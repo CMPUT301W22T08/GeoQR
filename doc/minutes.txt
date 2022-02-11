@@ -20,4 +20,8 @@ Meeting Date: 07-Feb-2022 - 14:30
 1. Finishing work on CRC cards
 	1a. group members chose a tool to create CRC cards
 	1b. group decided on using google drawing so they could all work simultaneously
+	1c. group members added initial CRC cards 
 2. Finished Project Planning
+	2a. group members added story points to backlog
+3. Conclusion
+	3a. group members decided to divide project task after the next weekly TA meeting.
