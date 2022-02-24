@@ -218,7 +218,7 @@ public class Camera extends AppCompatActivity {
     }
 
     private void start(byte[] bytes) {
-        Intent score = new Intent(Camera.this, addQR.class);
+        Intent score = new Intent(Camera.this, HomeScreen.class);
         score.putExtra("width", width);
         score.putExtra("height", height);
         score.putExtra("image", bytes);
