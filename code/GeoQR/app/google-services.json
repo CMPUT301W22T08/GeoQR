@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "298911710891",
+    "project_id": "qrdatabase-301geoqr",
+    "storage_bucket": "qrdatabase-301geoqr.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:298911710891:android:828332073790a8f62f01ee",
+        "android_client_info": {
+          "package_name": "com.example.geoqr"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "298911710891-mgt2qj093jl5frck1psru4mq4nnoi6f6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCN4_aoEO4GpzjrWecK7EYp6SWnccCZ1o0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "298911710891-mgt2qj093jl5frck1psru4mq4nnoi6f6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
