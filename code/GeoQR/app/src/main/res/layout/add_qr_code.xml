@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/UserTag"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginBottom="16dp"
+        android:text="User:"
+        app:layout_constraintBottom_toTopOf="@+id/QRcodeTag"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/QRcodeTag"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="16dp"
+        android:text="QR code: (HEX???)"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/UserTag" />
+
+    <TextView
+        android:id="@+id/UserAutoFill"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="UserAUTO"
+        app:layout_constraintBaseline_toBaselineOf="@+id/UserTag"
+        tools:layout_editor_absoluteX="165dp"
+        tools:ignore="MissingConstraints" />
+
+    <TextView
+        android:id="@+id/QRautoFill"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="QRauto"
+        app:layout_constraintBaseline_toBaselineOf="@+id/QRcodeTag"
+        tools:layout_editor_absoluteX="165dp"
+        tools:ignore="MissingConstraints" />
+
+    <TextView
+        android:id="@+id/QRscoreTag"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="QR code Score:"
+        app:layout_constraintTop_toBottomOf="@+id/QRcodeTag"
+        tools:layout_editor_absoluteX="32dp"
+        tools:ignore="MissingConstraints" />
+
+    <TextView
+        android:id="@+id/GeolocationTag"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Geolocation:"
+        app:layout_constraintTop_toBottomOf="@+id/QRscoreTag"
+        tools:layout_editor_absoluteX="34dp"
+        tools:ignore="MissingConstraints" />
+
+    <TextView
+        android:id="@+id/QRscoreAutoFill"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="QRscoreAuto"
+        app:layout_constraintBaseline_toBaselineOf="@+id/QRscoreTag"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/GeoSharable"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="GeoDefult"
+        app:layout_constraintBaseline_toBaselineOf="@+id/GeolocationTag"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.472"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <EditText
+        android:id="@+id/comments"
+        android:layout_width="332dp"
+        android:layout_height="206dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="29dp"
+        android:layout_marginEnd="32dp"
+        android:ems="10"
+        android:hint="click to add comments"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.533"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/GeolocationTag"
+        tools:ignore="MissingConstraints" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="332dp"
+        android:layout_height="178dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="36dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="24dp"
+        android:clickable="false"
+        app:layout_constraintBottom_toTopOf="@+id/Addbtn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.533"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/comments"
+        app:layout_constraintVertical_bias="0.0"
+        app:srcCompat="@drawable/ic_launcher_background" />
+
+    <Button
+        android:id="@+id/Addbtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
+        android:text="Add"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>
