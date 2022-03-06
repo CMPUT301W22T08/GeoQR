@@ -11,6 +11,7 @@ import androidx.constraintlayout.core.motion.utils.Utils;
 
 import com.google.common.hash.Hashing;
 import com.google.firebase.crashlytics.buildtools.reloc.org.apache.commons.codec.digest.DigestUtils;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.zxing.BinaryBitmap;
 import com.google.zxing.ChecksumException;
 import com.google.zxing.FormatException;
@@ -154,5 +155,9 @@ public class CalculateScore{
 
     public Bitmap getBitmap(){
         return bmp;
+    }
+
+    public String getHex_result() {
+        return hex_result;
     }
 }
