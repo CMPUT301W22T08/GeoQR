@@ -102,6 +102,7 @@ public class addQR extends AppCompatActivity implements askAddPictureFragment.On
 
         }else{
             // how to set image to default/empty?
+            // or can it just be left like this?
         }
 
         db = FirebaseFirestore.getInstance();
@@ -122,18 +123,18 @@ public class addQR extends AppCompatActivity implements askAddPictureFragment.On
                 // NOT TOO SURE IF THIS WILL WORK
                 List<String> loc = (List<String>) QR_ref.document(sccore.getHex_result()).get(Source.valueOf("Locations"));
                 List<String> user = (List<String>) QR_ref.document(sccore.getHex_result()).get(Source.valueOf("Users"));
+                // I'm guessing that if it does not find it, then it will create a new one
 
                 loc.add(GeoDisplay.getText().toString());
                 user.add(UserName);
 
-                // currently adding new QR code document for each one scanned
-                // so may have repeated document of the same qr code
+                // add data for the QR
                 HashMap<String, Object> data_qr = new HashMap<>();
                 data_qr.put("Locations",loc);
                 data_qr.put("Score",QRscore);
                 data_qr.put("User",user);
                 // will need to do updates to store a list of user instead of just 1 user
-
+                // I think I fixed it now, but not entirely sure
 
                 QR_ref
                         .document(sccore.getHex_result())
@@ -153,6 +154,8 @@ public class addQR extends AppCompatActivity implements askAddPictureFragment.On
                                 Log.d(TAG, "Data could not be added!" + e.toString());
                             }
                         });
+
+
 
                 // Add to user collection
 
@@ -176,6 +179,8 @@ public class addQR extends AppCompatActivity implements askAddPictureFragment.On
                         });
 
             }
+
+            // go to next page?????????????????????????????/
         });
     }
 
