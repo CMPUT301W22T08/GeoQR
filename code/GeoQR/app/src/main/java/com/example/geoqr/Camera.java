@@ -111,12 +111,12 @@ public class Camera extends AppCompatActivity {
                 x2 = touchEvent.getX();
                 y2 = touchEvent.getY();
                 if (x1 < x2) {
-                    Intent left = new Intent(Camera.this, HomeScreen.class);
+                    Intent left = new Intent(Camera.this, MainActivity.class);
                     startActivity(left);
                     overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
                 }
                 else if (x1 > x2) {
-                    Intent right = new Intent(Camera.this, HomeScreen.class);
+                    Intent right = new Intent(Camera.this, MainActivity.class);
                     startActivity(right);
                     overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                 }
