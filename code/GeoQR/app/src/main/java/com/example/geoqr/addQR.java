@@ -25,9 +25,12 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.firestore.Source;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -125,61 +128,58 @@ public class addQR extends AppCompatActivity{
                 // https://www.youtube.com/watch?v=y2op1D0W8oE
                 // Add to Qr collection
 
-                // NOT TOO SURE IF THIS WILL WORK
-                List<String> loc = (List<String>) QR_ref.document(sccore.getHex_result()).get(Source.valueOf("Locations"));
-                List<String> user = (List<String>) QR_ref.document(sccore.getHex_result()).get(Source.valueOf("Users"));
-                // I'm guessing that if it does not find it, then it will create a new one
+                try{
+                    // update list
+                    QR_ref.document(sccore.getHex_result()).update("Locations", FieldValue.arrayUnion(GeoDisplay.getText().toString()));
+                    QR_ref.document(sccore.getHex_result()).update("Users", FieldValue.arrayUnion(UserName));
 
-                loc.add(GeoDisplay.getText().toString());
-                user.add(UserName);
+                } catch (Exception e) {
+                    // if new doc
+                    List<String> loc = new ArrayList<String>();;
+                    List<String> user = new ArrayList<String>();;
+                    loc.add(GeoDisplay.getText().toString());
+                    user.add(UserName);
+                    // add data for the QR
+                    HashMap<String, Object> data_qr = new HashMap<>();
+                    data_qr.put("Locations",loc);  //(List<String>)
+                    data_qr.put("Score",QRscore);
+                    data_qr.put("User",user);
 
-                // add data for the QR
-                HashMap<String, Object> data_qr = new HashMap<>();
-                data_qr.put("Locations",loc);
-                data_qr.put("Score",QRscore);
-                data_qr.put("User",user);
-                // will need to do updates to store a list of user instead of just 1 user
-                // I think I fixed it now, but not entirely sure
+                    // add new doc/ override existing
+                    QR_ref
+                            .document(sccore.getHex_result())
+                            .set(data_qr)
+                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    // These are a method which gets executed when the task is succeeded
 
-                QR_ref
-                        .document(sccore.getHex_result())
-                        .set(data_qr)
-                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                // These are a method which gets executed when the task is succeeded
-
-                                Log.d(TAG, "Data has been added successfully!");
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                // These are a method which gets executed if there’s any problem
-                                Log.d(TAG, "Data could not be added!" + e.toString());
-                            }
-                        });
+                                    Log.d(TAG, "Data has been added successfully!");
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    // These are a method which gets executed if there’s any problem
+                                    Log.d(TAG, "Data could not be added!" + e.toString());
+                                }
+                            });
+                }
 
                 // Add to user collection
+                try{
+                    user_Ref.document(UserName).update("QR codes", FieldValue.arrayUnion(QRhexDisplay.getText().toString()));
+                } catch (Exception e) {
+                    List<String> qr = new ArrayList<String>();;
+                    qr.add(QRhexDisplay.getText().toString());
+                    HashMap<String, Object> user_qr = new HashMap<>();
+                    user_qr.put("QR codes",qr);
 
-                // using username as document
-                user_Ref
-                        .document(UserName)
-                        .collection("QR codes")
-                        .add(QRhexDisplay.getText().toString())
-                        .addOnSuccessListener(new OnSuccessListener() {
-                            @Override
-                            public void onSuccess(Object o) {
-                                Log.d(TAG, "Data has been added successfully!");
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                // These are a method which gets executed if there’s any problem
-                                Log.d(TAG, "Data could not be added!" + e.toString());
-                            }
-                        });
+                    // using username as document
+                    user_Ref
+                            .document(UserName)
+                            .set(user_qr, SetOptions.merge());
+                }
                     goBack();
             }
         });
