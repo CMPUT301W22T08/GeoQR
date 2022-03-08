@@ -14,6 +14,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -30,7 +31,7 @@ import com.google.firebase.firestore.Source;
 import java.util.HashMap;
 import java.util.List;
 
-public class addQR extends AppCompatActivity implements askAddPictureFragment.OnfragInteractionListener{
+public class addQR extends AppCompatActivity{
     //DATABASE STILL HAVE TROUBLE SETTING UP
 
     // Define values thats gonna display on the xml
@@ -53,7 +54,8 @@ public class addQR extends AppCompatActivity implements askAddPictureFragment.On
     EditText comment;
     ImageView QRimg;
     Button add_btn;
-    private Boolean add_img;
+    Switch add_geo;
+    Switch add_photo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,15 +69,18 @@ public class addQR extends AppCompatActivity implements askAddPictureFragment.On
         comment = findViewById(R.id.comments);
         QRimg = findViewById(R.id.imageView);
         add_btn = findViewById(R.id.Addbtn);
-
-        // ask user if want to add img
-        new askAddPictureFragment().ask(add_img).show(getSupportFragmentManager(), "ASK_ADD_IMG");
+        add_geo = findViewById(R.id.add_geo_switch);
+        add_photo = findViewById(R.id.add_photo_switch);
 
         // Call from Leo camera class
         Intent intent = getIntent();
-        Bundle bundle = intent.getBundleExtra("");
-        UserName = bundle.getString("");
-        qr_byte = bundle.getByteArray("");
+        qr_byte = intent.getByteArrayExtra("image");
+        //UserName = intent.getDataString("");
+        //////////////temperally!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        UserName = "I";
+//        Bundle bundle = intent.getBundleExtra("");
+//        UserName = bundle.getString("");
+//        qr_byte = bundle.getByteArray("image");
 
         //Calculate score
         sccore = new CalculateScore(qr_byte);
@@ -83,26 +88,26 @@ public class addQR extends AppCompatActivity implements askAddPictureFragment.On
 
         // Set text on display
         UNdisplay.setText(UserName);
-        QRscoreDisplay.setText(QRscore);
+        QRscoreDisplay.setText(QRscore.toString());
         QRhexDisplay.setText(sccore.getQRhex());
 
-        GeoDisplay.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // somehow get the location object form other class
-                GeoDisplay.setText("the return string");
-            }
-        });
+//        // if user wants to add the geo location
+//        if (add_geo.isChecked()){
+//            // somehow get the location object form other class
+//            GeoDisplay.setText("the return string");
+//        }
+        //////////////temperally!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        GeoDisplay.setText("position");
+
 
         // if user choose to add image to the
-        if (add_img){
+        if (add_photo.isChecked()){
+            QRimg.setVisibility(View.VISIBLE);
             // https://www.informit.com/articles/article.aspx?p=2423187
             QRimg.setImageBitmap(sccore.getBitmap());
             QRimg.setScaleType(ImageView.ScaleType.FIT_CENTER);
-
         }else{
-            // how to set image to default/empty?
-            // or can it just be left like this?
+            QRimg.setVisibility(View.INVISIBLE);
         }
 
         db = FirebaseFirestore.getInstance();
@@ -155,8 +160,6 @@ public class addQR extends AppCompatActivity implements askAddPictureFragment.On
                             }
                         });
 
-
-
                 // Add to user collection
 
                 // using username as document
@@ -177,16 +180,13 @@ public class addQR extends AppCompatActivity implements askAddPictureFragment.On
                                 Log.d(TAG, "Data could not be added!" + e.toString());
                             }
                         });
-
+                    goBack();
             }
-
-            // go to next page?????????????????????????????/
         });
     }
 
-    // return from addPicFragment
-    @Override
-    public void onOkPressed(boolean b) {
-        add_img = b;
+    private void goBack(){
+        Intent score = new Intent(addQR.this, Camera.class);
+        startActivity(score);
     }
 }

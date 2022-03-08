@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">GeoQR</string>
+<!--    <String name="camera.xml">scan_hint</String>-->
 </resources>

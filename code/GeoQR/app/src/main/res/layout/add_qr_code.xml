@@ -80,7 +80,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="GeoDefult"
-        app:layout_constraintBaseline_toBaselineOf="@+id/GeolocationTag"
+        app:layout_constraintBaseline_toBaselineOf="@+id/add_geo_switch"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.472"
         app:layout_constraintStart_toStartOf="parent" />
@@ -110,6 +110,7 @@
         android:layout_marginEnd="32dp"
         android:layout_marginBottom="24dp"
         android:clickable="false"
+        android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@+id/Addbtn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.533"
@@ -128,4 +129,30 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <Switch
+        android:id="@+id/add_geo_switch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add GeoLocation? "
+        tools:layout_editor_absoluteX="241dp"
+        tools:layout_editor_absoluteY="131dp" />
+
+    <Switch
+        android:id="@+id/add_photo_switch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBaseline_toBaselineOf="@+id/DIsplay_IMG_textview"
+        tools:layout_editor_absoluteX="268dp" />
+
+    <TextView
+        android:id="@+id/DIsplay_IMG_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="7dp"
+        android:text="Add photo?"
+        app:layout_constraintBottom_toTopOf="@+id/imageView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/comments" />
 </androidx.constraintlayout.widget.ConstraintLayout>
