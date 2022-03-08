@@ -2,15 +2,12 @@ package com.example.geoqr;
 
 import static android.content.ContentValues.TAG;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -18,7 +15,6 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -28,7 +24,6 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
-import com.google.firebase.firestore.Source;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -37,27 +32,29 @@ import java.util.List;
 public class addQR extends AppCompatActivity{
     //DATABASE STILL HAVE TROUBLE SETTING UP
 
-    // Define values thats gonna display on the xml
+    // Define values that's gonna display on the xml
     private String UserName;
-    private String QRhex; // I still don't get what this is asking, the really long one or the value?
-    private Integer QRscore;
+    private String QRHex; // I still don't get what this is asking, the really long one or the value?
+    private Integer QRScore;
     private String Comments;
-    private Location location = new Location(""); // get location somehow, work with Juliean
+    private Location location = new Location(""); // get location somehow, work with Julian
 
-    // Define variables thats relateded with external links like db/intent
+    // Define variables that's related with external links like db/intent
     private byte[] qr_byte;
-    private CalculateScore sccore;
+    private CalculateScore score;
     FirebaseFirestore db;
 
-    // Define variables thats going to be used inside this class
-    TextView UNdisplay;
-    TextView QRhexDisplay;
-    TextView QRscoreDisplay;
+    // Define variables that's going to be used inside this class
+    TextView UNDisplay;
+    TextView QRHexDisplay;
+    TextView QRScoreDisplay;
     TextView GeoDisplay;
     EditText comment;
-    ImageView QRimg;
+    ImageView QRImg;
     Button add_btn;
+    @SuppressLint("UseSwitchCompatOrMaterialCode")
     Switch add_geo;
+    @SuppressLint("UseSwitchCompatOrMaterialCode")
     Switch add_photo;
 
     @Override
@@ -65,12 +62,14 @@ public class addQR extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_qr_code);
 
-        UNdisplay = findViewById(R.id.UserAutoFill);
-        QRhexDisplay = findViewById(R.id.QRautoFill);
-        QRscoreDisplay = findViewById(R.id.QRscoreAutoFill);
+        db = FirebaseFirestore.getInstance();
+
+        UNDisplay = findViewById(R.id.UserAutoFill);
+        QRHexDisplay = findViewById(R.id.QRautoFill);
+        QRScoreDisplay = findViewById(R.id.QRScoreAutoFill);
         GeoDisplay = findViewById(R.id.GeoSharable);
         comment = findViewById(R.id.comments);
-        QRimg = findViewById(R.id.imageView);
+        QRImg = findViewById(R.id.imageView);
         add_btn = findViewById(R.id.Addbtn);
         add_geo = findViewById(R.id.add_geo_switch);
         add_photo = findViewById(R.id.add_photo_switch);
@@ -79,46 +78,47 @@ public class addQR extends AppCompatActivity{
         Intent intent = getIntent();
         qr_byte = intent.getByteArrayExtra("image");
         //UserName = intent.getDataString("");
-        //////////////temperally!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        //////////////temporary!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         UserName = "I";
 //        Bundle bundle = intent.getBundleExtra("");
 //        UserName = bundle.getString("");
 //        qr_byte = bundle.getByteArray("image");
 
         //Calculate score
-        sccore = new CalculateScore(qr_byte);
-        QRscore = sccore.find_total();
+        score = new CalculateScore(qr_byte);
+        QRScore = score.find_total();
 
         // Set text on display
-        UNdisplay.setText(UserName);
-        QRscoreDisplay.setText(QRscore.toString());
-        QRhexDisplay.setText(sccore.getQRhex());
+        UNDisplay.setText(UserName);
+        QRScoreDisplay.setText(String.valueOf(QRScore));
+        QRHexDisplay.setText(score.getQRHex());
 
 //        // if user wants to add the geo location
 //        if (add_geo.isChecked()){
 //            // somehow get the location object form other class
 //            GeoDisplay.setText("the return string");
 //        }
-        //////////////temperally!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        //////////////temporary!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         GeoDisplay.setText("position");
 
 
         // if user choose to add image to the
-        if (add_photo.isChecked()){
-            QRimg.setVisibility(View.VISIBLE);
+        if (add_photo.isChecked()) {
+            QRImg.setVisibility(View.VISIBLE);
             // https://www.informit.com/articles/article.aspx?p=2423187
-            QRimg.setImageBitmap(sccore.getBitmap());
-            QRimg.setScaleType(ImageView.ScaleType.FIT_CENTER);
-        }else{
-            QRimg.setVisibility(View.INVISIBLE);
+            QRImg.setImageBitmap(score.getBitmap());
+            QRImg.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        }
+        else {
+            QRImg.setVisibility(View.GONE);
         }
 
-        db = FirebaseFirestore.getInstance();
+        
         final CollectionReference user_Ref = db.collection("Users");
         final CollectionReference QR_ref = db.collection("QR codes");
-        // final CollectionReference QR_loc_ref = db.collection("QR codes").document(sccore.getHex_result()).collection("Location");
-        // final CollectionReference QR_user_ref = db.collection("QR codes").document(sccore.getHex_result()).collection("User");
-        final DocumentReference QR_code_ref = db.collection("QR codes").document(sccore.getHex_result());
+        // final CollectionReference QR_loc_ref = db.collection("QR codes").document(score.getHex_result()).collection("Location");
+        // final CollectionReference QR_user_ref = db.collection("QR codes").document(score.getHex_result()).collection("User");
+        final DocumentReference QR_code_ref = db.collection("QR codes").document(score.getHex_result());
 
         // get all data to the QR database and go to next page
         add_btn.setOnClickListener(new View.OnClickListener() {
@@ -130,24 +130,24 @@ public class addQR extends AppCompatActivity{
 
                 try{
                     // update list
-                    QR_ref.document(sccore.getHex_result()).update("Locations", FieldValue.arrayUnion(GeoDisplay.getText().toString()));
-                    QR_ref.document(sccore.getHex_result()).update("Users", FieldValue.arrayUnion(UserName));
+                    QR_ref.document(score.getHex_result()).update("Locations", FieldValue.arrayUnion(GeoDisplay.getText().toString()));
+                    QR_ref.document(score.getHex_result()).update("Users", FieldValue.arrayUnion(UserName));
 
                 } catch (Exception e) {
                     // if new doc
-                    List<String> loc = new ArrayList<String>();;
-                    List<String> user = new ArrayList<String>();;
+                    List<String> loc = new ArrayList<>();
+                    List<String> user = new ArrayList<>();
                     loc.add(GeoDisplay.getText().toString());
                     user.add(UserName);
                     // add data for the QR
                     HashMap<String, Object> data_qr = new HashMap<>();
                     data_qr.put("Locations",loc);  //(List<String>)
-                    data_qr.put("Score",QRscore);
+                    data_qr.put("Score",QRScore);
                     data_qr.put("User",user);
 
                     // add new doc/ override existing
                     QR_ref
-                            .document(sccore.getHex_result())
+                            .document(score.getHex_result())
                             .set(data_qr)
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
@@ -161,17 +161,17 @@ public class addQR extends AppCompatActivity{
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
                                     // These are a method which gets executed if there’s any problem
-                                    Log.d(TAG, "Data could not be added!" + e.toString());
+                                    Log.d(TAG, "Data could not be added!" + e);
                                 }
                             });
                 }
 
                 // Add to user collection
-                try{
-                    user_Ref.document(UserName).update("QR codes", FieldValue.arrayUnion(QRhexDisplay.getText().toString()));
+                try {
+                    user_Ref.document(UserName).update("QR codes", FieldValue.arrayUnion(QRHexDisplay.getText().toString()));
                 } catch (Exception e) {
-                    List<String> qr = new ArrayList<String>();;
-                    qr.add(QRhexDisplay.getText().toString());
+                    List<String> qr = new ArrayList<>();
+                    qr.add(QRHexDisplay.getText().toString());
                     HashMap<String, Object> user_qr = new HashMap<>();
                     user_qr.put("QR codes",qr);
 
@@ -186,7 +186,7 @@ public class addQR extends AppCompatActivity{
     }
 
     private void goBack(){
-        Intent score = new Intent(addQR.this, Camera.class);
-        startActivity(score);
+        Intent camera = new Intent(addQR.this, Camera.class);
+        startActivity(camera);
     }
 }

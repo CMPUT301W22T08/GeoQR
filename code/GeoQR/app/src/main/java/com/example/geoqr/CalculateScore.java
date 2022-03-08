@@ -1,41 +1,14 @@
 package com.example.geoqr;
 
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.Bundle;
-import android.util.Log;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.core.motion.utils.Utils;
 
 import com.google.common.hash.Hashing;
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.commons.codec.digest.DigestUtils;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.zxing.BinaryBitmap;
-import com.google.zxing.ChecksumException;
-import com.google.zxing.FormatException;
-import com.google.zxing.LuminanceSource;
-import com.google.zxing.MultiFormatReader;
-import com.google.zxing.NotFoundException;
-import com.google.zxing.RGBLuminanceSource;
-import com.google.zxing.Reader;
-import com.google.zxing.Result;
-import com.google.zxing.common.HybridBinarizer;
-import com.google.zxing.datamatrix.DataMatrixReader;
-import com.google.zxing.qrcode.QRCodeReader;
-
-import java.io.BufferedInputStream;
-import java.io.FileInputStream;
-import java.util.ArrayList;
-import java.util.Dictionary;
-import java.util.Hashtable;
+import com.google.zxing.*;
 
 import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.ArrayList;
+import java.util.Hashtable;
 
 public class CalculateScore{
 
@@ -46,7 +19,7 @@ public class CalculateScore{
 
     private char[] hex_result_array;
 
-    ArrayList<String> continuse;
+    ArrayList<String> continuous;
 
 
     public CalculateScore(byte[] qr){
@@ -62,8 +35,6 @@ public class CalculateScore{
 
         // array byte to string result
         Result = new String(qr_byte, StandardCharsets.UTF_8); // for UTF-8 encoding
-
-        return;
     }
 
     private void Result_to_hexResult(){
@@ -73,36 +44,34 @@ public class CalculateScore{
                 .hashString(Result, StandardCharsets.UTF_8)
                 .toString();
 
-        // hex to chararray for next step simplicity
+        // hex to char-array for next step simplicity
         // https://www.geeksforgeeks.org/iterate-over-the-characters-of-a-string-in-java/#:~:text=In%20this%20approach%2C%20we%20convert,loop%20or%20for%2Deach%20loop.
         hex_result_array = hex_result.toCharArray();
 
-        return;
     }
 
     private void find_hex_cont(){
         char prev = ' ';
-        char prev_inlist = ' ';
+        char prev_inList = ' ';
         int index = 0;
-        continuse = new ArrayList<String>();
+        continuous = new ArrayList<>();
 
         // extracts groups from char array
         for (int i = 0; i < hex_result_array.length; i++){
             if (prev == hex_result_array[i]){
 
                 if (index == 0){
-                    continuse.add(index,String.valueOf(hex_result_array[i]));
-                    prev_inlist = hex_result_array[i];
-                }else if(prev_inlist == hex_result_array[i]){
-                    continuse.set(index, continuse.get(index)+String.valueOf(hex_result_array[i]));
-                }else{
+                    continuous.add(index,String.valueOf(hex_result_array[i]));
+                    prev_inList = hex_result_array[i];
+                } else if(prev_inList == hex_result_array[i]){
+                    continuous.set(index, continuous.get(index)+ hex_result_array[i]);
+                } else{
                     index += 1;
-                    continuse.add(index,String.valueOf(hex_result_array[i]));
+                    continuous.add(index,String.valueOf(hex_result_array[i]));
                 }
             }
             prev = hex_result_array[i];
         }
-        return;
     }
 
     public Integer find_total(){
@@ -114,7 +83,7 @@ public class CalculateScore{
 
         Integer total = 0;
         long temp;
-        Hashtable<String, Integer> hex_dict = new Hashtable<String, Integer>();
+        Hashtable<String, Integer> hex_dict = new Hashtable<>();
 
         // https://www.educative.io/edpresso/how-to-create-a-dictionary-in-java
         // use in pick out group
@@ -137,19 +106,19 @@ public class CalculateScore{
         hex_dict.put("f",15);
 
         // calculate each group score and add together
-        for (int i = 0; i < continuse.size(); i++ ){
-            temp = continuse.get(i).chars().count();
+        for (int i = 0; i < continuous.size(); i++ ){
+            temp = continuous.get(i).chars().count();
             if (temp > 1){
-                total += (int) Math.pow(hex_dict.get(continuse.get(i)), temp);
+                total += (int) Math.pow(hex_dict.get(continuous.get(i)), temp);
             }else{
-                total += hex_dict.get(continuse.get(i));
+                total += hex_dict.get(continuous.get(i));
             }
         }
         return total;
     }
 
     // getters
-    public String getQRhex(){
+    public String getQRHex(){
         return hex_result;
     }
 

@@ -67,7 +67,7 @@
         tools:ignore="MissingConstraints" />
 
     <TextView
-        android:id="@+id/QRscoreAutoFill"
+        android:id="@+id/QRScoreAutoFill"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="QRscoreAuto"
