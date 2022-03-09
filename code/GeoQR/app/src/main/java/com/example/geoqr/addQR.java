@@ -30,7 +30,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class addQR extends AppCompatActivity{
+public class addQR extends AppCompatActivity {
     //DATABASE STILL HAVE TROUBLE SETTING UP
 
     // Define values that's gonna display on the xml
@@ -75,7 +75,7 @@ public class addQR extends AppCompatActivity{
         add_geo = findViewById(R.id.add_geo_switch);
         add_photo = findViewById(R.id.add_photo_switch);
 
-        // Call from Leo camera class
+        // Call from Camera class
         Intent intent = getIntent();
         qr_byte = intent.getByteArrayExtra("image");
         //UserName = intent.getDataString("");

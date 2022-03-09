@@ -1,5 +1,36 @@
 package com.example.geoqr;
 
-public class DatabaseQR {
-    // get qr code
+import android.os.Bundle;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.firebase.firestore.FirebaseFirestore;
+
+public class DatabaseQR extends AppCompatActivity {
+
+    FirebaseFirestore db;
+
+    // getUserName
+    // setUserName
+    // getQRData
+    // setQRData
+    // getQRScore
+    // setQRScore
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        db = FirebaseFirestore.getInstance();
+    }
+
+    public String getUserName() {
+        return "Name";
+    }
+
+
+
+
+
 }
