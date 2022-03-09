@@ -153,14 +153,11 @@ public class addQR extends AppCompatActivity{
                     data_qr.put("User",user);
 
                     // add new doc/ override existing
-                    QR_ref
-                            .document(score.getHex_result())
-                            .set(data_qr)
+                    QR_ref.document(score.getHex_result()).set(data_qr)
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
                                     // These are a method which gets executed when the task is succeeded
-
                                     Log.d(TAG, "Data has been added successfully!");
                                 }
                             })
@@ -190,7 +187,7 @@ public class addQR extends AppCompatActivity{
                             .document(UserName)
                             .set(user_qr, SetOptions.merge());
                 }
-                    goBack();
+                goBack();
             }
         });
     }
