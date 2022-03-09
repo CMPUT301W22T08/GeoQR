@@ -28,6 +28,7 @@ import com.google.firebase.firestore.SetOptions;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class addQR extends AppCompatActivity{
     //DATABASE STILL HAVE TROUBLE SETTING UP
@@ -127,6 +128,28 @@ public class addQR extends AppCompatActivity{
             @Override
             public void onClick(View view) {
 
+                //////////////////////////////////////////////////////////////////////////////////////////////////
+                Map<String, Object> city = new HashMap<>();
+                city.put("name", "Los Angeles");
+                city.put("state", "CA");
+                city.put("country", "USA");
+
+                db.collection("cities").document("LA")
+                        .set(city)
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                Log.d(TAG, "DocumentSnapshot successfully written!");
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.w(TAG, "Error writing document", e);
+                            }
+                        });
+                /////////////////////////////////////////////////////////////////////////////////////////////////
+
                 // 然后根据两个add_img和add_g来放入db
                 // 还把imageview给阉割了，UX东西以后再想
                 // 98 83 106
@@ -187,7 +210,7 @@ public class addQR extends AppCompatActivity{
                 }
                 goBack();
             }
-        });
+         });
     }
 
     private void goBack(){
