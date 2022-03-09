@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Switch;
@@ -38,6 +39,8 @@ public class addQR extends AppCompatActivity{
     private Integer QRScore;
     private String Comments;
     private Location location = new Location(""); // get location somehow, work with Julian
+    private Boolean add_img = false;
+    private Boolean add_g = false;
 
     // Define variables that's related with external links like db/intent
     private byte[] qr_byte;
@@ -50,7 +53,6 @@ public class addQR extends AppCompatActivity{
     TextView QRScoreDisplay;
     TextView GeoDisplay;
     EditText comment;
-    ImageView QRImg;
     Button add_btn;
     @SuppressLint("UseSwitchCompatOrMaterialCode")
     Switch add_geo;
@@ -60,7 +62,7 @@ public class addQR extends AppCompatActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.add_qr_code);
+        setContentView(R.layout.aqq_qr_code_v2);
 
         db = FirebaseFirestore.getInstance();
 
@@ -69,7 +71,6 @@ public class addQR extends AppCompatActivity{
         QRScoreDisplay = findViewById(R.id.QRScoreAutoFill);
         GeoDisplay = findViewById(R.id.GeoSharable);
         comment = findViewById(R.id.comments);
-        QRImg = findViewById(R.id.imageView);
         add_btn = findViewById(R.id.Addbtn);
         add_geo = findViewById(R.id.add_geo_switch);
         add_photo = findViewById(R.id.add_photo_switch);
@@ -93,41 +94,47 @@ public class addQR extends AppCompatActivity{
         QRScoreDisplay.setText(String.valueOf(QRScore));
         QRHexDisplay.setText(score.getQRHex());
 
-//        // if user wants to add the geo location
-//        if (add_geo.isChecked()){
-//            // somehow get the location object form other class
-//            GeoDisplay.setText("the return string");
-//        }
         //////////////temporary!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         GeoDisplay.setText("position");
 
+        // get if user wants to add the geo or not
+        add_geo.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                add_g = true;
+                // somehow get the location object form other class
+                // GeoDisplay.setText("the return string");
+            }
+        });
+        // get if user wants to add the image or not
+        add_photo.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                add_img = true;
+            }
+        });
 
-        // if user choose to add image to the
-        if (add_photo.isChecked()) {
-            QRImg.setVisibility(View.VISIBLE);
-            // https://www.informit.com/articles/article.aspx?p=2423187
-            QRImg.setImageBitmap(score.getBitmap());
-            QRImg.setScaleType(ImageView.ScaleType.FIT_CENTER);
-        }
-        else {
-            QRImg.setVisibility(View.GONE);
-        }
 
-        
+
+        // define for add to database
         final CollectionReference user_Ref = db.collection("Users");
         final CollectionReference QR_ref = db.collection("QR codes");
         // final CollectionReference QR_loc_ref = db.collection("QR codes").document(score.getHex_result()).collection("Location");
         // final CollectionReference QR_user_ref = db.collection("QR codes").document(score.getHex_result()).collection("User");
         final DocumentReference QR_code_ref = db.collection("QR codes").document(score.getHex_result());
 
-        // get all data to the QR database and go to next page
+        // get all data to the QR database and go back
         add_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
+                // 然后根据两个add_img和add_g来放入db
+                // 打中文单纯因为烦躁
+                // 还把imageview给阉割了，UX东西以后再想
+                // 98 83 106
+
                 // https://www.youtube.com/watch?v=y2op1D0W8oE
                 // Add to Qr collection
-
                 try{
                     // update list
                     QR_ref.document(score.getHex_result()).update("Locations", FieldValue.arrayUnion(GeoDisplay.getText().toString()));
@@ -167,13 +174,16 @@ public class addQR extends AppCompatActivity{
                 }
 
                 // Add to user collection
+
                 try {
                     user_Ref.document(UserName).update("QR codes", FieldValue.arrayUnion(QRHexDisplay.getText().toString()));
+                    //update user image collection?
                 } catch (Exception e) {
                     List<String> qr = new ArrayList<>();
                     qr.add(QRHexDisplay.getText().toString());
                     HashMap<String, Object> user_qr = new HashMap<>();
                     user_qr.put("QR codes",qr);
+//                    user_qr.put("Image")
 
                     // using username as document
                     user_Ref
