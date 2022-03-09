@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/add_qr_page"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -13,18 +14,20 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:orientation="horizontal">
+
         <TextView
             android:id="@+id/UserTag"
-            android:layout_marginLeft="20dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="User:" />
+            android:layout_marginLeft="20dp"
+            android:text="@string/user_hint" />
+
         <TextView
             android:id="@+id/UserAutoFill"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
-            android:text="UserAUTO" />
+            android:text="@string/default_txt" />
     </LinearLayout>
     <!--QR code-->
     <LinearLayout
@@ -32,38 +35,42 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:orientation="horizontal">
+
         <TextView
-            android:id="@+id/QRcodeTag"
-            android:layout_marginLeft="20dp"
+            android:id="@+id/QRCodeTag"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="QR code:"/>
+            android:layout_marginLeft="20dp"
+            android:text="@string/qr_code_hint" />
+
         <TextView
-            android:id="@+id/QRautoFill"
+            android:id="@+id/QRAutoFill"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
-            android:text="QRauto"/>
+            android:text="@string/default_txt" />
     </LinearLayout>
 
-    <!--QRscore-->
+    <!--QRScore-->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:orientation="horizontal">
+
         <TextView
-            android:id="@+id/QRscoreTag"
+            android:id="@+id/QRScoreTag"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
-            android:text="QR code Score:"/>
+            android:text="@string/qr_score_hint" />
+
         <TextView
             android:id="@+id/QRScoreAutoFill"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
-            android:text="QRscoreAuto"/>
+            android:text="@string/default_txt" />
     </LinearLayout>
 
     <!--geo location + switch-->
@@ -72,18 +79,20 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:orientation="horizontal">
+
         <TextView
             android:id="@+id/GeolocationTag"
-            android:layout_marginLeft="20dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Geolocation:"/>
+            android:layout_marginLeft="20dp"
+            android:text="@string/geo_hint" />
+
         <TextView
             android:id="@+id/GeoSharable"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
-            android:text="GeoDefult"/>
+            android:text="@string/default_txt" />
     </LinearLayout>
 
     <!--add photo switch-->
@@ -91,20 +100,24 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:orientation="horizontal"
-        android:gravity="center">
+        android:gravity="center"
+        android:orientation="horizontal">
+
         <Switch
             android:id="@+id/add_geo_switch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
-            android:text="Add Location"/>
+            android:text="@string/add_location_switch"
+            tools:ignore="UseSwitchCompatOrMaterialXml" />
+
         <Switch
             android:id="@+id/add_photo_switch"
-            android:text="Add photo"
-            android:layout_marginLeft="20dp"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:text="@string/add_photo_switch"
+            tools:ignore="UseSwitchCompatOrMaterialXml" />
     </LinearLayout>
 
     <!--comment-->
@@ -112,33 +125,35 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:orientation="horizontal"
-        android:gravity="center">
+        android:gravity="center"
+        android:orientation="horizontal">
+
         <EditText
             android:id="@+id/comments"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:paddingTop="5dp"
-            android:paddingBottom="5dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
             android:ems="10"
-            android:hint="click to add comments"
-            android:inputType="textPersonName"/>
+            android:hint="@string/comment_hint"
+            android:inputType="textPersonName"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp" />
     </LinearLayout>
 
-    <!--butten save-->
+    <!--button save-->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:orientation="horizontal"
-        android:gravity="center">
+        android:gravity="center"
+        android:orientation="horizontal">
+
         <Button
-            android:id="@+id/Addbtn"
+            android:id="@+id/AddBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Add"/>
+            android:text="@string/add_btn" />
     </LinearLayout>
 
 </LinearLayout>

@@ -11,7 +11,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -67,11 +66,11 @@ public class addQR extends AppCompatActivity{
         db = FirebaseFirestore.getInstance();
 
         UNDisplay = findViewById(R.id.UserAutoFill);
-        QRHexDisplay = findViewById(R.id.QRautoFill);
+        QRHexDisplay = findViewById(R.id.QRAutoFill);
         QRScoreDisplay = findViewById(R.id.QRScoreAutoFill);
         GeoDisplay = findViewById(R.id.GeoSharable);
         comment = findViewById(R.id.comments);
-        add_btn = findViewById(R.id.Addbtn);
+        add_btn = findViewById(R.id.AddBtn);
         add_geo = findViewById(R.id.add_geo_switch);
         add_photo = findViewById(R.id.add_photo_switch);
 

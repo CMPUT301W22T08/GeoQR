@@ -15,12 +15,12 @@
         android:layout_marginTop="32dp"
         android:layout_marginBottom="16dp"
         android:text="User:"
-        app:layout_constraintBottom_toTopOf="@+id/QRcodeTag"
+        app:layout_constraintBottom_toTopOf="@+id/QRCodeTag"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/QRcodeTag"
+        android:id="@+id/QRCodeTag"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
@@ -39,21 +39,21 @@
         tools:ignore="MissingConstraints" />
 
     <TextView
-        android:id="@+id/QRautoFill"
+        android:id="@+id/QRAutoFill"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="QRauto"
-        app:layout_constraintBaseline_toBaselineOf="@+id/QRcodeTag"
+        app:layout_constraintBaseline_toBaselineOf="@+id/QRCodeTag"
         tools:layout_editor_absoluteX="165dp"
         tools:ignore="MissingConstraints" />
 
     <TextView
-        android:id="@+id/QRscoreTag"
+        android:id="@+id/QRScoreTag"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="QR code Score:"
-        app:layout_constraintTop_toBottomOf="@+id/QRcodeTag"
+        app:layout_constraintTop_toBottomOf="@+id/QRCodeTag"
         tools:layout_editor_absoluteX="32dp"
         tools:ignore="MissingConstraints" />
 
@@ -63,7 +63,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="Geolocation:"
-        app:layout_constraintTop_toBottomOf="@+id/QRscoreTag"
+        app:layout_constraintTop_toBottomOf="@+id/QRScoreTag"
         tools:layout_editor_absoluteX="34dp"
         tools:ignore="MissingConstraints" />
 
@@ -72,7 +72,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="QRscoreAuto"
-        app:layout_constraintBaseline_toBaselineOf="@+id/QRscoreTag"
+        app:layout_constraintBaseline_toBaselineOf="@+id/QRScoreTag"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -112,7 +112,7 @@
         android:layout_marginBottom="24dp"
         android:clickable="false"
         android:visibility="invisible"
-        app:layout_constraintBottom_toTopOf="@+id/Addbtn"
+        app:layout_constraintBottom_toTopOf="@+id/AddBtn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.533"
         app:layout_constraintStart_toStartOf="parent"
@@ -121,7 +121,7 @@
         app:srcCompat="@drawable/ic_launcher_background" />
 
     <Button
-        android:id="@+id/Addbtn"
+        android:id="@+id/AddBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="32dp"
