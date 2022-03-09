@@ -128,7 +128,6 @@ public class addQR extends AppCompatActivity{
             public void onClick(View view) {
 
                 // 然后根据两个add_img和add_g来放入db
-                // 打中文单纯因为烦躁
                 // 还把imageview给阉割了，UX东西以后再想
                 // 98 83 106
 
