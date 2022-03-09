@@ -152,7 +152,7 @@ public class addQR extends AppCompatActivity {
                     data_qr.put("User",user);
 
                     // add new doc/ override existing
-                    QR_ref.document(score.getHex_result()).set(data_qr)
+                    QR_ref.document(score.getHex_result()).set(data_qr,SetOptions.merge())
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
