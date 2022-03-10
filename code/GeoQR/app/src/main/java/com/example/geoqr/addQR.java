@@ -122,7 +122,7 @@ public class addQR extends AppCompatActivity {
         // define for add to database
         final CollectionReference user_Ref = db.collection("Users");
         final CollectionReference QR_ref = db.collection("QR codes");
-        final DocumentReference QR_code_ref = db.collection("QR codes").document(score.getHex_result());
+        final DocumentReference QR_code_ref = db.collection("QR codes").document(s);
 
 //        QR_code_ref.get().addOnCompleteListener(@NonNull Task<DocumentSnapshot> task){
 //
@@ -167,10 +167,9 @@ public class addQR extends AppCompatActivity {
                 // 还把imageview给阉割了，UX东西以后再想
                 // 98 83 106
                 // 186
-
                 // https://www.youtube.com/watch?v=y2op1D0W8oE
                 // Add to Qr collection
-                try{
+                try {
                     // update list
                     QR_ref.document(score.getHex_result()).update("Locations", FieldValue.arrayUnion(GeoDisplay.getText().toString()));
                     QR_ref.document(score.getHex_result()).update("Users", FieldValue.arrayUnion(UserName));
@@ -187,6 +186,7 @@ public class addQR extends AppCompatActivity {
                     data_qr.put("Score",QRScore);
                     data_qr.put("User",user);
 
+                    // ID: score.getHex_result(),
                     // add new doc/ override existing
                     QR_ref.document(score.getHex_result()).set(data_qr,SetOptions.merge())
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
