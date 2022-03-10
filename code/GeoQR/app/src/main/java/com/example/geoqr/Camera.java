@@ -86,11 +86,6 @@ public class Camera extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.camera);
 
-        if (!checkCamera(this)) {
-            Toast.makeText(getApplicationContext(), "You do not have camera on this device", Toast.LENGTH_LONG).show();
-            finish();
-        }
-
         cam = findViewById(R.id.cameraView);
         assert cam != null;
         cam.setSurfaceTextureListener(textureListener);
@@ -213,7 +208,7 @@ public class Camera extends AppCompatActivity {
         }
     }
 
-    private boolean checkCamera(Context context) {
+    public boolean checkCamera(Context context) {
         return context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY);
     }
 
