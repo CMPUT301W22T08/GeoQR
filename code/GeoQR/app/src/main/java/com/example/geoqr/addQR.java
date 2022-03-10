@@ -21,6 +21,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
@@ -116,43 +117,56 @@ public class addQR extends AppCompatActivity {
 
 
 
+        String s = score.getHex_result();
+
         // define for add to database
         final CollectionReference user_Ref = db.collection("Users");
         final CollectionReference QR_ref = db.collection("QR codes");
-        // final CollectionReference QR_loc_ref = db.collection("QR codes").document(score.getHex_result()).collection("Location");
-        // final CollectionReference QR_user_ref = db.collection("QR codes").document(score.getHex_result()).collection("User");
         final DocumentReference QR_code_ref = db.collection("QR codes").document(score.getHex_result());
 
+//        QR_code_ref.get().addOnCompleteListener(@NonNull Task<DocumentSnapshot> task){
+//
+//        }
+
         // get all data to the QR database and go back
+
+        //https://stackoverflow.com/questions/39045603/sending-message-to-a-handler-on-a-dead-thread-when-getting-a-location-within-ser
+        //https://stackoverflow.com/questions/4443278/toast-sending-message-to-a-handler-on-a-dead-thread
+        //https://programmerah.com/sending-message-to-a-handler-on-a-dead-thread-21820/
+        //https://developer.android.com/reference/android/app/IntentService.html
+
+        //https://stackoverflow.com/questions/53332471/checking-if-a-document-exists-in-a-firestore-collection
+
         add_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                //////////////////////////////////////////////////////////////////////////////////////////////////
-                Map<String, Object> city = new HashMap<>();
-                city.put("name", "Los Angeles");
-                city.put("state", "CA");
-                city.put("country", "USA");
-
-                db.collection("cities").document("LA")
-                        .set(city)
-                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                Log.d(TAG, "DocumentSnapshot successfully written!");
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Log.w(TAG, "Error writing document", e);
-                            }
-                        });
-                /////////////////////////////////////////////////////////////////////////////////////////////////
+//                //////////////////////////////////////////////////////////////////////////////////////////////////
+//                Map<String, Object> city = new HashMap<>();
+//                city.put("name", "Los Angeles");
+//                city.put("state", "CA");
+//                city.put("country", "USA");
+//
+//                db.collection("cities").document("LA")
+//                        .set(city)
+//                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+//                            @Override
+//                            public void onSuccess(Void aVoid) {
+//                                Log.d(TAG, "DocumentSnapshot successfully written!");
+//                            }
+//                        })
+//                        .addOnFailureListener(new OnFailureListener() {
+//                            @Override
+//                            public void onFailure(@NonNull Exception e) {
+//                                Log.w(TAG, "Error writing document", e);
+//                            }
+//                        });
+//                /////////////////////////////////////////////////////////////////////////////////////////////////
 
                 // 然后根据两个add_img和add_g来放入db
                 // 还把imageview给阉割了，UX东西以后再想
                 // 98 83 106
+                // 186
 
                 // https://www.youtube.com/watch?v=y2op1D0W8oE
                 // Add to Qr collection
