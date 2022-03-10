@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/login"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Login"
+        android:textSize = "50sp"
+        android:layout_margin="50dp"
+        android:gravity="center"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/username"
+        android:layout_below="@id/login"
+        android:layout_margin="10dp"
+        android:hint="Enter Your Username"
+        android:padding = "20dp"/>
+
+    <TextView
+        android:id="@+id/newTO"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/generateUsername"
+        android:layout_marginLeft="120dp"
+        android:layout_marginBottom="7dp"
+        android:gravity="left"
+        android:text="new?"
+        android:textSize="12sp" />
+
+    <Button
+        android:id="@+id/generateUsername"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:text="Generate username" />
+
+    <Button
+        android:id="@+id/Scan"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/generateUsername"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:text="Scan/login" />
+
+
+</RelativeLayout>
