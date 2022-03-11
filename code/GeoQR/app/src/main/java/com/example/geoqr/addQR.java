@@ -124,104 +124,77 @@ public class addQR extends AppCompatActivity {
         final CollectionReference QR_ref = db.collection("QR codes");
         final DocumentReference QR_code_ref = db.collection("QR codes").document(s);
 
-//        QR_code_ref.get().addOnCompleteListener(@NonNull Task<DocumentSnapshot> task){
-//
-//        }
-
         // get all data to the QR database and go back
-
-        //https://stackoverflow.com/questions/39045603/sending-message-to-a-handler-on-a-dead-thread-when-getting-a-location-within-ser
-        //https://stackoverflow.com/questions/4443278/toast-sending-message-to-a-handler-on-a-dead-thread
-        //https://programmerah.com/sending-message-to-a-handler-on-a-dead-thread-21820/
-        //https://developer.android.com/reference/android/app/IntentService.html
-
-        //https://stackoverflow.com/questions/53332471/checking-if-a-document-exists-in-a-firestore-collection
 
         add_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-//                //////////////////////////////////////////////////////////////////////////////////////////////////
-//                Map<String, Object> city = new HashMap<>();
-//                city.put("name", "Los Angeles");
-//                city.put("state", "CA");
-//                city.put("country", "USA");
-//
-//                db.collection("cities").document("LA")
-//                        .set(city)
-//                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-//                            @Override
-//                            public void onSuccess(Void aVoid) {
-//                                Log.d(TAG, "DocumentSnapshot successfully written!");
-//                            }
-//                        })
-//                        .addOnFailureListener(new OnFailureListener() {
-//                            @Override
-//                            public void onFailure(@NonNull Exception e) {
-//                                Log.w(TAG, "Error writing document", e);
-//                            }
-//                        });
-//                /////////////////////////////////////////////////////////////////////////////////////////////////
-
-                // 然后根据两个add_img和add_g来放入db
-                // 还把imageview给阉割了，UX东西以后再想
                 // 98 83 106
                 // 186
+
                 // https://www.youtube.com/watch?v=y2op1D0W8oE
                 // Add to Qr collection
-                try {
-                    // update list
-                    QR_ref.document(score.getHex_result()).update("Locations", FieldValue.arrayUnion(GeoDisplay.getText().toString()));
-                    QR_ref.document(score.getHex_result()).update("Users", FieldValue.arrayUnion(UserName));
 
-                } catch (Exception e) {
-                    // if new doc
-                    List<String> loc = new ArrayList<>();
-                    List<String> user = new ArrayList<>();
-                    loc.add(GeoDisplay.getText().toString());
-                    user.add(UserName);
-                    // add data for the QR
-                    HashMap<String, Object> data_qr = new HashMap<>();
-                    data_qr.put("Locations",loc);  //(List<String>)
-                    data_qr.put("Score",QRScore);
-                    data_qr.put("User",user);
+                List<String> loc = new ArrayList<>();
+                List<String> user = new ArrayList<>();
+                loc.add(GeoDisplay.getText().toString());
+                user.add(UserName);
+                // add data for the QR
+                HashMap<String, Object> data_qr = new HashMap<>();
+                data_qr.put("Locations",loc);  //(List<String>)
+                data_qr.put("Score",QRScore);
+                data_qr.put("User",user);
 
-                    // ID: score.getHex_result(),
-                    // add new doc/ override existing
-                    QR_ref.document(score.getHex_result()).set(data_qr,SetOptions.merge())
-                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void aVoid) {
-                                    // These are a method which gets executed when the task is succeeded
-                                    Log.d(TAG, "Data has been added successfully!");
-                                }
-                            })
-                            .addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    // These are a method which gets executed if there’s any problem
-                                    Log.d(TAG, "Data could not be added!" + e);
-                                }
-                            });
-                }
+                // ID: score.getHex_result(),
+                // add new doc/ override existing
+                QR_ref.document(score.getHex_result()).set(data_qr,SetOptions.merge())
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                // These are a method which gets executed when the task is succeeded
+                                Log.d(TAG, "Data has been added successfully!");
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                // These are a method which gets executed if there’s any problem
+                                Log.d(TAG, "Data could not be added!" + e);
+                            }
+                        });
+
+//                // update list
+                // all not work
+                // check method 1
+//                QR_ref.document(score.getHex_result()).update("Locations", FieldValue.arrayUnion(GeoDisplay.getText().toString()));
+//                QR_ref.document(score.getHex_result()).update("Users", FieldValue.arrayUnion(UserName));
+//
+                // check method 2
+//                QR_code_ref.get().addOnCompleteListener(@NonNull Task<DocumentSnapshot> task){
+//
+//                }
+
+                // check method 3
+//                List<String> qr = user_Ref.document(UserName).get().getResult().get("QR codes");
+
 
                 // Add to user collection
-
-                try {
-                    user_Ref.document(UserName).update("QR codes", FieldValue.arrayUnion(QRHexDisplay.getText().toString()));
-                    //update user image collection?
-                } catch (Exception e) {
-                    List<String> qr = new ArrayList<>();
-                    qr.add(QRHexDisplay.getText().toString());
-                    HashMap<String, Object> user_qr = new HashMap<>();
-                    user_qr.put("QR codes",qr);
+                List<String> qr = new ArrayList<>();
+                qr.add(QRHexDisplay.getText().toString());
+                HashMap<String, Object> user_qr = new HashMap<>();
+                user_qr.put("QR codes",qr);
 //                    user_qr.put("Image")
 
-                    // using username as document
-                    user_Ref
-                            .document(UserName)
-                            .set(user_qr, SetOptions.merge());
-                }
+                // using username as document
+                user_Ref
+                        .document(UserName)
+                        .set(user_qr, SetOptions.merge());
+
+
+//                user_Ref.document(UserName).update("QR codes", FieldValue.arrayUnion(QRHexDisplay.getText().toString()));
+//                //update user image collection?
+
                 goBack();
             }
          });
