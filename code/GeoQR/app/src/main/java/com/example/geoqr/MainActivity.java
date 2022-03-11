@@ -20,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         // setContentView(R.layout.login_page);
 
-        Camera cam = new Camera();
+        Camera_V2 cam = new Camera_V2();
         if (!cam.checkCamera(this)) {
             Toast.makeText(getApplicationContext(), "You do not have camera on this device", Toast.LENGTH_LONG).show();
             finish();
