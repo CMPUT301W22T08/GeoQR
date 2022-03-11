@@ -43,8 +43,31 @@ public class Camera_V2 extends AppCompatActivity {
         else {
             scanCode();
         }
+    }
 
+    public boolean onTouchEvent(MotionEvent touchEvent) {
 
+        switch (touchEvent.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                x1 = touchEvent.getX();
+                y1 = touchEvent.getY();
+                break;
+            case MotionEvent.ACTION_UP:
+                x2 = touchEvent.getX();
+                y2 = touchEvent.getY();
+                if (x1 < x2) {
+                    Intent left = new Intent(Camera_V2.this, MainActivity.class);
+                    startActivity(left);
+                    overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+                }
+                else if (x1 > x2) {
+                    Intent right = new Intent(Camera_V2.this, MainActivity.class);
+                    startActivity(right);
+                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                }
+                break;
+        }
+        return false;
     }
 
     private void scanCode() {
@@ -97,31 +120,6 @@ public class Camera_V2 extends AppCompatActivity {
 
     public boolean checkCamera(Context context) {
         return context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY);
-    }
-
-    public boolean onTouchEvent(MotionEvent touchEvent) {
-
-        switch (touchEvent.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                x1 = touchEvent.getX();
-                y1 = touchEvent.getY();
-                break;
-            case MotionEvent.ACTION_UP:
-                x2 = touchEvent.getX();
-                y2 = touchEvent.getY();
-                if (x1 < x2) {
-                    Intent left = new Intent(Camera_V2.this, MainActivity.class);
-                    startActivity(left);
-                    overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
-                }
-                else if (x1 > x2) {
-                    Intent right = new Intent(Camera_V2.this, MainActivity.class);
-                    startActivity(right);
-                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-                }
-                break;
-        }
-        return false;
     }
 
     public boolean camPermission(Context context, String ... permissions) {
