@@ -90,7 +90,7 @@ public class Camera_V2 extends AppCompatActivity {
     }
 
     private void calculateScore() {
-        Intent calScore = new Intent(Camera_V2.this, ContentTest.class);
+        Intent calScore = new Intent(Camera_V2.this, addQR.class);
         calScore.putExtra("content", content);
         startActivity(calScore);
     }
