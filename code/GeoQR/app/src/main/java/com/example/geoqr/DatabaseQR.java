@@ -20,7 +20,7 @@ public class DatabaseQR extends AppCompatActivity {
     FirebaseFirestore db;
     CollectionReference user_ref;
     CollectionReference QR_ref;
-    private String ID;
+    private String UserID, QRCodeID;
     private String userID, userName, QRScore;
     // private Integer QRScore;
     ArrayList<Integer> tempIntArray = new ArrayList<>();
@@ -34,14 +34,18 @@ public class DatabaseQR extends AppCompatActivity {
         QR_ref = db.collection("QR codes");
     }
 
-    public void setUserID(String ID) {
-        this.ID = ID;
+    public void setUserID(String UserID) {
+        this.UserID = UserID;
     }
     // 这后面应该还需要call什么然后db才能更新
 
+    public void setQR(String QRCodeID) {
+        this.QRCodeID = QRCodeID;
+    }
+
     // going to test if addOnComplete or addOnSuccess is more suitable
     public String getUserID() {
-        DocumentReference getID = user_ref.document(ID);
+        DocumentReference getID = user_ref.document(UserID);
 
 //        getID.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
 //            @Override
@@ -75,7 +79,7 @@ public class DatabaseQR extends AppCompatActivity {
 
     public String getUserName() {
         // 大概应该是没什么问题，但是一个 .getId() 在document后面应该就可以解决了。。。
-        DocumentReference getName = user_ref.document(ID);
+        DocumentReference getName = user_ref.document(UserID);
         getName.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
@@ -93,7 +97,7 @@ public class DatabaseQR extends AppCompatActivity {
 
     public String getQRScore() {
         // 目前感觉没什么问题
-        DocumentReference getQR = QR_ref.document(ID);
+        DocumentReference getQR = QR_ref.document(QRCodeID);
         getQR.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
