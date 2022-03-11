@@ -19,6 +19,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -45,6 +46,7 @@ public class addQR extends AppCompatActivity {
 
     // Define variables that's related with external links like db/intent
     private String qr_str;
+    private byte[] qr_img;
     private CalculateScore score;
     FirebaseFirestore db;
 
@@ -82,6 +84,7 @@ public class addQR extends AppCompatActivity {
         // Call from Camera class
         Intent intent = getIntent();
         qr_str = intent.getStringExtra("content");
+        qr_img = intent.getByteArrayExtra("bytes");
 //        qr_byte = intent.getByteArrayExtra("image");
 
         //UserName = intent.getDataString("");
@@ -202,16 +205,23 @@ public class addQR extends AppCompatActivity {
 
 
                 // Add to user collection
-                List<String> qr = new ArrayList<>();
-                qr.add(QRHexDisplay.getText().toString());
-                HashMap<String, Object> user_qr = new HashMap<>();
-                user_qr.put("QR codes",qr);
-//                    user_qr.put("Image")
+                DocumentSnapshot s = user_Ref.document(UserName).get().getResult();
+                if(s.exists()){
+                    user_Ref.document(UserName).update("QR codes", FieldValue.arrayUnion(QRHexDisplay.getText().toString()));
+                }else{
+                    List<String> qr = new ArrayList<>();
+                    qr.add(QRHexDisplay.getText().toString());
+                    HashMap<String, Object> user_qr = new HashMap<>();
+                    user_qr.put("QR codes",qr);
+                    // user_qr.put("Image")
 
-                // using username as document
-                user_Ref
-                        .document(UserName)
-                        .set(user_qr, SetOptions.merge());
+                    // using username as document
+                    user_Ref
+                            .document(UserName)
+                            .set(user_qr, SetOptions.merge());
+                }
+
+
 
 
 //                user_Ref.document(UserName).update("QR codes", FieldValue.arrayUnion(QRHexDisplay.getText().toString()));
