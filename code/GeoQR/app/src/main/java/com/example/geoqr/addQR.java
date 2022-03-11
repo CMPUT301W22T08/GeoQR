@@ -189,8 +189,9 @@ public class addQR extends AppCompatActivity {
 //                }
 
                 // check method 3
-                List<String> qr = (ArrayList<String>) user_Ref.document(UserName).get().getResult().get("QR codes");
+//                List<String> qr = (ArrayList<String>) user_Ref.document(UserName).get().getResult().get("QR codes");
 
+                List<String> qr = user_Ref.document(UserName)
 
                 // Add to user collection
                 //List<String> qr = new ArrayList<>();
