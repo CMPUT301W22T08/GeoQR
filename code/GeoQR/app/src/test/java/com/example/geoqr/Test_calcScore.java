@@ -30,7 +30,7 @@ public class Test_calcScore {
     @Test
     void tests(){
         CalculateScore z = test();
-        z.byteArray_to_Result();
+        //z.byteArray_to_Result();
         z.Result_to_hexResult();
         z.find_hex_cont();
         z.find_total();
