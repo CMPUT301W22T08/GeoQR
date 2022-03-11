@@ -49,6 +49,7 @@ public class addQR extends AppCompatActivity {
     FirebaseFirestore db;
 
     // Define variables that's going to be used inside this class
+    TextView QRInfo;
     TextView UNDisplay;
     TextView QRHexDisplay;
     TextView QRScoreDisplay;
@@ -75,6 +76,8 @@ public class addQR extends AppCompatActivity {
         add_btn = findViewById(R.id.AddBtn);
         add_geo = findViewById(R.id.add_geo_switch);
         add_photo = findViewById(R.id.add_photo_switch);
+        QRInfo = findViewById(R.id.QRInfo);
+
 
         // Call from Camera class
         Intent intent = getIntent();
@@ -98,6 +101,7 @@ public class addQR extends AppCompatActivity {
         UNDisplay.setText(UserName);
         QRScoreDisplay.setText(String.valueOf(QRScore));
         QRHexDisplay.setText(score.getQRHex());
+        QRInfo.setText(qr_str);
 
         //////////////temporary!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         GeoDisplay.setText("position");
@@ -123,7 +127,11 @@ public class addQR extends AppCompatActivity {
         add_photo.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                add_img = true;
+                if (add_img){
+                    add_img = false;
+                }else {
+                    add_img = true;
+                }
             }
         });
 
@@ -189,11 +197,12 @@ public class addQR extends AppCompatActivity {
 //                }
 
                 // check method 3
-                List<String> qr = (ArrayList<String>) user_Ref.document(UserName).get().getResult().get("QR codes");
+//                List<String> qr = (ArrayList<String>) user_Ref.document(UserName).get().getResult().get("QR codes");
+
 
 
                 // Add to user collection
-                //List<String> qr = new ArrayList<>();
+                List<String> qr = new ArrayList<>();
                 qr.add(QRHexDisplay.getText().toString());
                 HashMap<String, Object> user_qr = new HashMap<>();
                 user_qr.put("QR codes",qr);
