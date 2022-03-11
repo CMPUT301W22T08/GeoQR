@@ -37,7 +37,7 @@ public class Camera_V2 extends AppCompatActivity {
         };
 
         if (!camPermission(this, permissions)) {
-            // Toast.makeText(this, "Camera Permission Needed", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Camera Permission Needed", Toast.LENGTH_LONG).show();
             ActivityCompat.requestPermissions(this, permissions, permission_all);
         }
         else {
@@ -52,7 +52,7 @@ public class Camera_V2 extends AppCompatActivity {
         mCodeScanner.setAutoFocusEnabled(true);
         mCodeScanner.setFormats(CodeScanner.ALL_FORMATS);
         mCodeScanner.setScanMode(ScanMode.CONTINUOUS);
-        mCodeScanner.setFlashEnabled(true);
+        // mCodeScanner.setFlashEnabled(true);
 
         // mCodeScanner.startPreview();
 
