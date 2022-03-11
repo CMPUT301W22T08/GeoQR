@@ -20,9 +20,8 @@ public class DatabaseQR extends AppCompatActivity {
     FirebaseFirestore db;
     CollectionReference user_ref;
     CollectionReference QR_ref;
-    private String UserID, QRCodeID;
+    private String UserID, QRCodeID, Geo;
     private String userID, userName, QRScore;
-    // private Integer QRScore;
     ArrayList<Integer> tempIntArray = new ArrayList<>();
     ArrayList<String> tempStringArray = new ArrayList<>();
 
@@ -41,6 +40,14 @@ public class DatabaseQR extends AppCompatActivity {
 
     public void setQR(String QRCodeID) {
         this.QRCodeID = QRCodeID;
+    }
+
+    public void setGeo(String Geo) {
+        this.Geo = Geo;
+    }
+
+    public String getGeo() {
+        return this.Geo;
     }
 
     // going to test if addOnComplete or addOnSuccess is more suitable

@@ -110,9 +110,6 @@ public class Camera_V2 extends AppCompatActivity {
         mCodeScanner.setAutoFocusEnabled(true);
         mCodeScanner.setFormats(CodeScanner.ALL_FORMATS);
         mCodeScanner.setScanMode(ScanMode.CONTINUOUS);
-        // mCodeScanner.setFlashEnabled(true);
-
-        // mCodeScanner.startPreview();
 
         mCodeScanner.setDecodeCallback(new DecodeCallback() {
             @Override
