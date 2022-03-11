@@ -204,4 +204,9 @@ public class addQR extends AppCompatActivity {
         Intent camera = new Intent(addQR.this, Camera.class);
         startActivity(camera);
     }
+
+    // testing purpose
+    public byte[] getarray(){
+        return qr_byte;
+    }
 }
