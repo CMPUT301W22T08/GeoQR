@@ -117,7 +117,7 @@ public class addQR extends AppCompatActivity {
 
 
 
-        String s = score.getHex_result();
+        String s = score.getQRHex();
 
         // define for add to database
         final CollectionReference user_Ref = db.collection("Users");
@@ -146,9 +146,9 @@ public class addQR extends AppCompatActivity {
                 data_qr.put("Score",QRScore);
                 data_qr.put("User",user);
 
-                // ID: score.getHex_result(),
+                // ID: score.getQRHex(),
                 // add new doc/ override existing
-                QR_ref.document(score.getHex_result()).set(data_qr,SetOptions.merge())
+                QR_ref.document(score.getQRHex()).set(data_qr,SetOptions.merge())
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
@@ -167,8 +167,8 @@ public class addQR extends AppCompatActivity {
 //                // update list
                 // all not work
                 // check method 1
-//                QR_ref.document(score.getHex_result()).update("Locations", FieldValue.arrayUnion(GeoDisplay.getText().toString()));
-//                QR_ref.document(score.getHex_result()).update("Users", FieldValue.arrayUnion(UserName));
+//                QR_ref.document(score.getQRHex()).update("Locations", FieldValue.arrayUnion(GeoDisplay.getText().toString()));
+//                QR_ref.document(score.getQRHex()).update("Users", FieldValue.arrayUnion(UserName));
 //
                 // check method 2
 //                QR_code_ref.get().addOnCompleteListener(@NonNull Task<DocumentSnapshot> task){
