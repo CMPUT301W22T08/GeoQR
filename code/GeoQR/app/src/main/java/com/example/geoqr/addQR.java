@@ -164,11 +164,12 @@ public class addQR extends AppCompatActivity {
                             }
                         });
 
-//                // update list
+//                // check if document exist
                 // all not work
                 // check method 1
 //                QR_ref.document(score.getQRHex()).update("Locations", FieldValue.arrayUnion(GeoDisplay.getText().toString()));
 //                QR_ref.document(score.getQRHex()).update("Users", FieldValue.arrayUnion(UserName));
+                // raise error and use try
 //
                 // check method 2
 //                QR_code_ref.get().addOnCompleteListener(@NonNull Task<DocumentSnapshot> task){
@@ -176,7 +177,7 @@ public class addQR extends AppCompatActivity {
 //                }
 
                 // check method 3
-//                List<String> qr = user_Ref.document(UserName).get().getResult().get("QR codes");
+//                List<String> qr = (List<String>) user_Ref.document(UserName).get().getResult().get("QR codes");
 
 
                 // Add to user collection
