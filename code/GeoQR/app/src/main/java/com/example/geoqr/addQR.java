@@ -106,11 +106,19 @@ public class addQR extends AppCompatActivity {
         add_geo.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                add_g = true;
+                if (add_g){
+                    add_g = false;
+                    GeoDisplay.setText("defult");
+                }else{
+                    add_g = true;
+                    GeoDisplay.setText("current");
+                }
+
                 // somehow get the location object form other class
                 // GeoDisplay.setText("the return string");
             }
         });
+
         // get if user wants to add the image or not
         add_photo.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -181,11 +189,11 @@ public class addQR extends AppCompatActivity {
 //                }
 
                 // check method 3
-//                List<String> qr = (List<String>) user_Ref.document(UserName).get().getResult().get("QR codes");
+                List<String> qr = (ArrayList<String>) user_Ref.document(UserName).get().getResult().get("QR codes");
 
 
                 // Add to user collection
-                List<String> qr = new ArrayList<>();
+                //List<String> qr = new ArrayList<>();
                 qr.add(QRHexDisplay.getText().toString());
                 HashMap<String, Object> user_qr = new HashMap<>();
                 user_qr.put("QR codes",qr);

@@ -35,6 +35,6 @@ public class Test_calcScore {
         z.find_hex_cont();
         z.find_total();
 
-        assertEquals(15,(int)z.find_total());
+        assertEquals(19,(int)z.find_total());
     }
 }
