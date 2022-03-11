@@ -22,20 +22,21 @@ public class CalculateScore{
     ArrayList<String> continuous;
 
 
-    public CalculateScore(byte[] qr){
-        this.qr_byte = qr;
+    public CalculateScore(String qr){
+        //this.qr_byte = qr;
+        this.Result = qr;
     }
 
-    public void byteArray_to_Result(){
-        Result result = null;
-
-        // array byte to bitmap
-        // https://stackoverflow.com/questions/13854742/byte-array-of-image-into-imageview
-        bmp = BitmapFactory.decodeByteArray(qr_byte, 0, qr_byte.length);
-
-        // array byte to string result
-        Result = new String(qr_byte, StandardCharsets.UTF_8); // for UTF-8 encoding
-    }
+//    public void byteArray_to_Result(){
+//        Result result = null;
+//
+//        // array byte to bitmap
+//        // https://stackoverflow.com/questions/13854742/byte-array-of-image-into-imageview
+//        bmp = BitmapFactory.decodeByteArray(qr_byte, 0, qr_byte.length);
+//
+//        // array byte to string result
+//        Result = new String(qr_byte, StandardCharsets.UTF_8); // for UTF-8 encoding
+//    }
 
     public void Result_to_hexResult(){
         // hash result to hex
@@ -76,7 +77,7 @@ public class CalculateScore{
 
     public Integer find_total(){
         // to get the above pre-condition so can get result
-        byteArray_to_Result();
+        // byteArray_to_Result();
         Result_to_hexResult();
         find_hex_cont();
 
@@ -122,8 +123,8 @@ public class CalculateScore{
         return hex_result;
     }
 
-    public Bitmap getBitmap(){
-        return bmp;
-    }
+//    public Bitmap getBitmap(){
+//        return bmp;
+//    }
 
 }

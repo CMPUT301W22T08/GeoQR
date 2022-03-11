@@ -13,17 +13,17 @@ import java.net.URL;
 
 public class Test_calcScore {
     private CalculateScore test(){
-        String url = "https://chart.googleapis.com/chart?cht=qr&chl=BFG5DGW54&chs=180x180&choe=UTF-8&chld=L|2";
-        byte[] fileContent = new byte[0];
-        try {
-            fileContent = IOUtils.toByteArray(new URL(url));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-//
-//        PowerMockito.mockStatic(testScore.class);
+//        String url = "https://chart.googleapis.com/chart?cht=qr&chl=BFG5DGW54&chs=180x180&choe=UTF-8&chld=L|2";
+//        byte[] fileContent = new byte[0];
+//        try {
+//            fileContent = IOUtils.toByteArray(new URL(url));
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+////
+////        PowerMockito.mockStatic(testScore.class);
 
-        CalculateScore c = new CalculateScore(fileContent);
+        CalculateScore c = new CalculateScore("BFG5DGW54");
         return c;
     }
 

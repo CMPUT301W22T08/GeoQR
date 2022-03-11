@@ -44,7 +44,7 @@ public class addQR extends AppCompatActivity {
     private Boolean add_g = false;
 
     // Define variables that's related with external links like db/intent
-    private byte[] qr_byte;
+    private String qr_str;
     private CalculateScore score;
     FirebaseFirestore db;
 
@@ -78,16 +78,20 @@ public class addQR extends AppCompatActivity {
 
         // Call from Camera class
         Intent intent = getIntent();
-        qr_byte = intent.getByteArrayExtra("image");
+        qr_str = intent.getStringExtra("content");
+//        qr_byte = intent.getByteArrayExtra("image");
+
         //UserName = intent.getDataString("");
         //////////////temporary!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         UserName = "I";
+
+
+//        DatabaseQR q
 //        Bundle bundle = intent.getBundleExtra("");
-//        UserName = bundle.getString("");
 //        qr_byte = bundle.getByteArray("image");
 
         //Calculate score
-        score = new CalculateScore(qr_byte);
+        score = new CalculateScore(qr_str);
         QRScore = score.find_total();
 
         // Set text on display
@@ -207,7 +211,5 @@ public class addQR extends AppCompatActivity {
     }
 
     // testing purpose
-    public byte[] getarray(){
-        return qr_byte;
-    }
+
 }
