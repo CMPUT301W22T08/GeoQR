@@ -1,12 +1,14 @@
 package com.example.geoqr;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -25,12 +27,14 @@ public class Camera_V2 extends AppCompatActivity {
     private CodeScannerView scannerView;
     float x1, x2, y1, y2;
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.camera_v2);
 
         scannerView = findViewById(R.id.scan_view);
+        RelativeLayout cameraLayout = findViewById(R.id.camera_layout);
         int permission_all = 1;
         String[] permissions = {
                 Manifest.permission.CAMERA
@@ -43,7 +47,38 @@ public class Camera_V2 extends AppCompatActivity {
         else {
             scanCode();
         }
+
+        cameraLayout.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                switch (motionEvent.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        x1 = motionEvent.getX();
+                        y1 = motionEvent.getY();
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        x2 = motionEvent.getX();
+                        y2 = motionEvent.getY();
+                        if (x1 < x2) {
+                            Intent left = new Intent(Camera_V2.this, MainActivity.class);
+                            startActivity(left);
+                            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+                        }
+                        else if (x1 > x2) {
+                            Intent right = new Intent(Camera_V2.this, MainActivity.class);
+                            startActivity(right);
+                            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                        }
+                        break;
+                }
+                return false;
+            }
+        });
+
+
     }
+
+
 
     public boolean onTouchEvent(MotionEvent touchEvent) {
 
