@@ -26,7 +26,7 @@ public class CalculateScore{
         this.qr_byte = qr;
     }
 
-    private void byteArray_to_Result(){
+    public void byteArray_to_Result(){
         Result result = null;
 
         // array byte to bitmap
@@ -37,7 +37,7 @@ public class CalculateScore{
         Result = new String(qr_byte, StandardCharsets.UTF_8); // for UTF-8 encoding
     }
 
-    private void Result_to_hexResult(){
+    public void Result_to_hexResult(){
         // hash result to hex
         // https://stackoverflow.com/questions/5531455/how-to-hash-some-string-with-sha256-in-java
         hex_result = Hashing.sha256()
@@ -50,7 +50,7 @@ public class CalculateScore{
 
     }
 
-    private void find_hex_cont(){
+    public void find_hex_cont(){
         char prev = ' ';
         char prev_inList = ' ';
         int index = 0;
@@ -126,7 +126,4 @@ public class CalculateScore{
         return bmp;
     }
 
-    public String getHex_result() {
-        return hex_result;
-    }
 }
