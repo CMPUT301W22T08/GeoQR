@@ -118,7 +118,7 @@ public class addQR extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if (add_g){
                     add_g = false;
-                    GeoDisplay.setText("defult");
+                    GeoDisplay.setText("default");
                 }else{
                     add_g = true;
                     GeoDisplay.setText("current");
@@ -310,7 +310,7 @@ public class addQR extends AppCompatActivity {
     }
 
     private void goBack(){
-        Intent camera = new Intent(addQR.this, Camera.class);
+        Intent camera = new Intent(addQR.this, Camera_test.class);
         startActivity(camera);
     }
 
