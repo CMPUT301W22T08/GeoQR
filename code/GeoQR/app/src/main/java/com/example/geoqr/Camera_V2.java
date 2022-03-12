@@ -34,7 +34,6 @@ public class Camera_V2 extends AppCompatActivity {
         setContentView(R.layout.camera_v2);
 
         scannerView = findViewById(R.id.scan_view);
-        RelativeLayout cameraLayout = findViewById(R.id.camera_layout);
         int permission_all = 1;
         String[] permissions = {
                 Manifest.permission.CAMERA
@@ -48,7 +47,7 @@ public class Camera_V2 extends AppCompatActivity {
             scanCode();
         }
 
-        cameraLayout.setOnTouchListener(new View.OnTouchListener() {
+        scannerView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 switch (motionEvent.getAction()) {
