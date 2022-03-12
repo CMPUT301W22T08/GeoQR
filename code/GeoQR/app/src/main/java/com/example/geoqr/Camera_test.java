@@ -29,7 +29,6 @@ import android.view.TextureView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -51,6 +50,7 @@ public class Camera_test extends AppCompatActivity {
     private static final int REQUEST_CAMERA_PERMISSION = 0;
     public String content;
     private CodeScannerView scannerView;
+
     float x1, x2, y1, y2;
     int width = 480;
     int height = 480;
@@ -105,31 +105,32 @@ public class Camera_test extends AppCompatActivity {
         setContentView(R.layout.camera_v2);
 
 
-
-
         cam = findViewById(R.id.cameraView);
-        Button btn = findViewById(R.id.scan_btn);
-
-
-
-
 
         scannerView = findViewById(R.id.scan_view);
-        LinearLayout cameraLayout = findViewById(R.id.camera_layout);
-        int permission_all = 1;
-        String[] permissions = {
-                Manifest.permission.CAMERA
-        };
+        // LinearLayout cameraLayout = findViewById(R.id.camera_layout);
+//        int permission_all = 1;
+//        String[] permissions = {
+//                Manifest.permission.CAMERA
+//        };
+//
+//        if (!camPermission(this, permissions)) {
+//            ActivityCompat.requestPermissions(this, permissions, permission_all);
+//        }
+//        else {
+//            scanCode();
+//        }
 
-        if (!camPermission(this, permissions)) {
-            Toast.makeText(this, "Camera Permission Needed", Toast.LENGTH_LONG).show();
-            ActivityCompat.requestPermissions(this, permissions, permission_all);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,new String[] {
+                    Manifest.permission.CAMERA}, REQUEST_CAMERA_PERMISSION);
+            return;
         }
         else {
             scanCode();
         }
 
-        cameraLayout.setOnTouchListener(new View.OnTouchListener() {
+        scannerView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 switch (motionEvent.getAction()) {
@@ -158,8 +159,6 @@ public class Camera_test extends AppCompatActivity {
 
 
     }
-
-
 
     public boolean onTouchEvent(MotionEvent touchEvent) {
 
@@ -277,7 +276,6 @@ public class Camera_test extends AppCompatActivity {
 
             // Capture image with custom size
 
-
             if (jpegSizes != null && jpegSizes.length > 0) {
                 width = jpegSizes[0].getWidth();
                 height = jpegSizes[0].getHeight();
@@ -338,7 +336,7 @@ public class Camera_test extends AppCompatActivity {
                 }
 
                 @Override
-                public void onConfigureFailed (@NonNull CameraCaptureSession cameraCaptureSession) {
+                public void onConfigureFailed(@NonNull CameraCaptureSession cameraCaptureSession) {
                 }
             }, bgHandler);
 
