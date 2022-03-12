@@ -294,7 +294,7 @@ public class addQR extends AppCompatActivity {
 //                        }
 //                    }
 //                });
-                
+
 //                user_Ref.document(UserName).update("QR codes", FieldValue.arrayUnion(QRHexDisplay.getText().toString()));
 //                //update user image collection?
 
