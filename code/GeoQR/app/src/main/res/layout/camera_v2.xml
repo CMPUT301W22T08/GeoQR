@@ -1,18 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/camera_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:clickable="true"
-    android:focusable="true"
-    android:focusableInTouchMode="true" >
+    android:orientation="vertical" >
 
 
     <com.budiyev.android.codescanner.CodeScannerView
         android:id="@+id/scan_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:clickable="true"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
         app:autoFocusButtonColor="@color/white"
         app:autoFocusButtonVisible="false"
         app:flashButtonColor="@color/white"
@@ -26,4 +28,11 @@
         app:frameThickness="2dp"
         app:maskColor="@color/black" />
 
-</RelativeLayout>
+    <TextureView
+        android:id="@+id/cameraView"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+
+</LinearLayout>

@@ -28,6 +28,7 @@ import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -101,7 +102,6 @@ public class Camera_test extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.camera);
         setContentView(R.layout.camera_v2);
 
 
@@ -115,7 +115,7 @@ public class Camera_test extends AppCompatActivity {
 
 
         scannerView = findViewById(R.id.scan_view);
-        RelativeLayout cameraLayout = findViewById(R.id.camera_layout);
+        LinearLayout cameraLayout = findViewById(R.id.camera_layout);
         int permission_all = 1;
         String[] permissions = {
                 Manifest.permission.CAMERA
