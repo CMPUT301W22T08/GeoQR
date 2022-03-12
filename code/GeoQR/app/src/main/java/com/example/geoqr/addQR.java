@@ -4,6 +4,7 @@ import static android.content.ContentValues.TAG;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
@@ -46,7 +47,7 @@ public class addQR extends AppCompatActivity {
 
     // Define variables that's related with external links like db/intent
     private String qr_str;
-    private byte[] qr_img;
+    private Bitmap qr_img;
     private CalculateScore score;
     FirebaseFirestore db;
 
@@ -83,8 +84,10 @@ public class addQR extends AppCompatActivity {
 
         // Call from Camera class
         Intent intent = getIntent();
-        qr_str = intent.getStringExtra("content");
-        qr_img = intent.getByteArrayExtra("bytes");
+        Bundle b = intent.getExtras();
+
+        qr_str = b.getString("content");
+        qr_img = b.getParcelable("bitmap");
 //        qr_byte = intent.getByteArrayExtra("image");
 
         //UserName = intent.getDataString("");
