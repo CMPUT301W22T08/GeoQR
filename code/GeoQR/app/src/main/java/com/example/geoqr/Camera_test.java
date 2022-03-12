@@ -6,15 +6,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.hardware.camera2.CameraCaptureSession;
-import android.hardware.camera2.CameraDevice;
-import android.hardware.camera2.CaptureRequest;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.HandlerThread;
-import android.util.Size;
 import android.view.MotionEvent;
-import android.view.TextureView;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -95,6 +88,18 @@ public class Camera_test extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mCodeScanner.startPreview();
+    }
+
+    @Override
+    protected void onPause() {
+        mCodeScanner.releaseResources();
+        super.onPause();
+    }
+
     private void scanCode() {
         mCodeScanner = new CodeScanner(this, scannerView);
         mCodeScanner.setAutoFocusEnabled(true);
@@ -132,18 +137,6 @@ public class Camera_test extends AppCompatActivity {
         catch (Throwable e) {
             e.printStackTrace();
         }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        mCodeScanner.startPreview();
-    }
-
-    @Override
-    protected void onPause() {
-        mCodeScanner.releaseResources();
-        super.onPause();
     }
 
 
