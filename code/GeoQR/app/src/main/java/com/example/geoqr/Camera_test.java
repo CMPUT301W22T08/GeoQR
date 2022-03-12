@@ -105,13 +105,13 @@ public class Camera_test extends AppCompatActivity {
         setContentView(R.layout.camera_v2);
 
 
+
+
         cam = findViewById(R.id.cameraView);
         Button btn = findViewById(R.id.scan_btn);
 
-        cam.setVisibility(View.GONE);
-        btn.setVisibility(View.GONE);
 
-        assert cam != null;
+
 
 
         scannerView = findViewById(R.id.scan_view);
