@@ -12,14 +12,20 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Username"
-        android:textSize="35sp"
+        android:textSize="40sp"
         android:paddingTop="20dp"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:text="Generate\nLogin QR" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:gravity="center">
+        android:gravity="center"
+        android:paddingTop="20dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -40,7 +46,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:textSize="20sp"
-                android:text="2000"/>
+                android:text="2000"
+                android:paddingTop="3dp"/>
 
         </LinearLayout>
 
@@ -69,7 +76,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:textSize="20sp"
-                    android:text="1000"/>
+                    android:text="1000"
+                    android:paddingTop="3dp"/>
             </LinearLayout>
 
             <LinearLayout
@@ -96,10 +104,87 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:textSize="20sp"
-                        android:text="3000"/>
+                        android:text="3000"
+                        android:paddingTop="3dp"/>
 
                 </LinearLayout>
             </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center">
+
+                    <TextView
+                        android:id="@+id/state_codes"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:text="Number of codes: "
+                        android:textSize="20sp"
+                        android:paddingTop="3dp"/>
+                    <TextView
+                        android:id="@+id/total_codes"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:textSize="20sp"
+                        android:text="10"
+                        android:paddingTop="3dp"/>
+
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:paddingTop="25dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="Content"
+                    android:layout_marginRight="20dp"
+                    android:textSize="22sp"
+                    android:paddingLeft="20dp">
+                </TextView>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="Score"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginLeft="15dp"
+                    android:textSize="22sp">
+                </TextView>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="Location"
+                    android:layout_marginRight="20dp"
+                    android:textSize="22sp">
+                </TextView>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="Time"
+                    android:layout_marginRight="20dp"
+                    android:textSize="22sp">
+                </TextView>
+            </LinearLayout>
+
         </LinearLayout>
+
+        <ListView
+            android:id="@+id/profile_list"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"/>
     </LinearLayout>
 </LinearLayout>
