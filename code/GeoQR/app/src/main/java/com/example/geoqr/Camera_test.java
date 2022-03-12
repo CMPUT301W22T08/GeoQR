@@ -342,8 +342,12 @@ public class Camera_test extends AppCompatActivity {
     private void calculateScore() {
         Intent calScore = new Intent(Camera_test.this, addQR.class);
         takeScreenShot();
-        calScore.putExtra("content", content);
-        calScore.putExtra("bitmap", bitmap);
+        Bundle bundle = new Bundle();
+        bundle.putParcelable("bitmap", bitmap);
+        bundle.putString("content", content);
+        // calScore.putExtra("content", content);
+        // calScore.putExtra("bitmap", bitmap);
+        calScore.putExtras(bundle);
         startActivity(calScore);
     }
 
