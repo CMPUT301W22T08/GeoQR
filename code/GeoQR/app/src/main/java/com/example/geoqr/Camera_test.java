@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.ImageFormat;
 import android.graphics.SurfaceTexture;
 import android.hardware.camera2.CameraAccessException;
@@ -19,6 +20,7 @@ import android.hardware.camera2.params.StreamConfigurationMap;
 import android.media.Image;
 import android.media.ImageReader;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.util.Size;
@@ -50,6 +52,7 @@ public class Camera_test extends AppCompatActivity {
     private static final int REQUEST_CAMERA_PERMISSION = 0;
     public String content;
     private CodeScannerView scannerView;
+    Bitmap bitmap;
 
     float x1, x2, y1, y2;
     int width = 480;
@@ -104,9 +107,7 @@ public class Camera_test extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.camera_v2);
 
-
         cam = findViewById(R.id.cameraView);
-
         scannerView = findViewById(R.id.scan_view);
         // LinearLayout cameraLayout = findViewById(R.id.camera_layout);
 //        int permission_all = 1;
@@ -160,29 +161,16 @@ public class Camera_test extends AppCompatActivity {
 
     }
 
-    public boolean onTouchEvent(MotionEvent touchEvent) {
-
-        switch (touchEvent.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                x1 = touchEvent.getX();
-                y1 = touchEvent.getY();
-                break;
-            case MotionEvent.ACTION_UP:
-                x2 = touchEvent.getX();
-                y2 = touchEvent.getY();
-                if (x1 < x2) {
-                    Intent left = new Intent(Camera_test.this, MainActivity.class);
-                    startActivity(left);
-                    overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
-                }
-                else if (x1 > x2) {
-                    Intent right = new Intent(Camera_test.this, MainActivity.class);
-                    startActivity(right);
-                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-                }
-                break;
+    private void takeScreenShot() {
+        try {
+            View view = getWindow().getDecorView().getRootView();
+            view.setDrawingCacheEnabled(true);
+            bitmap = Bitmap.createBitmap(view.getDrawingCache());
+            view.setDrawingCacheEnabled(false);
         }
-        return false;
+        catch (Throwable e) {
+            e.printStackTrace();
+        }
     }
 
     private void scanCode() {
@@ -353,9 +341,9 @@ public class Camera_test extends AppCompatActivity {
 
     private void calculateScore() {
         Intent calScore = new Intent(Camera_test.this, addQR.class);
-        scanPicture();
+        takeScreenShot();
         calScore.putExtra("content", content);
-        calScore.putExtra("bytes", bytes);
+        calScore.putExtra("bitmap", bitmap);
         startActivity(calScore);
     }
 
