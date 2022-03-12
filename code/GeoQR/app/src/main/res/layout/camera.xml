@@ -19,8 +19,6 @@
         android:layout_alignParentBottom="true"
         android:text="@string/scan_hint"
         android:visibility="gone"/>
-<!--    hard codded here-->
-<!--        android:text="@string/scan_hint"-->
 
 
 </RelativeLayout>

@@ -6,14 +6,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-
-    <TextureView
-        android:id="@+id/cameraView"
-        android:visibility="visible"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
-
     <com.budiyev.android.codescanner.CodeScannerView
         android:id="@+id/scan_view"
         android:layout_width="match_parent"
@@ -33,6 +25,5 @@
         app:frameSize="0.75"
         app:frameThickness="2dp"
         app:maskColor="@color/black" />
-
 
 </LinearLayout>
