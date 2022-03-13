@@ -2,45 +2,33 @@ package com.example.geoqr;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Toast;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContract;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import com.budiyev.android.codescanner.*;
+import com.budiyev.android.codescanner.CodeScanner;
+import com.budiyev.android.codescanner.CodeScannerView;
+import com.budiyev.android.codescanner.DecodeCallback;
+import com.budiyev.android.codescanner.ScanMode;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.zxing.Result;
-import com.google.zxing.integration.android.IntentIntegrator;
-import com.google.zxing.integration.android.IntentResult;
-
-import java.io.ByteArrayOutputStream;
 
 // CLASS TO BE TESTED
 public class Camera_V2 extends AppCompatActivity {
 
     private CodeScanner mCodeScanner;
-    // private static final int REQUEST_CAMERA_PERMISSION = 0;
     private static final int CAMERA_PERMISSION_CODE = 10;
     public String content;
     private CodeScannerView scannerView;
     float x1, x2, y1, y2;
-    Bitmap bitmap, btm;
-    byte[] bytes, byte_test;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -114,11 +102,7 @@ public class Camera_V2 extends AppCompatActivity {
                 return false;
             }
         });
-
-
     }
-
-
 
     private void scanCode() {
         mCodeScanner = new CodeScanner(this, scannerView);
@@ -134,11 +118,7 @@ public class Camera_V2 extends AppCompatActivity {
                     @Override
                     public void run() {
 
-                        IntentIntegrator intentIntegrator = new IntentIntegrator(Camera_V2.this);
-                        intentIntegrator.setBarcodeImageEnabled(true);
-
                         content = result.getText();
-
                         // to be tested
 //                        screenShot();
 //                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
@@ -160,47 +140,32 @@ public class Camera_V2 extends AppCompatActivity {
         });
     }
 
-//    ActivityResultLauncher<Intent> test = registerForActivityResult(
-//            new ActivityResultContracts.StartActivityForResult(),
-//            new ActivityResultCallback<ActivityResult>() {
-//                @Override
-//                public void onActivityResult(ActivityResult result) {
-//                    if (result.getResultCode() == Activity.RESULT_OK) {
-//                        Intent data = result.getData();
-//                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-//                        btm.compress(Bitmap.CompressFormat.PNG, 100, stream);
-//                        byte_test = stream.toByteArray();
-//                    }
-//                }
-//            }
-//    );
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+//        if (result != null) {
+//            btm = (Bitmap) data.getExtras().get("data");
+//            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+//            btm.compress(Bitmap.CompressFormat.PNG, 100, stream);
+//            byte_test = stream.toByteArray();
+//        }
+//        else {
+//            super.onActivityResult(requestCode, resultCode, data);
+//        }
+//    }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
-        if (result != null) {
-            btm = (Bitmap) data.getExtras().get("data");
-            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            btm.compress(Bitmap.CompressFormat.PNG, 100, stream);
-            byte_test = stream.toByteArray();
-        }
-        else {
-            super.onActivityResult(requestCode, resultCode, data);
-        }
-    }
-
-    private void screenShot() {
-        mCodeScanner.stopPreview();
-        try {
-            View view = getWindow().getDecorView().getRootView();
-            view.setDrawingCacheEnabled(true);
-            bitmap = Bitmap.createBitmap(view.getDrawingCache());
-            view.setDrawingCacheEnabled(false);
-        }
-        catch (Throwable e) {
-            e.printStackTrace();
-        }
-    }
+//    private void screenShot() {
+//        mCodeScanner.stopPreview();
+//        try {
+//            View view = getWindow().getDecorView().getRootView();
+//            view.setDrawingCacheEnabled(true);
+//            bitmap = Bitmap.createBitmap(view.getDrawingCache());
+//            view.setDrawingCacheEnabled(false);
+//        }
+//        catch (Throwable e) {
+//            e.printStackTrace();
+//        }
+//    }
 
     @Override
     protected void onResume() {
@@ -216,12 +181,7 @@ public class Camera_V2 extends AppCompatActivity {
 
     private void calculateScore() {
         Intent calScore = new Intent(Camera_V2.this, ContentTest.class);
-        Bundle bundle = new Bundle();
-        //bundle.putParcelable("bitmap", bitmap);
-        bundle.putString("content", content);
-        bundle.putByteArray("bytes", byte_test);
-        //calScore.putExtra("content", content);
-        calScore.putExtras(bundle);
+        calScore.putExtra("content", content);
         startActivity(calScore);
     }
 

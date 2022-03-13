@@ -28,6 +28,7 @@
         <activity android:name=".addQR" />
         <activity android:name=".MainActivity" />
         <activity android:name=".ContentTest" />
+        <activity android:name=".Camera" />
     </application>
 
 </manifest>

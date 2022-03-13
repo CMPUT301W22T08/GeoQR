@@ -86,41 +86,41 @@ public class Camera extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.camera);
 
-        cam = findViewById(R.id.cameraView);
+        cam = findViewById(R.id.camera_view);
         assert cam != null;
         cam.setSurfaceTextureListener(textureListener);
-        Button scan = findViewById(R.id.scan_btn);
-        scan.setOnClickListener(view -> {
-            scanPicture();
+        Button photo_btn = findViewById(R.id.photo_btn);
+        photo_btn.setOnClickListener(view -> {
+            takePhoto();
             System.out.println("Pass click");
         });
     }
 
-    public boolean onTouchEvent(MotionEvent touchEvent) {
-        switch (touchEvent.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                x1 = touchEvent.getX();
-                y1 = touchEvent.getY();
-                break;
-            case MotionEvent.ACTION_UP:
-                x2 = touchEvent.getX();
-                y2 = touchEvent.getY();
-                if (x1 < x2) {
-                    Intent left = new Intent(Camera.this, MainActivity.class);
-                    startActivity(left);
-                    overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
-                }
-                else if (x1 > x2) {
-                    Intent right = new Intent(Camera.this, MainActivity.class);
-                    startActivity(right);
-                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-                }
-                break;
-        }
-        return false;
-    }
+//    public boolean onTouchEvent(MotionEvent touchEvent) {
+//        switch (touchEvent.getAction()) {
+//            case MotionEvent.ACTION_DOWN:
+//                x1 = touchEvent.getX();
+//                y1 = touchEvent.getY();
+//                break;
+//            case MotionEvent.ACTION_UP:
+//                x2 = touchEvent.getX();
+//                y2 = touchEvent.getY();
+//                if (x1 < x2) {
+//                    Intent left = new Intent(Camera.this, MainActivity.class);
+//                    startActivity(left);
+//                    overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+//                }
+//                else if (x1 > x2) {
+//                    Intent right = new Intent(Camera.this, MainActivity.class);
+//                    startActivity(right);
+//                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+//                }
+//                break;
+//        }
+//        return false;
+//    }
 
-    private void scanPicture() {
+    private void takePhoto() {
         if (cameraDevice == null) {
             return;
         }
@@ -206,10 +206,6 @@ public class Camera extends AppCompatActivity {
         catch (CameraAccessException e) {
             e.printStackTrace();
         }
-    }
-
-    public boolean checkCamera(Context context) {
-        return context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY);
     }
 
     private void start(byte[] bytes) {
