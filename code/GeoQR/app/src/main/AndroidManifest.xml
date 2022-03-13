@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.GeoQR">
         <activity
-            android:name=".ProfilePage"
+            android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -19,12 +19,12 @@
             </intent-filter>
         </activity>
 
-<!--        <activity-->
-<!--            android:name=".ProfilePage"-->
-<!--            android:parentActivityName=".HomeScreen" />-->
-<!--            <meta-data-->
-<!--                android:name="android.support.PARENT_ACTIVITY"-->
-<!--                android:value=".HomeScreen" />-->
+        <activity
+            android:name=".ProfilePage"
+            android:parentActivityName=".HomeScreen" />
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".HomeScreen" />
 
 
     </application>
