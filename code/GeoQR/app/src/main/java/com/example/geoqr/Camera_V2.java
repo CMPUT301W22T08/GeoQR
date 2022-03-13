@@ -2,6 +2,7 @@ package com.example.geoqr;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -11,6 +12,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.activity.result.contract.ActivityResultContract;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -19,6 +22,8 @@ import androidx.core.content.ContextCompat;
 import com.budiyev.android.codescanner.*;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.zxing.Result;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 
 import java.io.ByteArrayOutputStream;
 
@@ -31,8 +36,8 @@ public class Camera_V2 extends AppCompatActivity {
     public String content;
     private CodeScannerView scannerView;
     float x1, x2, y1, y2;
-    Bitmap bitmap;
-    byte[] bytes;
+    Bitmap bitmap, btm;
+    byte[] bytes, byte_test;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -106,7 +111,11 @@ public class Camera_V2 extends AppCompatActivity {
                 return false;
             }
         });
+
+
     }
+
+
 
     private void scanCode() {
         mCodeScanner = new CodeScanner(this, scannerView);
@@ -122,6 +131,9 @@ public class Camera_V2 extends AppCompatActivity {
                     @Override
                     public void run() {
 
+                        IntentIntegrator intentIntegrator = new IntentIntegrator(Camera_V2.this);
+                        intentIntegrator.setBarcodeImageEnabled(true);
+
                         content = result.getText();
 
                         // to be tested
@@ -136,12 +148,27 @@ public class Camera_V2 extends AppCompatActivity {
             }
         });
 
+
         scannerView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mCodeScanner.startPreview();
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        if (result != null) {
+            btm = (Bitmap) data.getExtras().get("data");
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            btm.compress(Bitmap.CompressFormat.PNG, 100, stream);
+            byte_test = stream.toByteArray();
+        }
+        else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
     }
 
     private void screenShot() {
@@ -174,7 +201,7 @@ public class Camera_V2 extends AppCompatActivity {
         Bundle bundle = new Bundle();
         //bundle.putParcelable("bitmap", bitmap);
         bundle.putString("content", content);
-        bundle.putByteArray("bytes", bytes);
+        bundle.putByteArray("bytes", byte_test);
         //calScore.putExtra("content", content);
         calScore.putExtras(bundle);
         startActivity(calScore);
