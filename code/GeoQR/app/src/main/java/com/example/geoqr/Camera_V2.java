@@ -12,6 +12,9 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContract;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
@@ -133,15 +136,14 @@ public class Camera_V2 extends AppCompatActivity {
 
                         IntentIntegrator intentIntegrator = new IntentIntegrator(Camera_V2.this);
                         intentIntegrator.setBarcodeImageEnabled(true);
-                        intentIntegrator.initiateScan();
 
                         content = result.getText();
 
                         // to be tested
-                        screenShot();
-                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-                        bytes = stream.toByteArray();
+//                        screenShot();
+//                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+//                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+//                        bytes = stream.toByteArray();
 
                         calculateScore();
                     }
@@ -157,6 +159,21 @@ public class Camera_V2 extends AppCompatActivity {
             }
         });
     }
+
+//    ActivityResultLauncher<Intent> test = registerForActivityResult(
+//            new ActivityResultContracts.StartActivityForResult(),
+//            new ActivityResultCallback<ActivityResult>() {
+//                @Override
+//                public void onActivityResult(ActivityResult result) {
+//                    if (result.getResultCode() == Activity.RESULT_OK) {
+//                        Intent data = result.getData();
+//                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+//                        btm.compress(Bitmap.CompressFormat.PNG, 100, stream);
+//                        byte_test = stream.toByteArray();
+//                    }
+//                }
+//            }
+//    );
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
