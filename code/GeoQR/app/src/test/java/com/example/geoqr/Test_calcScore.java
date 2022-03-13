@@ -1,12 +1,15 @@
 package com.example.geoqr;
 
-import org.junit.jupiter.api.Test;
+import org.junit.*;
+//import org.junit.jupiter.api.Test;
+
+import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.google.firebase.crashlytics.buildtools.reloc.org.apache.commons.io.IOUtils;
 
-import org.junit.jupiter.api.Test;
+//import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.net.URL;
@@ -28,7 +31,7 @@ public class Test_calcScore {
     }
 
     @Test
-    void tests(){
+    public void tests(){
         CalculateScore z = test();
         //z.byteArray_to_Result();
         z.Result_to_hexResult();
