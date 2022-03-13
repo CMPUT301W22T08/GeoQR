@@ -10,6 +10,8 @@ buildscript {
     dependencies {
         // Add this line
         classpath 'com.google.gms:google-services:4.3.10'
+        // for map functionality
+        classpath "com.google.android.libraries.mapsplatform.secrets-gradle-plugin:secrets-gradle-plugin:2.0.0"
 
     }
 }
@@ -17,6 +19,7 @@ buildscript {
 plugins {
     id 'com.android.application' version '7.1.1' apply false
     id 'com.android.library' version '7.1.1' apply false
+    id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin' version '2.0.1' apply false
 }
 
 
