@@ -133,6 +133,7 @@ public class Camera_V2 extends AppCompatActivity {
 
                         IntentIntegrator intentIntegrator = new IntentIntegrator(Camera_V2.this);
                         intentIntegrator.setBarcodeImageEnabled(true);
+                        intentIntegrator.initiateScan();
 
                         content = result.getText();
 
