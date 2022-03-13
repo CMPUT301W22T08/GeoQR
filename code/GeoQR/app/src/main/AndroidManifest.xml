@@ -34,7 +34,7 @@
             android:exported="false"
             android:label="@string/title_activity_map" />
         <activity
-            android:name=".HomeScreen"
+            android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

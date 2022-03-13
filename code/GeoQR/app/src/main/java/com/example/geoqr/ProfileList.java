@@ -29,6 +29,13 @@ public class ProfileList extends ArrayAdapter<ListEntry> {
         this.context = context;
     }
 
+    /*
+     * ADD SORT FUNCTIONALITY
+     *
+     */
+
+
+
     @NonNull
     @Override
     public View getView(final int position, @Nullable View convertView, @NonNull ViewGroup parent) {
