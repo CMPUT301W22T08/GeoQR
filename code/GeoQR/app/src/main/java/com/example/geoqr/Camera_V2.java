@@ -48,20 +48,28 @@ public class Camera_V2 extends AppCompatActivity {
 //                Manifest.permission.CAMERA
 //        };
 
-        int check = 0;
-        for (int i = 0; ; i++ ) {
-            if (check == 3) {
-                Toast.makeText(this, "Camera Permission Needed", Toast.LENGTH_LONG).show();
-                finish();
-                break;
-            }
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED) {
-                check++;
-                ActivityCompat.requestPermissions(this, new String[] { Manifest.permission.CAMERA }, CAMERA_PERMISSION_CODE);
-            }
-            else {
-                scanCode();
-            }
+//        int check = 0;
+//        for (int i = 0; ; i++ ) {
+//            if (check == 3) {
+//                Toast.makeText(this, "Camera Permission Needed", Toast.LENGTH_LONG).show();
+//                finish();
+//                break;
+//            }
+//            if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED) {
+//                check++;
+//                ActivityCompat.requestPermissions(this, new String[] { Manifest.permission.CAMERA }, CAMERA_PERMISSION_CODE);
+//            }
+//            else {
+//                scanCode();
+//                break;
+//            }
+//        }
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED) {
+            ActivityCompat.requestPermissions(this, new String[] { Manifest.permission.CAMERA }, CAMERA_PERMISSION_CODE);
+        }
+        else {
+            scanCode();
         }
 
         profile_btn.setOnClickListener(new View.OnClickListener() {

@@ -109,5 +109,5 @@ public class DatabaseQR extends AppCompatActivity {
         return tempStringArray;
     }
     // 这后面应该还需要call什么然后db才能更新
-    
+
 }
