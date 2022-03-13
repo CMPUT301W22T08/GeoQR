@@ -39,13 +39,6 @@ public class DatabaseQR extends AppCompatActivity {
         this.QRCodeID = QRCodeID;
     }
 
-    public void setGeo(String Geo) {
-        this.Geo = Geo;
-    }
-
-    public String getGeo() {
-        return this.Geo;
-    }
 
     // going to test if addOnComplete or addOnSuccess is more suitable
     public String getUserID() {
@@ -112,19 +105,9 @@ public class DatabaseQR extends AppCompatActivity {
     }
 
     // to be written
-    public ArrayList<Integer> getGeoList() {
-        return tempIntArray;
-    }
-    // 这后面应该还需要call什么然后db才能更新
-
-    // to be written
     public ArrayList<String> getUserList() {
         return tempStringArray;
     }
     // 这后面应该还需要call什么然后db才能更新
-
-
-
-
-
+    
 }
