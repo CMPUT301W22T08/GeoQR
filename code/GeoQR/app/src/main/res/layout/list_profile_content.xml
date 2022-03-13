@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:orientation="horizontal"
+    android:paddingTop="30dp">
+
+    <TextView
+        android:id="@+id/pl_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:layout_marginRight="25dp"
+        android:paddingLeft="20dp">
+    </TextView>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/pl_score"
+        android:textSize="20sp"
+        android:layout_marginRight="25dp">
+    </TextView>
+
+    <TextView
+        android:id="@+id/pl_location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="15dp"
+        android:textSize="20sp">
+    </TextView>
+
+    <TextView
+        android:id="@+id/pl_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="15dp"
+        android:textSize="20sp">
+    </TextView>
+
+
+</LinearLayout>
