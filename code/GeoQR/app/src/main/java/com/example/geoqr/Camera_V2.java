@@ -14,8 +14,10 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.budiyev.android.codescanner.*;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.zxing.Result;
 
 import java.io.ByteArrayOutputStream;
@@ -24,7 +26,8 @@ import java.io.ByteArrayOutputStream;
 public class Camera_V2 extends AppCompatActivity {
 
     private CodeScanner mCodeScanner;
-    private static final int REQUEST_CAMERA_PERMISSION = 0;
+    // private static final int REQUEST_CAMERA_PERMISSION = 0;
+    private static final int CAMERA_PERMISSION_CODE = 10;
     public String content;
     private CodeScannerView scannerView;
     float x1, x2, y1, y2;
@@ -38,18 +41,36 @@ public class Camera_V2 extends AppCompatActivity {
         setContentView(R.layout.camera_v2);
 
         scannerView = findViewById(R.id.scan_view);
-        int permission_all = 1;
-        String[] permissions = {
-                Manifest.permission.CAMERA
-        };
+        FloatingActionButton profile_btn = findViewById(R.id.profile_btn);
+        // int permission_all = 1;
 
-        if (!camPermission(this, permissions)) {
-            // Toast.makeText(this, "Camera Permission Needed", Toast.LENGTH_LONG).show();
-            ActivityCompat.requestPermissions(this, permissions, permission_all);
+//        String[] permissions = {
+//                Manifest.permission.CAMERA
+//        };
+
+        int check = 0;
+        for (int i = 0; ; i++ ) {
+            if (check == 3) {
+                Toast.makeText(this, "Camera Permission Needed", Toast.LENGTH_LONG).show();
+                finish();
+                break;
+            }
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED) {
+                check++;
+                ActivityCompat.requestPermissions(this, new String[] { Manifest.permission.CAMERA }, CAMERA_PERMISSION_CODE);
+            }
+            else {
+                scanCode();
+            }
         }
-        else {
-            scanCode();
-        }
+
+        profile_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent profile = new Intent(Camera_V2.this, MainActivity.class);
+                startActivity(profile);
+            }
+        });
 
         scannerView.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -85,8 +106,6 @@ public class Camera_V2 extends AppCompatActivity {
         mCodeScanner.setFormats(CodeScanner.ALL_FORMATS);
         mCodeScanner.setScanMode(ScanMode.CONTINUOUS);
         mCodeScanner.setFlashEnabled(false);
-
-        // mCodeScanner.startPreview();
 
         mCodeScanner.setDecodeCallback(new DecodeCallback() {
             @Override
@@ -144,7 +163,6 @@ public class Camera_V2 extends AppCompatActivity {
 
     private void calculateScore() {
         Intent calScore = new Intent(Camera_V2.this, ContentTest.class);
-//        screenShot();
         Bundle bundle = new Bundle();
         //bundle.putParcelable("bitmap", bitmap);
         bundle.putString("content", content);
@@ -158,51 +176,26 @@ public class Camera_V2 extends AppCompatActivity {
         return context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY);
     }
 
-    public boolean onTouchEvent(MotionEvent touchEvent) {
-
-        switch (touchEvent.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                x1 = touchEvent.getX();
-                y1 = touchEvent.getY();
-                break;
-            case MotionEvent.ACTION_UP:
-                x2 = touchEvent.getX();
-                y2 = touchEvent.getY();
-                if (x1 < x2) {
-                    Intent left = new Intent(Camera_V2.this, MainActivity.class);
-                    startActivity(left);
-                    overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
-                }
-                else if (x1 > x2) {
-                    Intent right = new Intent(Camera_V2.this, MainActivity.class);
-                    startActivity(right);
-                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-                }
-                break;
-        }
-        return false;
-    }
-
-    public boolean camPermission(Context context, String ... permissions) {
-        if (context != null && permissions != null) {
-            for (String permission : permissions) {
-                if (ActivityCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
+//    public boolean camPermission(Context context, String ... permissions) {
+//        if (context != null && permissions != null) {
+//            for (String permission : permissions) {
+//                if (ActivityCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
+//                    return false;
+//                }
+//            }
+//        }
+//        return true;
+//    }
 
     // to be tested
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == REQUEST_CAMERA_PERMISSION) {
-            if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(this, "Camera Permission needed", Toast.LENGTH_SHORT).show();
-                finish();
-            }
-        }
-    }
+//    @Override
+//    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+//        if (requestCode == REQUEST_CAMERA_PERMISSION) {
+//            if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+//                Toast.makeText(this, "Camera Permission needed", Toast.LENGTH_SHORT).show();
+//                finish();
+//            }
+//        }
+//    }
 }

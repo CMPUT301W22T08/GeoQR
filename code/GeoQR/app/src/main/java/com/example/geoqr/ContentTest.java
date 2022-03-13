@@ -25,7 +25,7 @@ public class ContentTest extends AppCompatActivity {
 
         TextView show = findViewById(R.id.test_text);
         show.setText(content);
-        
+
         Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
         ImageView show_b = findViewById(R.id.bit_test);
         show_b.setImageBitmap(bitmap);
