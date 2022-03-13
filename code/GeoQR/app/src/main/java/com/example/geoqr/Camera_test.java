@@ -61,14 +61,14 @@ public class Camera_test extends AppCompatActivity {
             scanCode();
         }
 
-        FloatingActionButton profile = findViewById(R.id.profile_btn);
-        profile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent profile = new Intent(Camera_test.this, MainActivity.class);
-                startActivity(profile);
-            }
-        });
+//        FloatingActionButton profile = findViewById(R.id.profile_btn);
+//        profile.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Intent profile = new Intent(Camera_test.this, MainActivity.class);
+//                startActivity(profile);
+//            }
+//        });
 
         scannerView.setOnTouchListener(new View.OnTouchListener() {
             @Override
