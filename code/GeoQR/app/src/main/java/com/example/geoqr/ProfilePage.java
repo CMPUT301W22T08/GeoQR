@@ -20,15 +20,15 @@ import java.util.ArrayList;
 
 public class ProfilePage extends AppCompatActivity implements ListFragment.OnFragmentInteractionListener {
 
-    ListView profileList;
-    TextView profileTotal;
-    TextView totalCodes;
-    TextView highScore;
-    TextView lowScore;
+    private ListView profileList;
+    private TextView profileTotal;
+    private TextView totalCodes;
+    private TextView highScore;
+    private TextView lowScore;
 
-    ArrayAdapter<ListEntry> listAdapter;
-    ArrayList<ListEntry> entryDataList;
-    final String TAG = "Sample";
+    private ArrayAdapter<ListEntry> listAdapter;
+    private ArrayList<ListEntry> entryDataList;
+    private final String TAG = "Sample";
     FirebaseFirestore db;
     int totalScore = 0;
     int largestScore = 0;
