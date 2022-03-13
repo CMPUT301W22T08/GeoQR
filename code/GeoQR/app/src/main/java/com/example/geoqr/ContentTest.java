@@ -2,6 +2,7 @@ package com.example.geoqr;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -20,10 +21,12 @@ public class ContentTest extends AppCompatActivity {
         Bundle bundle = intent.getExtras();
 
         String content = bundle.getString("content");
-        Bitmap bitmap = bundle.getParcelable("bitmap");
+        byte[] bytes = bundle.getByteArray("bytes");
 
         TextView show = findViewById(R.id.test_text);
         show.setText(content);
+        
+        Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
         ImageView show_b = findViewById(R.id.bit_test);
         show_b.setImageBitmap(bitmap);
     }

@@ -18,6 +18,8 @@ import androidx.core.app.ActivityCompat;
 import com.budiyev.android.codescanner.*;
 import com.google.zxing.Result;
 
+import java.io.ByteArrayOutputStream;
+
 // CLASS TO BE TESTED
 public class Camera_V2 extends AppCompatActivity {
 
@@ -27,6 +29,8 @@ public class Camera_V2 extends AppCompatActivity {
     private CodeScannerView scannerView;
     float x1, x2, y1, y2;
     Bitmap bitmap;
+    byte[] bytes;
+
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,8 +94,15 @@ public class Camera_V2 extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        screenShot();
+
                         content = result.getText();
+
+                        // to be tested
+                        screenShot();
+                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                        bytes = stream.toByteArray();
+
                         calculateScore();
                     }
                 });
@@ -137,6 +148,7 @@ public class Camera_V2 extends AppCompatActivity {
         Bundle bundle = new Bundle();
         //bundle.putParcelable("bitmap", bitmap);
         bundle.putString("content", content);
+        bundle.putByteArray("bytes", bytes);
         //calScore.putExtra("content", content);
         calScore.putExtras(bundle);
         startActivity(calScore);
