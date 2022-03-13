@@ -31,7 +31,7 @@
 
         <activity
             android:name=".MapActivity"
-            android:exported="true"
+            android:exported="false"
             android:label="@string/title_activity_map" />
         <activity
             android:name=".HomeScreen"
