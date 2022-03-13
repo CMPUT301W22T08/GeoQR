@@ -18,6 +18,7 @@ import com.budiyev.android.codescanner.CodeScanner;
 import com.budiyev.android.codescanner.CodeScannerView;
 import com.budiyev.android.codescanner.DecodeCallback;
 import com.budiyev.android.codescanner.ScanMode;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.zxing.Result;
 
 // CLASS TO BE TESTED
@@ -60,6 +61,15 @@ public class Camera_test extends AppCompatActivity {
             scanCode();
         }
 
+        FloatingActionButton profile = findViewById(R.id.profile_btn);
+        profile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent profile = new Intent(Camera_test.this, MainActivity.class);
+                startActivity(profile);
+            }
+        });
+
         scannerView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -81,6 +91,10 @@ public class Camera_test extends AppCompatActivity {
                             startActivity(right);
                             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                         }
+
+                        // to be tested
+
+
                         break;
                 }
                 return false;
