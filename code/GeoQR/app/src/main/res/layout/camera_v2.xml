@@ -1,50 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/camera_layout"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <RelativeLayout
+    <com.budiyev.android.codescanner.CodeScannerView
+        android:id="@+id/scan_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent"
+        app:autoFocusButtonColor="@color/white"
+        app:autoFocusButtonVisible="false"
+        app:flashButtonColor="@color/white"
+        app:flashButtonVisible="true"
+        app:frameColor="@color/white"
+        app:frameCornersSize="50dp"
+        app:frameCornersRadius="0dp"
+        app:frameAspectRatioWidth="1"
+        app:frameAspectRatioHeight="1"
+        app:frameSize="0.75"
+        app:frameThickness="2dp"
+        app:maskColor="@color/black" />
 
-        <com.budiyev.android.codescanner.CodeScannerView
-            android:id="@+id/scan_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:clickable="true"
-            android:focusable="true"
-            android:focusableInTouchMode="true"
-            app:autoFocusButtonColor="@color/white"
-            app:autoFocusButtonVisible="false"
-            app:flashButtonColor="@color/white"
-            app:flashButtonVisible="true"
-            app:frameAspectRatioHeight="1"
-            app:frameAspectRatioWidth="1"
-            app:frameColor="@color/white"
-            app:frameCornersRadius="0dp"
-            app:frameCornersSize="50dp"
-            app:frameSize="0.75"
-            app:frameThickness="2dp"
-            app:maskColor="@color/zxing_transparent" />
-
-    </RelativeLayout>
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/profile_btn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:clickable="true"
-        android:contentDescription="@string/default_txt"
-        android:focusable="true"
-        android:foregroundGravity="center"
-        android:layout_gravity="end|bottom"
-        android:layout_margin="16dp"
-        app:srcCompat="?android:attr/fingerprintAuthDrawable" />
-
-</android.support.design.widget.CoordinatorLayout>
-
-
-
+</RelativeLayout>

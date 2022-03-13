@@ -12,7 +12,7 @@ import java.util.Hashtable;
 
 public class CalculateScore{
 
-//    private byte[] qr_byte;
+    //    private byte[] qr_byte;
 //    private Bitmap bmp;
     private String Result = "";
     private String hex_result = "";

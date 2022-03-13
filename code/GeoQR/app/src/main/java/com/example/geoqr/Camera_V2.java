@@ -5,10 +5,10 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -26,7 +26,7 @@ public class Camera_V2 extends AppCompatActivity {
     public String content;
     private CodeScannerView scannerView;
     float x1, x2, y1, y2;
-
+    Bitmap bitmap;
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +40,7 @@ public class Camera_V2 extends AppCompatActivity {
         };
 
         if (!camPermission(this, permissions)) {
-            Toast.makeText(this, "Camera Permission Needed", Toast.LENGTH_LONG).show();
+            // Toast.makeText(this, "Camera Permission Needed", Toast.LENGTH_LONG).show();
             ActivityCompat.requestPermissions(this, permissions, permission_all);
         }
         else {
@@ -73,11 +73,78 @@ public class Camera_V2 extends AppCompatActivity {
                 return false;
             }
         });
-
-
     }
 
+    private void scanCode() {
+        mCodeScanner = new CodeScanner(this, scannerView);
+        mCodeScanner.setAutoFocusEnabled(true);
+        mCodeScanner.setFormats(CodeScanner.ALL_FORMATS);
+        mCodeScanner.setScanMode(ScanMode.CONTINUOUS);
+        mCodeScanner.setFlashEnabled(false);
 
+        // mCodeScanner.startPreview();
+
+        mCodeScanner.setDecodeCallback(new DecodeCallback() {
+            @Override
+            public void onDecoded(@NonNull Result result) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        screenShot();
+                        content = result.getText();
+                        calculateScore();
+                    }
+                });
+            }
+        });
+
+        scannerView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mCodeScanner.startPreview();
+            }
+        });
+    }
+
+    private void screenShot() {
+        mCodeScanner.stopPreview();
+        try {
+            View view = getWindow().getDecorView().getRootView();
+            view.setDrawingCacheEnabled(true);
+            bitmap = Bitmap.createBitmap(view.getDrawingCache());
+            view.setDrawingCacheEnabled(false);
+        }
+        catch (Throwable e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mCodeScanner.startPreview();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mCodeScanner.releaseResources();
+    }
+
+    private void calculateScore() {
+        Intent calScore = new Intent(Camera_V2.this, ContentTest.class);
+//        screenShot();
+        Bundle bundle = new Bundle();
+        //bundle.putParcelable("bitmap", bitmap);
+        bundle.putString("content", content);
+        //calScore.putExtra("content", content);
+        calScore.putExtras(bundle);
+        startActivity(calScore);
+    }
+
+    public boolean checkCamera(Context context) {
+        return context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY);
+    }
 
     public boolean onTouchEvent(MotionEvent touchEvent) {
 
@@ -102,55 +169,6 @@ public class Camera_V2 extends AppCompatActivity {
                 break;
         }
         return false;
-    }
-
-    private void scanCode() {
-        mCodeScanner = new CodeScanner(this, scannerView);
-        mCodeScanner.setAutoFocusEnabled(true);
-        mCodeScanner.setFormats(CodeScanner.ALL_FORMATS);
-        mCodeScanner.setScanMode(ScanMode.CONTINUOUS);
-
-        mCodeScanner.setDecodeCallback(new DecodeCallback() {
-            @Override
-            public void onDecoded(@NonNull Result result) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        content = result.getText();
-                        calculateScore();
-                    }
-                });
-            }
-        });
-
-        scannerView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mCodeScanner.startPreview();
-            }
-        });
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        mCodeScanner.startPreview();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        mCodeScanner.releaseResources();
-    }
-
-    private void calculateScore() {
-        Intent calScore = new Intent(Camera_V2.this, addQR.class);
-        calScore.putExtra("content", content);
-        startActivity(calScore);
-    }
-
-    public boolean checkCamera(Context context) {
-        return context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY);
     }
 
     public boolean camPermission(Context context, String ... permissions) {

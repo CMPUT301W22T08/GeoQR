@@ -306,11 +306,11 @@ public class addQR extends AppCompatActivity {
 
                 goBack();
             }
-         });
+        });
     }
 
     private void goBack(){
-        Intent camera = new Intent(addQR.this, Camera_test.class);
+        Intent camera = new Intent(addQR.this, Camera_V2.class);
         startActivity(camera);
     }
 

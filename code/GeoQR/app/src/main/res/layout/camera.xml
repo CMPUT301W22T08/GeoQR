@@ -9,16 +9,16 @@
         android:id="@+id/cameraView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/scan_btn"
-        android:visibility="gone"/>
+        android:layout_above="@id/scan_btn" />
 
     <Button
         android:id="@+id/scan_btn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:text="@string/scan_hint"
-        android:visibility="gone"/>
+        android:text="@string/scan_hint" />
+<!--    hard codded here-->
+<!--        android:text="@string/scan_hint"-->
 
 
 </RelativeLayout>

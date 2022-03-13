@@ -16,7 +16,7 @@
         android:theme="@style/Theme.GeoQR">
 
         <activity
-            android:name=".Camera_test"
+            android:name=".Camera_V2"
             android:exported="true"
             android:screenOrientation="nosensor" >
             <intent-filter>
@@ -27,6 +27,7 @@
         </activity>
         <activity android:name=".addQR" />
         <activity android:name=".MainActivity" />
+        <activity android:name=".ContentTest" />
     </application>
 
 </manifest>
