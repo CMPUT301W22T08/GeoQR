@@ -73,4 +73,20 @@ public class ProfileList extends ArrayAdapter<ListEntry> {
         return view;
 
     }
+
+    public void addEntry(ListEntry entry) {
+        qrlist.add(entry);
+    }
+
+    public void deleteEntry(ListEntry entry) {
+        if (qrlist.contains(entry)) {
+            qrlist.remove(entry);
+        } else {
+            throw new IllegalArgumentException();
+        }
+    }
+
+    public int size() {
+        return qrlist.size();
+    }
 }

@@ -104,7 +104,10 @@ public class ProfilePage extends AppCompatActivity implements ListFragment.OnFra
 
         int removeScore = Integer.parseInt(entry.getScore());
         totalScore = totalScore - removeScore;
-        entryDataList.remove(entry);
+
+        profilelist.deleteEntry(entry);
+
+        //entryDataList.remove(entry);
         listAdapter.notifyDataSetChanged();
 
 
