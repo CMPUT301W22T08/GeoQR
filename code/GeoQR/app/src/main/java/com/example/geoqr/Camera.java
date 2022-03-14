@@ -41,7 +41,6 @@ import java.util.List;
 public class Camera extends AppCompatActivity {
 
     private TextureView cam;
-    float x1, x2, y1, y2;
     int width = 480;
     int height = 480;
 
