@@ -240,7 +240,9 @@ public class addQR extends AppCompatActivity {
                                 Log.d(TAG, "Data could not be added!" + e);
                             }
                         });
+
                 Toast.makeText(getApplicationContext(),"Add Successfully",Toast.LENGTH_LONG).show();
+
 //                // check if document exist
                 // all not work
                 // check method 1
