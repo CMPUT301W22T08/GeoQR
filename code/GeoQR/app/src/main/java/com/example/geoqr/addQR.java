@@ -252,7 +252,7 @@ public class addQR extends AppCompatActivity {
                                 Log.d(TAG, "Data could not be added!" + e);
                             }
                         });
-
+                Toast.makeText(getApplicationContext(),"Add Successfully",Toast.LENGTH_LONG).show();
 //                // check if document exist
                 // all not work
                 // check method 1
@@ -324,8 +324,6 @@ public class addQR extends AppCompatActivity {
                         .collection("QR codes")
                         .document(QRHexDisplay.getText().toString())
                         .set(user_qr,SetOptions.merge());
-
-                Toast.makeText(getApplicationContext(),"Add Successfully",Toast.LENGTH_LONG).show();
 
 //                final List<String>[] qr = new List[]{new ArrayList<>()};
 //
