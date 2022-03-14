@@ -172,6 +172,20 @@ public class addQR extends AppCompatActivity {
                 data_qr.put("Score",QRScore);
                 data_qr.put("User",user);
 
+                // if user wants to add photo
+                if (add_img){
+                    Camera c = new Camera();
+                    Bitmap b;// = c.takephoto(); // private.............................................
+                    // got bitmap and can store to database
+                    // but currently no place to put bitmap on database so implement later
+                }
+
+                // if user wants to add location
+                if(add_g){
+                    // get location from location class and put in hashmap
+                    // but currently no place to put location on database so implement later
+                }
+
                 // ID: score.getQRHex(),
                 // add new doc/ override existing
                 QR_ref.document(score.getQRHex()).set(data_qr,SetOptions.merge())
@@ -314,6 +328,7 @@ public class addQR extends AppCompatActivity {
         startActivity(camera);
     }
 
-    // testing purpose
-
 }
+
+
+// and of course, the testcase does not want to work with me
