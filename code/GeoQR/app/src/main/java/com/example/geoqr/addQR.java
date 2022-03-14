@@ -17,6 +17,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
@@ -323,6 +324,8 @@ public class addQR extends AppCompatActivity {
                         .collection("QR codes")
                         .document(QRHexDisplay.getText().toString())
                         .set(user_qr,SetOptions.merge());
+
+                Toast.makeText(getApplicationContext(),"Add Successfully",Toast.LENGTH_LONG).show();
 
 //                final List<String>[] qr = new List[]{new ArrayList<>()};
 //
