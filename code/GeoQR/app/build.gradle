@@ -7,7 +7,6 @@ apply plugin: 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin' 
 
 android {
     compileSdk 32
-    buildToolsVersion '28.0.3'
 
     defaultConfig {
         applicationId "com.example.geoqr"
@@ -87,7 +86,7 @@ dependencies {
 
     implementation 'com.google.code.gson:gson:2.8.9'
     androidTestImplementation 'com.jayway.android.robotium:robotium-solo:5.3.1'
-    androidTestImplementation 'androidx.test:rules:1.2.0'
+    androidTestImplementation 'androidx.test:rules:1.4.0'
 
 
     // Import the Firebase BoM
