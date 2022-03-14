@@ -3,8 +3,10 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Semesters/Semester 5/CMPUT 301/Project/GeoQR/code/GeoQR/app/src/main/res/layout/activity_admin.xml" value="0.1" />
+        <entry key="..\:/Semesters/Semester 5/CMPUT 301/Project/GeoQR/code/GeoQR/app/src/main/res/layout/activity_admin.xml" value="0.4" />
         <entry key="..\:/Semesters/Semester 5/CMPUT 301/Project/GeoQR/code/GeoQR/app/src/main/res/layout/admin.xml" value="0.25" />
+        <entry key="..\:/Semesters/Semester 5/CMPUT 301/Project/GeoQR/code/GeoQR/app/src/main/res/layout/list_admin_player.xml" value="0.1" />
+        <entry key="..\:/Semesters/Semester 5/CMPUT 301/Project/GeoQR/code/GeoQR/app/src/main/res/layout/list_admin_qr.xml" value="0.25" />
       </map>
     </option>
   </component>
