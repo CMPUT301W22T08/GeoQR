@@ -158,7 +158,7 @@ public class addQR extends AppCompatActivity {
 //                add_img = true;
 //                // set image to imageview
 //                Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-//                QR_img_view.setVisibility(View.VISIBLE);
+//
 //                QR_img_view.setImageBitmap(bitmap);
 
                 // to be tested
@@ -166,6 +166,7 @@ public class addQR extends AppCompatActivity {
                 if (cam.resolveActivity(getPackageManager()) != null) {
                     activityResultLauncher.launch(cam);
                 }
+                QR_img_view.setVisibility(View.VISIBLE);
             }
         });
 
