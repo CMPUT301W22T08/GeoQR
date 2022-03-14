@@ -61,7 +61,7 @@ public class ProfilePage extends AppCompatActivity implements ListFragment.OnFra
 
         final FloatingActionButton returnButton = findViewById(R.id.return_to_camera);
         returnButton.setOnClickListener((v) -> {
-            Intent intent = new Intent(ProfilePage.this, Camera_V2.class);
+            Intent intent = new Intent(ProfilePage.this, ScanQR.class);
             startActivity(intent);
         });
 
