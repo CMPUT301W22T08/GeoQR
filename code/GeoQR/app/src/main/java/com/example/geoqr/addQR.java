@@ -219,7 +219,7 @@ public class addQR extends AppCompatActivity {
                 }
 
                 // if user wants to add location
-                if(add_g){  
+                if(add_g){
                     // get location from location class and put in hashmap
                     // but currently no place to put location on database so implement later
                 }
