@@ -4,7 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
 import com.google.common.hash.Hashing;
-import com.google.zxing.*;
+//import com.google.zxing.*;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
