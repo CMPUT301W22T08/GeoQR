@@ -189,11 +189,16 @@ public class AdminPage extends AppCompatActivity {
     }
 
     private void deleteQRCodes() {
-        // TODO
+        for (AdminQRTuple qrTuple: qrSelection) {
+            db.collection("QR codes").document(qrTuple.getContents()).delete();
+        }
     }
 
     private void deletePlayers() {
-        // TODO
+        for (AdminPlayerTuple playerTuple: playerSelection) {
+            db.collection("Users").document(playerTuple.getName()).delete();
+            playerAdapter.remove(playerTuple);
+        }
     }
 
     private void toggle(View btn) {
