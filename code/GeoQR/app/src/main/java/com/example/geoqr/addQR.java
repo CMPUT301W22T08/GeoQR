@@ -101,11 +101,6 @@ public class addQR extends AppCompatActivity {
         //////////////temporary!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         UserName = "I";
 
-
-//        DatabaseQR q
-//        Bundle bundle = intent.getBundleExtra("");
-//        qr_byte = bundle.getByteArray("image");
-
         //Calculate score
         score = new CalculateScore(qr_str);
         QRScore = score.find_total();
@@ -147,6 +142,7 @@ public class addQR extends AppCompatActivity {
                 add_img = true;
                 // set image to imageview
                 Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                QR_img_view.setVisibility(View.VISIBLE);
                 QR_img_view.setImageBitmap(bitmap);
             }
         });
@@ -155,6 +151,7 @@ public class addQR extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 add_img = false;
+                QR_img_view.setVisibility(View.GONE);
             }
         });
 //        add_photo.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
