@@ -20,6 +20,9 @@ public class Test_calcScore {
         CalculateScore z = test();
         //z.byteArray_to_Result();
         z.Result_to_hexResult();
+
+        assertEquals("dawdwad21",z.getQRHex());
+
         z.find_hex_cont();
         z.find_total();
 
