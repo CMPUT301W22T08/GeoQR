@@ -38,10 +38,15 @@
             android:name=".MapActivity"
             android:exported="false"
             android:label="@string/title_activity_map" />
+      
+        <activity
+            android:name=".AdminPage"
+            android:exported="true" />
+      
         <activity
             android:name=".ScanQR"
             android:exported="true"
-            android:screenOrientation="nosensor" >
+            android:screenOrientation="nosensor">
           
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
