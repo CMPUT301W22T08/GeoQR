@@ -5,10 +5,10 @@ import static android.content.ContentValues.TAG;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -38,6 +38,7 @@ import com.google.firebase.firestore.SetOptions;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class addQR extends AppCompatActivity {
     //DATABASE STILL HAVE TROUBLE SETTING UP
@@ -166,8 +167,9 @@ public class addQR extends AppCompatActivity {
                 Intent cam = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 if (cam.resolveActivity(getPackageManager()) != null) {
                     activityResultLauncher.launch(cam);
+                    QR_img_view.setVisibility(View.VISIBLE);
                 }
-                QR_img_view.setVisibility(View.VISIBLE);
+
             }
         });
 
@@ -178,19 +180,6 @@ public class addQR extends AppCompatActivity {
                 QR_img_view.setVisibility(View.GONE);
             }
         });
-//        add_photo.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-//            @Override
-//            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-//                if (add_img){
-//                    add_img = false;
-//                }else {
-//                    add_photo();
-//                    // b = c.takephoto(); // private.............................................
-//                    // but wont this take the photo of the summary?
-//                    add_img = true;
-//                }
-//            }
-//        });
 
 
 
@@ -222,6 +211,8 @@ public class addQR extends AppCompatActivity {
                 data_qr.put("Locations",loc);  //(List<String>)
                 data_qr.put("Score",QRScore);
                 data_qr.put("User",user);
+                data_qr.put("Content", qr_str);
+                data_qr.put("Comment",comment.getText());
 
                 // if user wants to add photo
                 if (add_img){
@@ -252,7 +243,9 @@ public class addQR extends AppCompatActivity {
                                 Log.d(TAG, "Data could not be added!" + e);
                             }
                         });
+
                 Toast.makeText(getApplicationContext(),"Add Successfully",Toast.LENGTH_LONG).show();
+
 //                // check if document exist
                 // all not work
                 // check method 1
@@ -269,23 +262,23 @@ public class addQR extends AppCompatActivity {
 //                List<String> qr = (ArrayList<String>) user_Ref.document(UserName).get().getResult().get("QR codes");
 
 
-
-                // Add to user collection
-                DocumentSnapshot s = user_Ref.document(UserName).get().getResult();
-                if(s.exists()){
-                    user_Ref.document(UserName).update("QR codes", FieldValue.arrayUnion(QRHexDisplay.getText().toString()));
-                }else{
-                    List<String> qr = new ArrayList<>();
-                    qr.add(QRHexDisplay.getText().toString());
-                    HashMap<String, Object> user_qr = new HashMap<>();
-                    user_qr.put("QR codes",qr);
-                    // user_qr.put("Image")
-
-                    // using username as document
-                    user_Ref
-                            .document(UserName)
-                            .set(user_qr, SetOptions.merge());
-                }
+//
+//                // Add to user collection
+//                DocumentSnapshot s = user_Ref.document(UserName).get().getResult();
+//                if(s.exists()){
+//                    user_Ref.document(UserName).update("QR codes", FieldValue.arrayUnion(QRHexDisplay.getText().toString()));
+//                }else{
+//                    List<String> qr = new ArrayList<>();
+//                    qr.add(QRHexDisplay.getText().toString());
+//                    HashMap<String, Object> user_qr = new HashMap<>();
+//                    user_qr.put("QR codes",qr);
+//                    // user_qr.put("Image")
+//
+//                    // using username as document
+//                    user_Ref
+//                            .document(UserName)
+//                            .set(user_qr, SetOptions.merge());
+//                }
 
 
 //                List<Object> list = new ArrayList<>();
@@ -323,7 +316,18 @@ public class addQR extends AppCompatActivity {
                 user_Ref.document(UserName)
                         .collection("QR codes")
                         .document(QRHexDisplay.getText().toString())
-                        .set(user_qr,SetOptions.merge());
+                        .set(user_qr,SetOptions.merge())
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Log.d(TAG, "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAdded");
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG, "NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNot added");
+                    }
+                });
 
 //                final List<String>[] qr = new List[]{new ArrayList<>()};
 //
@@ -377,7 +381,7 @@ public class addQR extends AppCompatActivity {
      * go back to the class intented from
      */
     private void goBack(){
-        Intent camera = new Intent(addQR.this, Camera_V2.class);
+        Intent camera = new Intent(addQR.this, ScanQR.class);
         startActivity(camera);
     }
 

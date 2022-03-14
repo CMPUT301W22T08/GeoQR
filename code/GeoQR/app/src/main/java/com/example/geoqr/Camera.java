@@ -1,6 +1,7 @@
 package com.example.geoqr;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -258,7 +259,7 @@ public class Camera extends AppCompatActivity {
             e.printStackTrace();
         }
     }
-
+    
     private void oCam() {
         CameraManager manager = (CameraManager) getSystemService(Context.CAMERA_SERVICE);
         try {

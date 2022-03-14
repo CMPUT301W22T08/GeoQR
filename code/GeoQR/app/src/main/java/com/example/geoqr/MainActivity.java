@@ -1,11 +1,8 @@
 package com.example.geoqr;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 
-import android.Manifest;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -20,7 +17,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         // setContentView(R.layout.login_page);
 
-        Camera_V2 cam = new Camera_V2();
+        ScanQR cam = new ScanQR();
         if (!cam.checkCamera(this)) {
             Toast.makeText(getApplicationContext(), "You do not have camera on this device", Toast.LENGTH_LONG).show();
             finish();
@@ -31,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, Camera.class);
+                Intent intent = new Intent(MainActivity.this, ScanQR.class);
                 startActivity(intent);
             }
         });

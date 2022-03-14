@@ -74,17 +74,17 @@ public class DatabaseQR extends AppCompatActivity {
         return userID;
     }
 
-    public String getUserName() {
-        // 大概应该是没什么问题，但是一个 .getId() 在document后面应该就可以解决了。。。
-        DocumentReference getName = user_ref.document(UserID);
-        getName.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                userName = documentSnapshot.getString("username");
-            }
-        });
-        return userName;
-    }
+//    public String getUserName() {
+//        // 大概应该是没什么问题，但是一个 .getId() 在document后面应该就可以解决了。。。
+//        DocumentReference getName = user_ref.document(UserID);
+//        getName.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+//            @Override
+//            public void onSuccess(DocumentSnapshot documentSnapshot) {
+//                userName = documentSnapshot.getString("username");
+//            }
+//        });
+//        return userName;
+//    }
 
     // to be written
     public ArrayList<String> getContactList() {
