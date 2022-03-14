@@ -71,7 +71,7 @@ public class Camera_V2 extends AppCompatActivity {
         profile_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent profile = new Intent(Camera_V2.this, MainActivity.class);
+                Intent profile = new Intent(Camera_V2.this, ProfilePage.class);
                 startActivity(profile);
             }
         });
@@ -88,7 +88,7 @@ public class Camera_V2 extends AppCompatActivity {
                         x2 = motionEvent.getX();
                         y2 = motionEvent.getY();
                         if (x1 < x2) {
-                            Intent left = new Intent(Camera_V2.this, MainActivity.class);
+                            Intent left = new Intent(Camera_V2.this, MapActivity.class);
                             startActivity(left);
                             overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
                         }
