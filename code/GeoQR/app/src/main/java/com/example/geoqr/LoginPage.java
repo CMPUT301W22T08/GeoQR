@@ -40,6 +40,7 @@ public class LoginPage extends AppCompatActivity {
     private FloatingActionButton scanLogin;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private static final int CAMERA_PERMISSION_CODE = 10;
+    String username_scan;
     // private CollectionReference ref = db.collection("Users");
 
 
@@ -49,6 +50,7 @@ public class LoginPage extends AppCompatActivity {
         setContentView(R.layout.login_page);
 
         ScanQR checkCam = new ScanQR();
+        DatabaseQR databaseQR = new DatabaseQR();
 
         if (!checkCam.checkCamera(this)) {
             Toast.makeText(getApplicationContext(), "You need a camera for this app", Toast.LENGTH_LONG).show();
@@ -87,6 +89,7 @@ public class LoginPage extends AppCompatActivity {
                                 @Override
                                 public void onSuccess(DocumentReference documentReference) {
                                     Log.d(TAG, "DocumentSnapshot written with ID: " + documentReference.getId());
+                                    databaseQR.setUserID(username);
                                     Intent camScan = new Intent(LoginPage.this, ScanQR.class);
                                     startActivity(camScan);
                                 }
@@ -119,6 +122,7 @@ public class LoginPage extends AppCompatActivity {
                 startActivity(scan);
                 boolean check = checkIfUserExists();
                 if (!check) {
+                    databaseQR.setUserID(username_scan);
                     Intent camScan = new Intent(LoginPage.this, ScanQR.class);
                     startActivity(camScan);
                 }
@@ -128,7 +132,7 @@ public class LoginPage extends AppCompatActivity {
 
     private boolean checkIfUserExists() {
         Intent intent = getIntent();
-        String username = intent.getStringExtra("content");
+        username_scan = intent.getStringExtra("content");
         return false;
     }
 

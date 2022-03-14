@@ -107,7 +107,8 @@ public class addQR extends AppCompatActivity {
 
         //UserName = intent.getDataString("");
         //////////////temporary!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        UserName = "I";
+        DatabaseQR databaseQR = new DatabaseQR();
+        UserName = databaseQR.getUserID();
 
         //Calculate score
         score = new CalculateScore(qr_str);
@@ -200,15 +201,15 @@ public class addQR extends AppCompatActivity {
                 // https://www.youtube.com/watch?v=y2op1D0W8oE
                 // Add to Qr collection
 
-                // List<String> loc = new ArrayList<>();
-                // List<String> user = new ArrayList<>();
-//                loc.add(GeoDisplay.getText().toString());
-//                user.add(UserName);
+                List<String> loc = new ArrayList<>();
+                List<String> user = new ArrayList<>();
+                loc.add(GeoDisplay.getText().toString());
+                user.add(UserName);
                 // add data for the QR
                 HashMap<String, Object> data_qr = new HashMap<>();
-                //data_qr.put("Locations",loc);  //(List<String>)
+                data_qr.put("Locations",loc);  //(List<String>)
                 data_qr.put("Score",QRScore);
-                //data_qr.put("User",user);
+                data_qr.put("User",user);
                 data_qr.put("Content", qr_str);
                 data_qr.put("Comment",comment.getText());
 
@@ -316,16 +317,16 @@ public class addQR extends AppCompatActivity {
                         .document(QRHexDisplay.getText().toString())
                         .set(user_qr,SetOptions.merge())
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void unused) {
-                        Log.d(TAG, "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAdded");
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d(TAG, "NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNot added");
-                    }
-                });
+                            @Override
+                            public void onSuccess(Void unused) {
+                                Log.d(TAG, "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAdded");
+                            }})
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.d(TAG, "NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNot added");
+                            }
+                        });
 
 //                final List<String>[] qr = new List[]{new ArrayList<>()};
 //

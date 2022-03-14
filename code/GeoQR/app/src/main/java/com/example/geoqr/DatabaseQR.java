@@ -33,7 +33,6 @@ public class DatabaseQR extends AppCompatActivity {
     public void setUserID(String UserID) {
         this.UserID = UserID;
     }
-    // 这后面应该还需要call什么然后db才能更新
 
     public void setQR(String QRCodeID) {
         this.QRCodeID = QRCodeID;
