@@ -21,11 +21,12 @@ import com.budiyev.android.codescanner.ScanMode;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.zxing.Result;
 
+// this class is to be implemented
 public class ScanLoginQR extends AppCompatActivity {
 
     private CodeScanner mCodeScanner;
     private static final int CAMERA_PERMISSION_CODE = 10;
-    public String content;
+    private String content;
     private CodeScannerView scannerView;
 
     @Override
@@ -62,7 +63,6 @@ public class ScanLoginQR extends AppCompatActivity {
                 });
             }
         });
-
 
         scannerView.setOnClickListener(new View.OnClickListener() {
             @Override
