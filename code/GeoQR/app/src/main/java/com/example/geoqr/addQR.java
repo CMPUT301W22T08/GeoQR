@@ -200,33 +200,11 @@ public class addQR extends AppCompatActivity {
                 // https://www.youtube.com/watch?v=y2op1D0W8oE
                 // Add to Qr collection
 
-                // List<String> loc = new ArrayList<>();
-                // List<String> user = new ArrayList<>();
-//                loc.add(GeoDisplay.getText().toString());
-//                user.add(UserName);
-                // add data for the QR
-                HashMap<String, Object> data_qr = new HashMap<>();
-                //data_qr.put("Locations",loc);  //(List<String>)
-                data_qr.put("Score",QRScore);
-                //data_qr.put("User",user);
-                data_qr.put("Content", qr_str);
-                data_qr.put("Comment",comment.getText());
 
-                // if user wants to add photo
-                if (add_img){
-                    // got bitmap and can store to database
-                    // but currently no place to put bitmap on database so implement later
-                }
-
-                // if user wants to add location
-                if(add_g){
-                    // get location from location class and put in hashmap
-                    // but currently no place to put location on database so implement later
-                }
 
                 // ID: score.getQRHex(),
                 // add new doc/ override existing
-                QR_ref.document(score.getQRHex()).set(data_qr,SetOptions.merge())
+                QR_ref.document(score.getQRHex()).set(qr_hex_db(),SetOptions.merge())
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
@@ -381,6 +359,34 @@ public class addQR extends AppCompatActivity {
     private void goBack(){
         Intent camera = new Intent(addQR.this, ScanQR.class);
         startActivity(camera);
+    }
+
+    private HashMap<String, Object> qr_hex_db(){
+        // List<String> loc = new ArrayList<>();
+        // List<String> user = new ArrayList<>();
+//                loc.add(GeoDisplay.getText().toString());
+//                user.add(UserName);
+        // add data for the QR
+        HashMap<String, Object> data_qr = new HashMap<>();
+        //data_qr.put("Locations",loc);  //(List<String>)
+        data_qr.put("Score",QRScore);
+        //data_qr.put("User",user);
+        data_qr.put("Content", qr_str);
+        data_qr.put("Comment",comment.getText());
+
+        // if user wants to add photo
+        if (add_img){
+            // got bitmap and can store to database
+            // but currently no place to put bitmap on database so implement later
+        }
+
+        // if user wants to add location
+        if(add_g){
+            // get location from location class and put in hashmap
+            // but currently no place to put location on database so implement later
+        }
+
+        return data_qr;
     }
 
 }
