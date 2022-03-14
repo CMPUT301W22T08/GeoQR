@@ -2,6 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.geoqr">
 
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -34,21 +39,30 @@
             android:exported="false"
             android:label="@string/title_activity_map" />
         <activity
-            android:name=".ProfilePage"
-            android:exported="true">
+            android:name=".Camera_V2"
+            android:exported="true"
+            android:screenOrientation="nosensor" >
+          
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-<!--        <activity-->
-<!--            android:name=".ProfilePage"-->
-<!--            android:parentActivityName=".MainActivity" />-->
 
-<!--        <meta-data-->
-<!--            android:name="android.support.PARENT_ACTIVITY"-->
-<!--            android:value=".MainActivity" />-->
+        <activity android:name=".addQR" />
+        <activity android:name=".MainActivity" />
+        <activity android:name=".ContentTest" />
+        <activity android:name=".Camera" />
+
+
+        <activity
+            android:name=".ProfilePage"
+            android:parentActivityName=".MainActivity" />
+
+        <meta-data
+            android:name="android.support.PARENT_ACTIVITY"
+            android:value=".MainActivity" />
+
     </application>
 
 </manifest>

@@ -1,4 +1,17 @@
 <resources>
     <string name="app_name">GeoQR</string>
+    <string name="scan_hint">Scan</string>
+    <string name="qr_code_hint">QR Code:</string>
+    <string name="user_hint">User:</string>
+    <string name="default_txt">To Be Set</string>
+    <string name="qr_score_hint">QR Code Score:</string>
+    <string name="geo_hint">Geolocation:</string>
+    <string name="add_location_switch">Add Location</string>
+    <string name="add_photo_switch">Add Photo</string>
+    <string name="comment_hint">Click to add comments</string>
+    <string name="add_btn">Add</string>
+    <string name="add_image">Add Image</string>
+    <string name="delete_image">Delete Image</string>
+    <string name="qr_content">QR Content</string>
     <string name="title_activity_map">MapActivity</string>
 </resources>
