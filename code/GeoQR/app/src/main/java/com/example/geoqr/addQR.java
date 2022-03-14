@@ -196,13 +196,16 @@ public class addQR extends AppCompatActivity {
         add_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                System.out.println("Debug0, something wrong");
+                Log.d("Debug", "Debug0, something wrong");
 
                 // 98 83 106
                 // 186
 
                 // https://www.youtube.com/watch?v=y2op1D0W8oE
                 // Add to Qr collection
-
+                System.out.println("Debug1, something wrong");
+                Log.d("Debug", "Debug1, something wrong");
                 List<String> loc = new ArrayList<>();
                 List<String> user = new ArrayList<>();
                 loc.add(GeoDisplay.getText().toString());
@@ -214,7 +217,8 @@ public class addQR extends AppCompatActivity {
                 data_qr.put("User",user);
                 data_qr.put("Content", qr_str);
                 data_qr.put("Comment",comment.getText());
-
+                System.out.println("Debug2, something wrong");
+                Log.d("Debug", "Debug2, something wrong");
                 // if user wants to add photo
                 if (add_img){
                     // got bitmap and can store to database
@@ -229,6 +233,8 @@ public class addQR extends AppCompatActivity {
 
                 // ID: score.getQRHex(),
                 // add new doc/ override existing
+                System.out.println("Debug, something wrong");
+                Log.d("Debug", "Debug3, something wrong");
                 QR_ref.document(score.getQRHex()).set(data_qr,SetOptions.merge())
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
