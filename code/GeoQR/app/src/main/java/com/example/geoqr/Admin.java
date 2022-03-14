@@ -41,7 +41,12 @@ public class Admin {
         // Adapters
         playerAdapter = new AdminPlayerAdapter(ctx, new ArrayList<>());
         qrAdapter = new AdminQRAdapter(ctx, new ArrayList<>());
+    }
 
+    /**
+     * It populates the Array Adapters by fetching data from the db
+     */
+    public void fetch() {
         // Get List of QR codes
         db = FirebaseFirestore.getInstance();
         db.collection("QR codes").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
