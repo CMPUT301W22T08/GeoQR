@@ -1,5 +1,8 @@
 <resources>
     <string name="app_name">GeoQR</string>
+    <string name="enter_name_hint">Enter UserName</string>
+    <string name="username">Username:</string>
+    <string name="login_btn">Login</string>
     <string name="scan_hint">Scan</string>
     <string name="qr_code_hint">QR Code:</string>
     <string name="user_hint">User:</string>

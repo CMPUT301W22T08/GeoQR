@@ -40,6 +40,9 @@
             android:label="@string/title_activity_map" />
       
         <activity
+            android:name=".LoginPage"
+            android:exported="true"/>
+      
             android:name=".AdminPage"
             android:exported="true" />
       
@@ -47,7 +50,7 @@
             android:name=".ScanQR"
             android:exported="true"
             android:screenOrientation="nosensor">
-          
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

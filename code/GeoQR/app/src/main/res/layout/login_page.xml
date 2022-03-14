@@ -1,55 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context=".LoginPage"
+    android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/login"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Login"
-        android:textSize = "50sp"
-        android:layout_margin="50dp"
-        android:gravity="center"/>
+        android:orientation="vertical">
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/username"
-        android:layout_below="@id/login"
-        android:layout_margin="10dp"
-        android:hint="Enter Your Username"
-        android:padding = "20dp"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="200dp"
+            android:layout_marginRight="20dp"
+            android:orientation="horizontal">
 
-    <TextView
-        android:id="@+id/newTO"
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/username"
+                android:textSize="29sp" />
+
+            <EditText
+                android:id="@+id/et_Username"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:hint="@string/enter_name_hint"
+                android:importantForAutofill="no"
+                android:inputType="textFilter"
+                android:textSize="20sp" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btn_Generate"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_gravity="end"
+            android:layout_marginEnd="40dp"
+            android:layout_weight="1"
+            android:text="auto username"
+            android:textSize="11sp" />
+
+        <Button
+            android:id="@+id/btn_Login"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginEnd="40dp"
+            android:text="@string/login_btn" />
+
+
+    </LinearLayout>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/scan_login"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@id/generateUsername"
-        android:layout_marginLeft="120dp"
-        android:layout_marginBottom="7dp"
-        android:gravity="left"
-        android:text="new?"
-        android:textSize="12sp" />
-
-    <Button
-        android:id="@+id/generateUsername"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:gravity="center"
-        android:text="Generate username" />
-
-    <Button
-        android:id="@+id/Scan"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/generateUsername"
-        android:layout_centerInParent="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
-        android:gravity="center"
-        android:text="Scan/login" />
-
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
+        android:clickable="true"
+        android:focusable="true"
+        app:srcCompat="@android:drawable/ic_menu_camera"
+        tools:ignore="ContentDescription,SpeakableTextPresentCheck" />
 
 </RelativeLayout>
