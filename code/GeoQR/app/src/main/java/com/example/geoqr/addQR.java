@@ -50,6 +50,8 @@ public class addQR extends AppCompatActivity {
     private Bitmap qr_img;
     private CalculateScore score;
     FirebaseFirestore db;
+    private Camera c;
+    private Bitmap b;
 
     // Define variables that's going to be used inside this class
     TextView QRInfo;
@@ -129,6 +131,8 @@ public class addQR extends AppCompatActivity {
             }
         });
 
+        c = new Camera();
+
         // get if user wants to add the image or not
         add_photo.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -136,6 +140,8 @@ public class addQR extends AppCompatActivity {
                 if (add_img){
                     add_img = false;
                 }else {
+                    // b = c.takephoto(); // private.............................................
+                    // but wont this take the photo of the summary?
                     add_img = true;
                 }
             }
@@ -174,8 +180,6 @@ public class addQR extends AppCompatActivity {
 
                 // if user wants to add photo
                 if (add_img){
-                    Camera c = new Camera();
-                    Bitmap b;// = c.takephoto(); // private.............................................
                     // got bitmap and can store to database
                     // but currently no place to put bitmap on database so implement later
                 }
