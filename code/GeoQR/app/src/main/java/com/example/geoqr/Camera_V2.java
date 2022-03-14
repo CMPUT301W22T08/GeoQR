@@ -21,7 +21,6 @@ import com.budiyev.android.codescanner.ScanMode;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.zxing.Result;
 
-// CLASS TO BE TESTED
 public class Camera_V2 extends AppCompatActivity {
 
     private CodeScanner mCodeScanner;
@@ -38,7 +37,6 @@ public class Camera_V2 extends AppCompatActivity {
 
         scannerView = findViewById(R.id.scan_view);
         FloatingActionButton profile_btn = findViewById(R.id.profile_btn);
-        // int permission_all = 1;
 
 //        String[] permissions = {
 //                Manifest.permission.CAMERA
@@ -117,14 +115,7 @@ public class Camera_V2 extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-
                         content = result.getText();
-                        // to be tested
-//                        screenShot();
-//                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-//                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-//                        bytes = stream.toByteArray();
-
                         calculateScore();
                     }
                 });
@@ -139,33 +130,6 @@ public class Camera_V2 extends AppCompatActivity {
             }
         });
     }
-
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
-//        if (result != null) {
-//            btm = (Bitmap) data.getExtras().get("data");
-//            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-//            btm.compress(Bitmap.CompressFormat.PNG, 100, stream);
-//            byte_test = stream.toByteArray();
-//        }
-//        else {
-//            super.onActivityResult(requestCode, resultCode, data);
-//        }
-//    }
-
-//    private void screenShot() {
-//        mCodeScanner.stopPreview();
-//        try {
-//            View view = getWindow().getDecorView().getRootView();
-//            view.setDrawingCacheEnabled(true);
-//            bitmap = Bitmap.createBitmap(view.getDrawingCache());
-//            view.setDrawingCacheEnabled(false);
-//        }
-//        catch (Throwable e) {
-//            e.printStackTrace();
-//        }
-//    }
 
     @Override
     protected void onResume() {
@@ -185,6 +149,11 @@ public class Camera_V2 extends AppCompatActivity {
         startActivity(calScore);
     }
 
+    /**
+     * This class helps device to check if it does have camera (hardware)
+     * @return boolean
+     * Return False if there is no camera, true otherwise
+     */
     public boolean checkCamera(Context context) {
         return context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY);
     }
