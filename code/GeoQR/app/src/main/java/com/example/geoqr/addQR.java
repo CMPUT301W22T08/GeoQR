@@ -147,8 +147,7 @@ public class addQR extends AppCompatActivity {
                 add_img = true;
                 // set image to imageview
                 Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                ImageView imageView = findViewById(R.id.QRImg);
-                imageView.setImageBitmap(bitmap);
+                QR_img_view.setImageBitmap(bitmap);
             }
         });
 
