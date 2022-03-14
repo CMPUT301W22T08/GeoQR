@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -17,6 +18,10 @@ import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -63,6 +68,7 @@ public class addQR extends AppCompatActivity {
     Button add_img_btn;
     Button delete_img_btn;
     ImageView QR_img_view;
+    ActivityResultLauncher<Intent> activityResultLauncher;
     @SuppressLint("UseSwitchCompatOrMaterialCode")
     Switch add_geo;
 //    @SuppressLint("UseSwitchCompatOrMaterialCode")
@@ -131,19 +137,35 @@ public class addQR extends AppCompatActivity {
             }
         });
 
+        activityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+            @Override
+            public void onActivityResult(ActivityResult result) {
+                if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                    Bundle bundle = result.getData().getExtras();
+                    Bitmap bitmap = (Bitmap) bundle.get("data");
+                    QR_img_view.setImageBitmap(bitmap);
+                }
+            }
+        });
 
         // get if user wants to add the image or not
         add_img_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                add_photo();
-                Intent intent = getIntent();
-                byte[] bytes = intent.getByteArrayExtra("image");
-                add_img = true;
-                // set image to imageview
-                Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                QR_img_view.setVisibility(View.VISIBLE);
-                QR_img_view.setImageBitmap(bitmap);
+//                add_photo();
+//                Intent intent = getIntent();
+//                byte[] bytes = intent.getByteArrayExtra("image");
+//                add_img = true;
+//                // set image to imageview
+//                Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+//                QR_img_view.setVisibility(View.VISIBLE);
+//                QR_img_view.setImageBitmap(bitmap);
+
+                // to be tested
+                Intent cam = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                if (cam.resolveActivity(getPackageManager()) != null) {
+                    activityResultLauncher.launch(cam);
+                }
             }
         });
 
