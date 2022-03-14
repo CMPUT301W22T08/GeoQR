@@ -372,14 +372,13 @@ public class addQR extends AppCompatActivity {
         });
     }
 
+
+    /**
+     * go back to the class intented from
+     */
     private void goBack(){
         Intent camera = new Intent(addQR.this, Camera_V2.class);
         startActivity(camera);
-    }
-
-    private void add_photo(){
-        Intent i = new Intent(addQR.this, Camera.class);
-        startActivity(i);
     }
 
 }
