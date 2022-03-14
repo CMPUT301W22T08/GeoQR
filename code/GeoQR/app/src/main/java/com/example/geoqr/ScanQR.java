@@ -116,7 +116,7 @@ public class ScanQR extends AppCompatActivity {
                     @Override
                     public void run() {
                         content = result.getText();
-                        calculateScore();
+                        passScore();
                     }
                 });
             }
@@ -143,7 +143,7 @@ public class ScanQR extends AppCompatActivity {
         mCodeScanner.releaseResources();
     }
 
-    private void calculateScore() {
+    private void passScore() {
         Intent calScore = new Intent(ScanQR.this, addQR.class);
         calScore.putExtra("content", content);
         startActivity(calScore);
