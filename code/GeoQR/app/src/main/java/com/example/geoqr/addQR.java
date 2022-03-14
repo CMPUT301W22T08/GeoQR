@@ -181,14 +181,12 @@ public class addQR extends AppCompatActivity {
             }
         });
 
-
-
         String s = score.getQRHex();
 
         // define for add to database
         final CollectionReference user_Ref = db.collection("Users");
         final CollectionReference QR_ref = db.collection("QR codes");
-        final DocumentReference QR_code_ref = db.collection("QR codes").document(s);
+        // final DocumentReference QR_code_ref = db.collection("QR codes").document(s);
 
         // get all data to the QR database and go back
 
