@@ -210,6 +210,7 @@ public class addQR extends AppCompatActivity {
                 data_qr.put("Score",QRScore);
                 data_qr.put("User",user);
                 data_qr.put("Content", qr_str);
+                data_qr.put("Comment",comment.getText());
 
                 // if user wants to add photo
                 if (add_img){
