@@ -44,7 +44,7 @@ public class addQR extends AppCompatActivity {
 
     // Define values that's gonna display on the xml
     private String UserName;
-    private String QRHex; // I still don't get what this is asking, the really long one or the value?
+    // private String QRHex; // I still don't get what this is asking, the really long one or the value?
     private Integer QRScore;
     private String Comments;
     private Location location = new Location(""); // get location somehow, work with Julian
@@ -53,10 +53,10 @@ public class addQR extends AppCompatActivity {
 
     // Define variables that's related with external links like db/intent
     private String qr_str;
-    private Bitmap qr_img;
+    // private Bitmap qr_img;
     private CalculateScore score;
     FirebaseFirestore db;
-    private Bitmap b;
+    // private Bitmap b;
 
     // Define variables that's going to be used inside this class
     TextView QRInfo;
