@@ -165,8 +165,9 @@ public class addQR extends AppCompatActivity {
                 Intent cam = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 if (cam.resolveActivity(getPackageManager()) != null) {
                     activityResultLauncher.launch(cam);
+                    QR_img_view.setVisibility(View.VISIBLE);
                 }
-                QR_img_view.setVisibility(View.VISIBLE);
+
             }
         });
 
@@ -177,19 +178,6 @@ public class addQR extends AppCompatActivity {
                 QR_img_view.setVisibility(View.GONE);
             }
         });
-//        add_photo.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-//            @Override
-//            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-//                if (add_img){
-//                    add_img = false;
-//                }else {
-//                    add_photo();
-//                    // b = c.takephoto(); // private.............................................
-//                    // but wont this take the photo of the summary?
-//                    add_img = true;
-//                }
-//            }
-//        });
 
 
 
@@ -221,6 +209,7 @@ public class addQR extends AppCompatActivity {
                 data_qr.put("Locations",loc);  //(List<String>)
                 data_qr.put("Score",QRScore);
                 data_qr.put("User",user);
+                data_qr.put("Content", qr_str);
 
                 // if user wants to add photo
                 if (add_img){
