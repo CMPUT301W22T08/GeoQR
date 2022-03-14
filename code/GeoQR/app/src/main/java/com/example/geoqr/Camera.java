@@ -32,6 +32,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
@@ -88,7 +90,7 @@ public class Camera extends AppCompatActivity {
         cam = findViewById(R.id.camera_view);
         assert cam != null;
         cam.setSurfaceTextureListener(textureListener);
-        Button photo_btn = findViewById(R.id.photo_btn);
+        FloatingActionButton photo_btn = findViewById(R.id.photo_btn);
         photo_btn.setOnClickListener(view -> {
             takePhoto();
             System.out.println("Pass click");
