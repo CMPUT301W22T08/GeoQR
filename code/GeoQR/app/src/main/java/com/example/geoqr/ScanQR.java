@@ -35,7 +35,7 @@ public class ScanQR extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.camera_v2);
 
-        scannerView = findViewById(R.id.scan_view);
+        scannerView = findViewById(R.id.login_view);
         FloatingActionButton profile_btn = findViewById(R.id.profile_btn);
 
 //        String[] permissions = {
