@@ -108,7 +108,9 @@ public class addQR extends AppCompatActivity {
         //UserName = intent.getDataString("");
         //////////////temporary!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         DatabaseQR databaseQR = new DatabaseQR();
-        UserName = databaseQR.getUserID();
+        UserName = databaseQR.getUserName();
+
+        Toast.makeText(getApplicationContext(), UserName, Toast.LENGTH_LONG).show();
 
         //Calculate score
         score = new CalculateScore(qr_str);

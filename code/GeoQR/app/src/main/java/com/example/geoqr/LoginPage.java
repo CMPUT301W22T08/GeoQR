@@ -89,7 +89,7 @@ public class LoginPage extends AppCompatActivity {
                                 @Override
                                 public void onSuccess(DocumentReference documentReference) {
                                     Log.d(TAG, "DocumentSnapshot written with ID: " + documentReference.getId());
-                                    databaseQR.setUserID(username);
+                                    databaseQR.setUsername(username);
                                     Intent camScan = new Intent(LoginPage.this, ScanQR.class);
                                     startActivity(camScan);
                                 }
@@ -122,7 +122,7 @@ public class LoginPage extends AppCompatActivity {
                 startActivity(scan);
                 boolean check = checkIfUserExists();
                 if (!check) {
-                    databaseQR.setUserID(username_scan);
+                    databaseQR.setUsername(username_scan);
                     Intent camScan = new Intent(LoginPage.this, ScanQR.class);
                     startActivity(camScan);
                 }

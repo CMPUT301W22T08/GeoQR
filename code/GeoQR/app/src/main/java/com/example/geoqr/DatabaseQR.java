@@ -30,8 +30,12 @@ public class DatabaseQR extends AppCompatActivity {
         QR_ref = db.collection("QR codes");
     }
 
-    public void setUserID(String UserID) {
+    public void setUsername(String UserID) {
         this.UserID = UserID;
+    }
+
+    public String getUserName() {
+        return this.UserID;
     }
 
     public void setQR(String QRCodeID) {
@@ -40,15 +44,15 @@ public class DatabaseQR extends AppCompatActivity {
 
 
     // going to test if addOnComplete or addOnSuccess is more suitable
-    public String getUserID() {
-        DocumentReference getID = user_ref.document(UserID);
-
-        getID.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                userID = documentSnapshot.getString("ID");
-            }
-        });
+//    public String getUserID() {
+//        DocumentReference getID = user_ref.document(UserID);
+//
+//        getID.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+//            @Override
+//            public void onSuccess(DocumentSnapshot documentSnapshot) {
+//                userID = documentSnapshot.getString("ID");
+//            }
+//        });
 
         // 大概。。看着有点怪，因为userid是field data，好像不是这样access的
 //        getID.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -70,8 +74,8 @@ public class DatabaseQR extends AppCompatActivity {
 //            }
 //        });
 
-        return userID;
-    }
+//        return userID;
+//    }
 
 //    public String getUserName() {
 //        // 大概应该是没什么问题，但是一个 .getId() 在document后面应该就可以解决了。。。
