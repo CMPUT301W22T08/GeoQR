@@ -9,6 +9,7 @@ import com.example.geoqr.RandomString;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
@@ -31,8 +32,9 @@ public class LoginPage extends AppCompatActivity {
 
     private Button btnLogin, btnGenerate;
     private EditText etUsername;
+    private FloatingActionButton scanLogin;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private CollectionReference ref = db.collection("Users");
+    // private CollectionReference ref = db.collection("Users");
 
 
     @Override
@@ -45,6 +47,7 @@ public class LoginPage extends AppCompatActivity {
         etUsername = findViewById(R.id.et_Username);
         btnGenerate = findViewById(R.id.btn_Generate);
         btnLogin = findViewById(R.id.btn_Login);
+        scanLogin = findViewById(R.id.scan_login);
 
 
         btnLogin.setOnClickListener(new View.OnClickListener() {
@@ -85,6 +88,13 @@ public class LoginPage extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 generate();
+
+            }
+        });
+
+        scanLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 
             }
         });
