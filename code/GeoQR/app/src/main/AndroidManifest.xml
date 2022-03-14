@@ -34,7 +34,7 @@
             android:exported="false"
             android:label="@string/title_activity_map" />
         <activity
-            android:name=".ProfilePage"
+            android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -42,13 +42,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-<!--        <activity-->
-<!--            android:name=".ProfilePage"-->
-<!--            android:parentActivityName=".HomeScreen" />-->
+        <activity
+            android:name=".ProfilePage"
+            android:parentActivityName=".MainActivity" />
 
-<!--        <meta-data-->
-<!--            android:name="android.support.PARENT_ACTIVITY"-->
-<!--            android:value=".HomeScreen" />-->
+        <meta-data
+            android:name="android.support.PARENT_ACTIVITY"
+            android:value=".MainActivity" />
     </application>
 
 </manifest>
