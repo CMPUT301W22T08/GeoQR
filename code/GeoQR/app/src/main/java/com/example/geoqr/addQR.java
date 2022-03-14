@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -60,10 +61,13 @@ public class addQR extends AppCompatActivity {
     TextView GeoDisplay;
     EditText comment;
     Button add_btn;
+    Button add_img_btn;
+    Button delete_img_btn;
+    ImageView QR_img_view;
     @SuppressLint("UseSwitchCompatOrMaterialCode")
     Switch add_geo;
-    @SuppressLint("UseSwitchCompatOrMaterialCode")
-    Switch add_photo;
+//    @SuppressLint("UseSwitchCompatOrMaterialCode")
+//    Switch add_photo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,7 +83,11 @@ public class addQR extends AppCompatActivity {
         comment = findViewById(R.id.comments);
         add_btn = findViewById(R.id.AddBtn);
         add_geo = findViewById(R.id.add_geo_switch);
-        add_photo = findViewById(R.id.add_photo_switch);
+//        add_photo = findViewById(R.id.add_photo_switch);
+        add_img_btn = findViewById(R.id.Add_img);
+        delete_img_btn = findViewById(R.id.Delete_img);
+        QR_img_view = findViewById(R.id.qrimg);
+
         QRInfo = findViewById(R.id.QRInfo);
 
 
@@ -132,20 +140,34 @@ public class addQR extends AppCompatActivity {
 
 
         // get if user wants to add the image or not
-        add_photo.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        add_img_btn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if (add_img){
-                    add_img = false;
-                }else {
-                    Intent i = new Intent(addQR.this, Camera.class);
-                    startActivity(i);
-                    // b = c.takephoto(); // private.............................................
-                    // but wont this take the photo of the summary?
-                    add_img = true;
-                }
+            public void onClick(View view) {
+                add_photo();
+                add_img = true;
+                // set image to imageview
             }
         });
+
+        delete_img_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                add_img = false;
+            }
+        });
+//        add_photo.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//            @Override
+//            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+//                if (add_img){
+//                    add_img = false;
+//                }else {
+//                    add_photo();
+//                    // b = c.takephoto(); // private.............................................
+//                    // but wont this take the photo of the summary?
+//                    add_img = true;
+//                }
+//            }
+//        });
 
 
 
@@ -330,6 +352,11 @@ public class addQR extends AppCompatActivity {
     private void goBack(){
         Intent camera = new Intent(addQR.this, Camera_V2.class);
         startActivity(camera);
+    }
+
+    private void add_photo(){
+        Intent i = new Intent(addQR.this, Camera.class);
+        startActivity(i);
     }
 
 }
