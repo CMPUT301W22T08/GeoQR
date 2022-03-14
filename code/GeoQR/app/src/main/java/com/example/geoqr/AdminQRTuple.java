@@ -3,9 +3,9 @@ package com.example.geoqr;
 public class AdminQRTuple {
     private String contents;
     private String player; // Username
-    private String Score;
+    private int Score;
 
-    public AdminQRTuple(String contents, String player, String score) {
+    public AdminQRTuple(String contents, String player, int score) {
         this.contents = contents;
         this.player = player;
         Score = score;
@@ -19,7 +19,7 @@ public class AdminQRTuple {
         return player;
     }
 
-    public String getScore() {
+    public int getScore() {
         return Score;
     }
 }

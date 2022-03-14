@@ -73,7 +73,6 @@ public class AdminPage extends AppCompatActivity {
         // Set ListViews
         playerList = findViewById(R.id.admin_player_list);
 
-
         qrCodeList = findViewById(R.id.admin_qr_code_list);
 
         // Search Bar
@@ -94,7 +93,9 @@ public class AdminPage extends AppCompatActivity {
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot document : task.getResult()) {
-                        Log.d("RRRRR: ", document.toString());
+                        Log.d("RR: ", document.toString());
+                        qrAdapter.add(new AdminQRTuple(document.getId(), (String) ((ArrayList) document.get("User")).get(0),
+                                Math.toIntExact((Long) document.get("Score"))));
                     }
                 }
             }
@@ -191,7 +192,14 @@ public class AdminPage extends AppCompatActivity {
     private void deleteQRCodes() {
         for (AdminQRTuple qrTuple: qrSelection) {
             db.collection("QR codes").document(qrTuple.getContents()).delete();
+            db.collection("User")
+                    .document(qrTuple.getPlayer())
+                    .collection("QR codes").document(qrTuple.getContents())
+                    .delete();
+            qrAdapter.remove(qrTuple);
         }
+
+        qrSelection.clear();
     }
 
     private void deletePlayers() {
@@ -199,6 +207,8 @@ public class AdminPage extends AppCompatActivity {
             db.collection("Users").document(playerTuple.getName()).delete();
             playerAdapter.remove(playerTuple);
         }
+
+        playerSelection.clear();
     }
 
     private void toggle(View btn) {
@@ -224,6 +234,7 @@ public class AdminPage extends AppCompatActivity {
 
             searchBar.setHint("Search QR Codes");
 
+            // Unselect
             for (AdminPlayerTuple p: playerSelection) {
                 playerList.getChildAt(playerAdapter.getPosition(p))
                     .setBackgroundColor(getResources().getColor(R.color.unhighlight, null));
@@ -244,6 +255,7 @@ public class AdminPage extends AppCompatActivity {
 
             searchBar.setHint("Search Players");
 
+            // Unselect
             for (AdminQRTuple q: qrSelection) {
                 qrCodeList.getChildAt(qrAdapter.getPosition(q))
                     .setBackgroundColor(getResources().getColor(R.color.unhighlight, null));
