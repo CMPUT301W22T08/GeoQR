@@ -7,13 +7,31 @@
     android:orientation="vertical"
     android:gravity="center">
 
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="top|right">
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/return_to_camera"
+            android:clickable="true"
+            android:focusable="true"
+            android:layout_gravity="top|right"
+            app:srcCompat="@android:drawable/ic_menu_camera"
+            tools:ignore="ContentDescription,SpeakableTextPresentCheck"/>
+
+    </FrameLayout>
     <TextView
         android:id="@+id/username"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Username"
-        android:textSize="40sp"
-        android:paddingTop="20dp"/>
+        android:textSize="40sp" />
+
 
     <Button
         android:layout_width="wrap_content"
@@ -185,6 +203,8 @@
         <ListView
             android:id="@+id/profile_list"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"/>
+            android:layout_height="wrap_content"/>
+
     </LinearLayout>
 </LinearLayout>
+
