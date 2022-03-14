@@ -1,5 +1,8 @@
 package com.example.geoqr;
 
+/**
+ * It represents the data for each element in the QR ListView in the Admin page
+ */
 public class AdminQRTuple {
     private String contents;
     private String player; // Username
@@ -11,14 +14,26 @@ public class AdminQRTuple {
         Score = score;
     }
 
+    /**
+     * Getter for the content of a QR code
+     * @return
+     */
     public String getContents() {
         return contents;
     }
 
+    /**
+     * Getter for the associated player
+     * @return
+     */
     public String getPlayer() {
         return player;
     }
 
+    /**
+     * Getter for the score of the QR code
+     * @return
+     */
     public int getScore() {
         return Score;
     }

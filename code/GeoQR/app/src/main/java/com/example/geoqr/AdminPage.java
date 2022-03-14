@@ -12,6 +12,9 @@ import android.widget.ListView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
 
+/**
+ * The View class for the Admin page.
+ */
 public class AdminPage extends AppCompatActivity {
     private int selectedBtnId;
     private boolean deleteBtnDisabled;
