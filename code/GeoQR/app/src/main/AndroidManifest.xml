@@ -40,14 +40,16 @@
             android:label="@string/title_activity_map" />
       
         <activity
-            android:name=".LoginPage"
-            android:exported="true"/>
-      
+            android:name=".ScanQR"
+            android:exported="true"
+            android:screenOrientation="nosensor" />
+
+        <activity
             android:name=".AdminPage"
             android:exported="true" />
       
         <activity
-            android:name=".ScanQR"
+            android:name=".LoginPage"
             android:exported="true"
             android:screenOrientation="nosensor">
 
@@ -60,7 +62,6 @@
         <activity android:name=".addQR" />
         <activity android:name=".MainActivity" />
         <activity android:name=".ContentTest" />
-        <activity android:name=".Camera" />
 
 
         <activity

@@ -4,6 +4,8 @@ import static android.content.ContentValues.TAG;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.example.geoqr.RandomString;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -15,6 +17,9 @@ import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import android.Manifest;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
@@ -34,6 +39,7 @@ public class LoginPage extends AppCompatActivity {
     private EditText etUsername;
     private FloatingActionButton scanLogin;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private static final int CAMERA_PERMISSION_CODE = 10;
     // private CollectionReference ref = db.collection("Users");
 
 
@@ -41,6 +47,19 @@ public class LoginPage extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_page);
+
+        ScanQR checkCam = new ScanQR();
+
+        if (!checkCam.checkCamera(this)) {
+            Toast.makeText(getApplicationContext(), "You need a camera for this app", Toast.LENGTH_LONG).show();
+            finish();
+        }
+        else {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED) {
+                ActivityCompat.requestPermissions(this, new String[] { Manifest.permission.CAMERA }, CAMERA_PERMISSION_CODE);
+            }
+        }
+
 
         db = FirebaseFirestore.getInstance();
 
@@ -68,6 +87,8 @@ public class LoginPage extends AppCompatActivity {
                                 @Override
                                 public void onSuccess(DocumentReference documentReference) {
                                     Log.d(TAG, "DocumentSnapshot written with ID: " + documentReference.getId());
+                                    Intent camScan = new Intent(LoginPage.this, ScanQR.class);
+                                    startActivity(camScan);
                                 }
                             })
                             .addOnFailureListener(new OnFailureListener() {
@@ -88,16 +109,27 @@ public class LoginPage extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 generate();
-
             }
         });
 
         scanLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Intent scan = new Intent(LoginPage.this, ScanLoginQR.class);
+                startActivity(scan);
+                boolean check = checkIfUserExists();
+                if (!check) {
+                    Intent camScan = new Intent(LoginPage.this, ScanQR.class);
+                    startActivity(camScan);
+                }
             }
         });
+    }
+
+    private boolean checkIfUserExists() {
+        Intent intent = getIntent();
+        String username = intent.getStringExtra("content");
+        return false;
     }
 
 
