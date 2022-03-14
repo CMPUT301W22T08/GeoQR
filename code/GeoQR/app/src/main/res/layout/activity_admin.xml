@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -14,6 +16,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:backgroundTint="@color/btn_focused"
             android:text="Players" />
 
         <Button
@@ -21,28 +24,101 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:backgroundTint="@color/btn_unfocused"
             android:text="QR Codes" />
 
     </LinearLayout>
 
-    <EditText
-        android:id="@+id/admin_search"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="Search Players"
-        android:inputType="textPersonName"
-        android:textAlignment="viewStart" />
+        android:orientation="horizontal">
 
-    <TableLayout
-        android:id="@+id/admin_player_table"
+        <EditText
+            android:id="@+id/admin_search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:ems="10"
+            android:hint="Search Players"
+            android:inputType="textPersonName"
+            android:textAlignment="viewStart" />
+
+        <Button
+            android:id="@+id/admin_delete_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:backgroundTint="@color/disabled"
+            android:minWidth="20dp"
+            app:icon="@android:drawable/ic_menu_delete"
+            app:iconPadding="0dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/admin_player_header"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="visible" />
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
-    <TableLayout
-        android:id="@+id/admin_qr_table"
+        <TextView
+            android:id="@+id/admin_player_header_player"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Player"
+            android:textAlignment="center" />
+
+        <TextView
+            android:id="@+id/admin_player_header_score"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Score"
+            android:textAlignment="center" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/admin_qr_code_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/admin_qr_code_header_qr_code"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="QR Code"
+            android:textAlignment="center" />
+
+        <TextView
+            android:id="@+id/admin_qr_code_header_user"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="User"
+            android:textAlignment="center" />
+
+        <TextView
+            android:id="@+id/admin_qr_code_header_score"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Score"
+            android:textAlignment="center" />
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/admin_player_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <ListView
+        android:id="@+id/admin_qr_code_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="gone" />
+
 </LinearLayout>

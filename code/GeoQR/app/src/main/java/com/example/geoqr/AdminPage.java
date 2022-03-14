@@ -1,94 +1,143 @@
 package com.example.geoqr;
 
-import android.graphics.Color;
+import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TableLayout;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
-
-import java.util.ArrayList;
-import java.util.List;
-
+/**
+ * The View class for the Admin page.
+ */
 public class AdminPage extends AppCompatActivity {
     private int selectedBtnId;
+    private boolean deleteBtnDisabled;
     private EditText searchBar;
 
     // Buttons
     private Button playerBtn;
     private Button qrCodeBtn;
+    private Button deleteBtn;
 
-    // Tables
-    private TableLayout playerTable;
-    private TableLayout qrCodeTable;
+    // Headers
+    private LinearLayout playerHeader;
+    private LinearLayout qrCodeHeader;
 
-    // DB
-    FirebaseFirestore db;
-    CollectionReference qrCodeColRef;
+    // ListViews
+    private ListView playerList;
+    private ListView qrCodeList;
+
+    // Admin Instance
+    private Admin admin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin);
 
-        // Set Buttons & Tables
+        admin = new Admin((Context) this);
+        // Set Buttons
         playerBtn = findViewById(R.id.admin_select_players);
         qrCodeBtn = findViewById(R.id.admin_select_qr_codes);
+        deleteBtn = findViewById(R.id.admin_delete_btn);
 
-        playerTable = findViewById(R.id.admin_player_table);
-        qrCodeTable = findViewById(R.id.admin_qr_table);
+        // Set Headers
+        playerHeader = findViewById(R.id.admin_player_header);
+        qrCodeHeader = findViewById(R.id.admin_qr_code_header);
 
+        // Set ListViews
+        playerList = findViewById(R.id.admin_player_list);
+
+        qrCodeList = findViewById(R.id.admin_qr_code_list);
+
+        // Search Bar
         searchBar = findViewById(R.id.admin_search);
 
         // Set default state
         selectedBtnId = R.id.admin_select_players;
+        deleteBtnDisabled = true;
 
         // Set onClick Event Listeners
         playerBtn.setOnClickListener(this::toggle);
         qrCodeBtn.setOnClickListener(this::toggle);
 
-        // Get List of QR codes
-        db = FirebaseFirestore.getInstance();
-        db.collection("QR codes").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    List<String> list = new ArrayList<>();
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        list.add(document.getId());
-                    }
 
-                    Log.d("QRs: ", list.toString());
-                } else {
-                    Log.d("Error:", "Error getting documents: ", task.getException());
+        qrCodeList.setAdapter(admin.getQRAdapter());
+        playerList.setAdapter(admin.getPlayerAdapter());
+
+        // Set Listeners
+        deleteBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!deleteBtnDisabled) {
+                    if (selectedBtnId == playerBtn.getId()) {
+                        // Delete Players
+                        admin.deletePlayers();
+                    }
+                    else {
+                        // Delete QR Codes
+                        admin.deleteQRCodes();
+                    }
                 }
             }
         });
-        // Get List of Players
-        db.collection("Users").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    List<String> list = new ArrayList<>();
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        list.add(document.getId());
-                    }
 
-                    Log.d("QRs: ", list.toString());
-                } else {
-                    Log.d("Error:", "Error getting documents: ", task.getException());
+        playerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int pos, long l) {
+                if (!admin.playerSelectedAt(pos)) {
+                    // Highlight
+                    view.setBackgroundColor(getResources().getColor(R.color.highlight, null));
+
+                    admin.addSelectedPlayerAt(pos);
+                }
+                else {
+                    // Unhighlight
+                    view.setBackgroundColor(getResources().getColor(R.color.unhighlight, null));
+
+                    admin.removeSelectedPlayerAt(pos);
+                }
+
+                if (!admin.noPlayerSelected()) {
+                    deleteBtnDisabled = false;
+                    deleteBtn.setBackgroundColor(getResources().getColor(R.color.deleteBtnEnabled, null));
+                }
+                else {
+                    deleteBtnDisabled = true;
+                    deleteBtn.setBackgroundColor(getResources().getColor(R.color.disabled, null));
+                }
+            }
+        });
+
+        qrCodeList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int pos, long l) {
+                if(!admin.qrSelectedAt(pos)) {
+                    // Highlight
+                    view.setBackgroundColor(getResources().getColor(R.color.highlight, null));
+
+                    admin.addSelectedQRAt(pos);
+                }
+                else {
+                    // Unhighlight
+                    view.setBackgroundColor(getResources().getColor(R.color.unhighlight, null));
+
+                    admin.removeSelectedQRAt(pos);
+                }
+
+                if (!admin.noQRSelected()) {
+                    deleteBtnDisabled = false;
+                    deleteBtn.setBackgroundColor(getResources().getColor(R.color.deleteBtnEnabled, null));
+                }
+                else {
+                    deleteBtnDisabled = true;
+                    deleteBtn.setBackgroundColor(getResources().getColor(R.color.disabled, null));
                 }
             }
         });
@@ -109,22 +158,47 @@ public class AdminPage extends AppCompatActivity {
             playerBtn.setBackgroundColor(unFocusedColor);
             qrCodeBtn.setBackgroundColor(focusedColor);
 
-            playerTable.setVisibility(View.GONE);
-            qrCodeTable.setVisibility(View.VISIBLE);
+            playerHeader.setVisibility(View.GONE);
+            qrCodeHeader.setVisibility(View.VISIBLE);
+
+            playerList.setVisibility(View.GONE);
+            qrCodeList.setVisibility(View.VISIBLE);
 
             searchBar.setHint("Search QR Codes");
+
+            // Unselect
+            for (Integer pos: admin.getSelectedPlayerIndices()) {
+                playerList.getChildAt(pos)
+                        .setBackgroundColor(getResources().getColor(R.color.unhighlight, null));
+            }
+
+            admin.resetPlayerSelection();
         }
 
         else {
             qrCodeBtn.setBackgroundColor(unFocusedColor);
             playerBtn.setBackgroundColor(focusedColor);
 
-            qrCodeTable.setVisibility(View.GONE);
-            playerBtn.setVisibility(View.VISIBLE);
+            qrCodeHeader.setVisibility(View.GONE);
+            playerHeader.setVisibility(View.VISIBLE);
+
+            qrCodeList.setVisibility(View.GONE);
+            playerList.setVisibility(View.VISIBLE);
 
             searchBar.setHint("Search Players");
+
+            // Unselect
+            for (Integer pos: admin.getSelectedQRIndices()) {
+                qrCodeList.getChildAt(pos)
+                        .setBackgroundColor(getResources().getColor(R.color.unhighlight, null));
+            }
+
+            admin.resetQRSelection();
         }
 
         selectedBtnId = focus;
+
+        deleteBtnDisabled = true;
+        deleteBtn.setBackgroundColor(getResources().getColor(R.color.disabled, null));
     }
 }

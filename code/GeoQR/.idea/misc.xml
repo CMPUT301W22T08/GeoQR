@@ -3,12 +3,13 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+
         <entry key="..\:/Users/yunuo/AndroidStudioProjects/!GeoQR/code/GeoQR/app/src/main/res/layout/activity_main.xml" value="0.2" />
         <entry key="..\:/Users/yunuo/AndroidStudioProjects/!GeoQR/code/GeoQR/app/src/main/res/layout/add_qr_code.xml" value="0.536" />
         <entry key="..\:/Users/yunuo/AndroidStudioProjects/!GeoQR/code/GeoQR/app/src/main/res/layout/aqq_qr_code_v2.xml" value="0.27395833333333336" />
         <entry key="..\:/Users/yunuo/AndroidStudioProjects/!GeoQR/code/GeoQR/app/src/main/res/layout/camera.xml" value="0.264" />
         <entry key="..\:/Users/yunuo/AndroidStudioProjects/!GeoQR/code/GeoQR/app/src/main/res/layout/camera_v2.xml" value="0.12604166666666666" />
-        <entry key="..\:/Users/yunuo/AndroidStudioProjects/!GeoQR/code/GeoQR/app/src/main/res/layout/login_page.xml" value="0.2" />
+
         <entry key="..\:/Users/yunuo/AndroidStudioProjects/!GeoQR/code/GeoQR/app/src/main/res/layout/slide_in_left.xml" value="0.4" />
         <entry key="..\:/Users/yunuo/Downloads/Compressed/GeoQR-af4734f0027ac5cda4f3fdc37c1b50453ae8213f/code/GeoQR/app/src/main/res/layout/add_qr_code.xml" value="0.1" />
         <entry key="..\:/Users/yunuo/Downloads/Compressed/GeoQR-af4734f0027ac5cda4f3fdc37c1b50453ae8213f/code/GeoQR/app/src/main/res/layout/aqq_qr_code_v2.xml" value="0.1" />
@@ -17,8 +18,7 @@
         <entry key="app/src/main/res/layout/aqq_qr_code_v2.xml" value="0.45585215605749485" />
         <entry key="app/src/main/res/layout/camera.xml" value="0.27810719807942713" />
         <entry key="app/src/main/res/layout/camera_v2.xml" value="0.249517822265625" />
-        <entry key="app/src/main/res/layout/login_page.xml" value="0.327445652173913" />
-        <entry key="app/src/main/res/layout/test_content.xml" value="0.13958333333333334" />
+
       </map>
     </option>
   </component>
