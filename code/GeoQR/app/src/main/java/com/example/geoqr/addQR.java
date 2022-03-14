@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.location.Location;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -37,6 +38,7 @@ import com.google.firebase.firestore.SetOptions;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class addQR extends AppCompatActivity {
     //DATABASE STILL HAVE TROUBLE SETTING UP
@@ -314,7 +316,18 @@ public class addQR extends AppCompatActivity {
                 user_Ref.document(UserName)
                         .collection("QR codes")
                         .document(QRHexDisplay.getText().toString())
-                        .set(user_qr,SetOptions.merge());
+                        .set(user_qr,SetOptions.merge())
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Log.d(TAG, "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAdded");
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG, "NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNot added");
+                    }
+                });
 
 //                final List<String>[] qr = new List[]{new ArrayList<>()};
 //
