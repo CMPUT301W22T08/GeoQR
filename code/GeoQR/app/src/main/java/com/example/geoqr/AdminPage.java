@@ -38,6 +38,8 @@ public class AdminPage extends AppCompatActivity {
     FirebaseFirestore db;
     CollectionReference qrCodeColRef;
 
+    // Lists
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
