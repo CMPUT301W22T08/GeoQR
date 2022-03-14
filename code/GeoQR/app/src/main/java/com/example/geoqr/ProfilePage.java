@@ -2,6 +2,7 @@ package com.example.geoqr;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ArrayAdapter;
@@ -58,11 +59,11 @@ public class ProfilePage extends AppCompatActivity implements ListFragment.OnFra
 
         profileList.setAdapter(listAdapter);
 
-//        final FloatingActionButton returnButton = findViewById(R.id.return_to_camera);
-//        returnButton.setOnClickListener((v) -> {
-//            Intent intent = new Intent(getApplicationContext(), addQR.class)
-//            startActivity(intent);
-//        });
+        final FloatingActionButton returnButton = findViewById(R.id.return_to_camera);
+        returnButton.setOnClickListener((v) -> {
+            Intent intent = new Intent(ProfilePage.this, Camera_V2.class);
+            startActivity(intent);
+        });
 
 
 
