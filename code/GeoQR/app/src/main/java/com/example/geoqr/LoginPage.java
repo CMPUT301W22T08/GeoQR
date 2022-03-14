@@ -47,25 +47,39 @@ public class LoginPage extends AppCompatActivity {
         btnLogin = findViewById(R.id.btn_Login);
 
 
-
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view){
+            public void onClick(View view) {
                 String username = etUsername.getText().toString();
-
-                QRsubcollection note = new QRsubcollection(comment, content, location, score, time);
+                Map<String, Object> data = new HashMap<>();
+                data.put("Comment","");
+                data.put("Content","");
+                data.put("Location","");
+                data.put("Score","");
+                data.put("Time","");
 
                 if (!TextUtils.isEmpty(username)) {  // if the username is not empty
-                    ref.document(username)
-                            .collection("QR codes").add(note);
-                    Toast.makeText(LoginPage.this, "Success",Toast.LENGTH_LONG).show();
+                    db.collection("Users").document(username).collection("QR codes")
+                            .add(data)
+                            .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                @Override
+                                public void onSuccess(DocumentReference documentReference) {
+                                    Log.d(TAG, "DocumentSnapshot written with ID: " + documentReference.getId());
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Log.w(TAG, "Error adding document", e);
+                                }
+                            });
 
                 } else {
                     Toast.makeText(LoginPage.this, "Username cannot be empty, please re-enter!", Toast.LENGTH_SHORT).show();
-
                 }
             }
         });
+
 
         btnGenerate.setOnClickListener(new View.OnClickListener() {
             @Override
