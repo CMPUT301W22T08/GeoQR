@@ -10,4 +10,7 @@
     <string name="add_photo_switch">Add Photo</string>
     <string name="comment_hint">Click to add comments</string>
     <string name="add_btn">Add</string>
+    <string name="add_image">Add Image</string>
+    <string name="delete_image">Delete Image</string>
+    <string name="qr_content">QR Content</string>
 </resources>

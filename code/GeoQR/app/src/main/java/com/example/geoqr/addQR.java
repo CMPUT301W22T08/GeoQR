@@ -5,6 +5,7 @@ import static android.content.ContentValues.TAG;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
@@ -21,7 +22,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -32,7 +32,6 @@ import com.google.firebase.firestore.SetOptions;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class addQR extends AppCompatActivity {
     //DATABASE STILL HAVE TROUBLE SETTING UP
@@ -86,7 +85,7 @@ public class addQR extends AppCompatActivity {
 //        add_photo = findViewById(R.id.add_photo_switch);
         add_img_btn = findViewById(R.id.Add_img);
         delete_img_btn = findViewById(R.id.Delete_img);
-        QR_img_view = findViewById(R.id.qrimg);
+        QR_img_view = findViewById(R.id.QRImg);
 
         QRInfo = findViewById(R.id.QRInfo);
 
@@ -96,7 +95,6 @@ public class addQR extends AppCompatActivity {
         Bundle b = intent.getExtras();
 
         qr_str = b.getString("content");
-        qr_img = b.getParcelable("bitmap");
 //        qr_byte = intent.getByteArrayExtra("image");
 
         //UserName = intent.getDataString("");
@@ -144,8 +142,14 @@ public class addQR extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 add_photo();
+                Intent intent = getIntent();
+                Bundle bundle = intent.getExtras();
+                byte[] bytes = bundle.getByteArray("image");
                 add_img = true;
                 // set image to imageview
+                Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                ImageView imageView = findViewById(R.id.QRImg);
+                imageView.setImageBitmap(bitmap);
             }
         });
 

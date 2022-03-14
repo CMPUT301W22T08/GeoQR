@@ -21,13 +21,13 @@ public class ContentTest extends AppCompatActivity {
         Bundle bundle = intent.getExtras();
 
         String content = bundle.getString("content");
-        byte[] bytes = bundle.getByteArray("bytes");
+        // byte[] bytes = bundle.getByteArray("bytes");
 
         TextView show = findViewById(R.id.test_text);
         show.setText(content);
 
-        Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+        // Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
         ImageView show_b = findViewById(R.id.bit_test);
-        show_b.setImageBitmap(bitmap);
+        // show_b.setImageBitmap(bitmap);
     }
 }
