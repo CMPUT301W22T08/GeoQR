@@ -143,8 +143,7 @@ public class addQR extends AppCompatActivity {
             public void onClick(View view) {
                 add_photo();
                 Intent intent = getIntent();
-                Bundle bundle = intent.getExtras();
-                byte[] bytes = bundle.getByteArray("image");
+                byte[] bytes = intent.getByteArrayExtra("image");
                 add_img = true;
                 // set image to imageview
                 Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
