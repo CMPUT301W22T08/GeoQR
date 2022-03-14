@@ -11,6 +11,7 @@ import android.widget.TextClock;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -40,6 +41,7 @@ public class ProfilePage extends AppCompatActivity implements ListFragment.OnFra
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getSupportActionBar().hide();
         setContentView(R.layout.activity_profile);
 
         profileList = findViewById(R.id.profile_list);
@@ -56,11 +58,15 @@ public class ProfilePage extends AppCompatActivity implements ListFragment.OnFra
 
         profileList.setAdapter(listAdapter);
 
+//        final FloatingActionButton returnButton = findViewById(R.id.return_to_camera);
+//        returnButton.setOnClickListener((v) -> {
+//            Intent intent = new Intent(getApplicationContext(), addQR.class)
+//            startActivity(intent);
+//        });
+
+
 
         final CollectionReference collectionReference = db.collection("Users").document("3FmLnxuiGMAJxStHRqMq").collection("QR codes");
-
-
-
 
         collectionReference.addSnapshotListener((queryDocumentSnapshots, error) -> {
             entryDataList.clear();
