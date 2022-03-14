@@ -5,7 +5,6 @@ import static android.content.ContentValues.TAG;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -377,7 +376,7 @@ public class addQR extends AppCompatActivity {
      * go back to the class intented from
      */
     private void goBack(){
-        Intent camera = new Intent(addQR.this, Camera_V2.class);
+        Intent camera = new Intent(addQR.this, ScanQR.class);
         startActivity(camera);
     }
 

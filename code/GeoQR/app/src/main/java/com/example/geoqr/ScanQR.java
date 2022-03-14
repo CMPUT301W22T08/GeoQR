@@ -21,7 +21,7 @@ import com.budiyev.android.codescanner.ScanMode;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.zxing.Result;
 
-public class Camera_V2 extends AppCompatActivity {
+public class ScanQR extends AppCompatActivity {
 
     private CodeScanner mCodeScanner;
     private static final int CAMERA_PERMISSION_CODE = 10;
@@ -69,7 +69,7 @@ public class Camera_V2 extends AppCompatActivity {
         profile_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent profile = new Intent(Camera_V2.this, ProfilePage.class);
+                Intent profile = new Intent(ScanQR.this, ProfilePage.class);
                 startActivity(profile);
             }
         });
@@ -86,12 +86,12 @@ public class Camera_V2 extends AppCompatActivity {
                         x2 = motionEvent.getX();
                         y2 = motionEvent.getY();
                         if (x1 < x2) {
-                            Intent left = new Intent(Camera_V2.this, MapActivity.class);
+                            Intent left = new Intent(ScanQR.this, MapActivity.class);
                             startActivity(left);
                             overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
                         }
                         else if (x1 > x2) {
-                            Intent right = new Intent(Camera_V2.this, MainActivity.class);
+                            Intent right = new Intent(ScanQR.this, MainActivity.class);
                             startActivity(right);
                             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                         }
@@ -144,7 +144,7 @@ public class Camera_V2 extends AppCompatActivity {
     }
 
     private void calculateScore() {
-        Intent calScore = new Intent(Camera_V2.this, addQR.class);
+        Intent calScore = new Intent(ScanQR.this, addQR.class);
         calScore.putExtra("content", content);
         startActivity(calScore);
     }

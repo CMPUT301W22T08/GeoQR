@@ -39,7 +39,7 @@
             android:exported="false"
             android:label="@string/title_activity_map" />
         <activity
-            android:name=".Camera_V2"
+            android:name=".ScanQR"
             android:exported="true"
             android:screenOrientation="nosensor" >
           
