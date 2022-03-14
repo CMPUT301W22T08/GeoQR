@@ -90,7 +90,6 @@ public class addQR extends AppCompatActivity {
         comment = findViewById(R.id.comments);
         add_btn = findViewById(R.id.AddBtn);
         add_geo = findViewById(R.id.add_geo_switch);
-//        add_photo = findViewById(R.id.add_photo_switch);
         add_img_btn = findViewById(R.id.Add_img);
         delete_img_btn = findViewById(R.id.Delete_img);
         QR_img_view = findViewById(R.id.QRImg);
