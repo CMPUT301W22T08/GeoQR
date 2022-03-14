@@ -20,6 +20,9 @@ public class Test_calcScore {
         CalculateScore z = test();
         //z.byteArray_to_Result();
         z.Result_to_hexResult();
+
+        Assert.assertEquals("8227ad036b504e39fe29393ce170908be2b1ea636554488fa86de5d9d6cd2c32",z.getQRHex());
+
         z.find_hex_cont();
         z.find_total();
 

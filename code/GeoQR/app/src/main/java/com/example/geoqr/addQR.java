@@ -257,23 +257,23 @@ public class addQR extends AppCompatActivity {
 //                List<String> qr = (ArrayList<String>) user_Ref.document(UserName).get().getResult().get("QR codes");
 
 
-
-                // Add to user collection
-                DocumentSnapshot s = user_Ref.document(UserName).get().getResult();
-                if(s.exists()){
-                    user_Ref.document(UserName).update("QR codes", FieldValue.arrayUnion(QRHexDisplay.getText().toString()));
-                }else{
-                    List<String> qr = new ArrayList<>();
-                    qr.add(QRHexDisplay.getText().toString());
-                    HashMap<String, Object> user_qr = new HashMap<>();
-                    user_qr.put("QR codes",qr);
-                    // user_qr.put("Image")
-
-                    // using username as document
-                    user_Ref
-                            .document(UserName)
-                            .set(user_qr, SetOptions.merge());
-                }
+//
+//                // Add to user collection
+//                DocumentSnapshot s = user_Ref.document(UserName).get().getResult();
+//                if(s.exists()){
+//                    user_Ref.document(UserName).update("QR codes", FieldValue.arrayUnion(QRHexDisplay.getText().toString()));
+//                }else{
+//                    List<String> qr = new ArrayList<>();
+//                    qr.add(QRHexDisplay.getText().toString());
+//                    HashMap<String, Object> user_qr = new HashMap<>();
+//                    user_qr.put("QR codes",qr);
+//                    // user_qr.put("Image")
+//
+//                    // using username as document
+//                    user_Ref
+//                            .document(UserName)
+//                            .set(user_qr, SetOptions.merge());
+//                }
 
 
 //                List<Object> list = new ArrayList<>();
