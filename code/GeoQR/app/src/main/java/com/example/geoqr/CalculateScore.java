@@ -21,7 +21,10 @@ public class CalculateScore{
 
     ArrayList<String> continuous;
 
-
+    /**
+     * get the content of the qr to Result
+     * @param qr-string item that the content of qr
+     */
     public CalculateScore(String qr){
         //this.qr_byte = qr;
         this.Result = qr;
@@ -38,6 +41,10 @@ public class CalculateScore{
 //        Result = new String(qr_byte, StandardCharsets.UTF_8); // for UTF-8 encoding
 //    }
 
+    /**
+     * turn result to incoded hex result
+     * output the hex result array
+     */
     public void Result_to_hexResult(){
         // hash result to hex
         // https://stackoverflow.com/questions/5531455/how-to-hash-some-string-with-sha256-in-java
@@ -51,6 +58,9 @@ public class CalculateScore{
 
     }
 
+    /**
+     * within the hex result array, get the chained up ones and store inside string called continuse
+     */
     public void find_hex_cont(){
         char prev = ' ';
         char prev_inList = ' ';
@@ -75,6 +85,10 @@ public class CalculateScore{
         }
     }
 
+    /**
+     * using the continuse string and check one by one in hashtable hex_dict for the int result
+     * @return total - the int score of the qr code
+     */
     public Integer find_total(){
         // to get the above pre-condition so can get result
         // byteArray_to_Result();
@@ -118,6 +132,10 @@ public class CalculateScore{
         return total;
     }
 
+    /**
+     * return hex array for namming referance
+     * @return hex_result - the hex result string format
+     */
     // getters
     public String getQRHex(){
         return hex_result;
