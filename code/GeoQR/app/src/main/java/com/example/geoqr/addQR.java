@@ -198,8 +198,10 @@ public class addQR extends AppCompatActivity {
         add_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                add_qr_db();
+                // Toast.makeText(getApplicationContext(), , Toast.LENGTH_LONG).show();
                 add_user_db();
+                add_qr_db();
+
                 goBack();
             }
         });
@@ -312,7 +314,7 @@ public class addQR extends AppCompatActivity {
                 });
 
         // adding username inside the sub-collection
-        QR_ref.document(score.getQRHex()).collection("Users").document(databaseQR.getUserName()).set(databaseQR.getUserName())
+        db.collection("QR codes").document(score.getQRHex()).collection("Users").document(databaseQR.getUserName()).set(databaseQR.getUserName())
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
