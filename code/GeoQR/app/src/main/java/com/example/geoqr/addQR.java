@@ -272,8 +272,7 @@ public class addQR extends AppCompatActivity {
         // add data for the QR
         HashMap<String, Object> data_qr = new HashMap<>();
 
-        String username = databaseQR.getUserName();
-        data_qr.put("Score",QRScore);
+        data_qr.put("Score", String.valueOf(QRScore));
         data_qr.put("Content", qr_str);
 
         //        System.out.println("Debug2, something wrong");
@@ -313,17 +312,18 @@ public class addQR extends AppCompatActivity {
                 });
 
         // adding username inside the sub-collection
-        QR_ref.document(score.getQRHex()).collection("Users").document(databaseQR.getUserName()).set(databaseQR.getUserName()).addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void unused) {
-                Log.d(TAG, "Data of username has been added successfully!");
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.d(TAG, "~(Data of username has been added successfully!)");
-            }
-        });
+        QR_ref.document(score.getQRHex()).collection("Users").document(databaseQR.getUserName()).set(databaseQR.getUserName())
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Log.d(TAG, "Data of username has been added successfully!");
+                    }})
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG, "~(Data of username has been added successfully!)");
+                    }
+                });
 
         Toast.makeText(getApplicationContext(),"Add Successfully",Toast.LENGTH_LONG).show();
     }
