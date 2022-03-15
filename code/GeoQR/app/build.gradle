@@ -106,5 +106,4 @@ dependencies {
     // Add the dependencies for Map related features
     implementation 'com.google.android.gms:play-services-location:19.0.1'
 
-
 }
