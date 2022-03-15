@@ -36,6 +36,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * add the QR codes details to the database
+ */
 public class addQR extends AppCompatActivity {
     //DATABASE STILL HAVE TROUBLE SETTING UP
 
@@ -213,7 +216,7 @@ public class addQR extends AppCompatActivity {
     /**
      * add the data to the user section of firestore
      */
-    public void add_user_db(){
+    public void add_user_db() {
         final CollectionReference user_Ref = db.collection("Users");
         user_Ref.document(UserName)
                 .collection("QR codes")
