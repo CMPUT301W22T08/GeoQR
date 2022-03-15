@@ -76,7 +76,8 @@ dependencies {
     implementation 'com.google.android.gms:play-services-maps:18.0.2'
     implementation 'com.squareup.picasso:picasso:2.71828'
 
-    testImplementation 'junit:junit:4.13.2'
+    testImplementation "org.junit.jupiter:junit-jupiter:5.8.2"
+    testImplementation "junit:junit:4.13.2"
 
     androidTestImplementation 'org.testng:testng:6.9.6'
 
@@ -105,5 +106,6 @@ dependencies {
 
     // Add the dependencies for Map related features
     implementation 'com.google.android.gms:play-services-location:19.0.1'
+
 
 }

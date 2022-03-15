@@ -8,7 +8,6 @@ import android.graphics.Bitmap;
 import android.location.Location;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -29,18 +28,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
 
 import java.io.ByteArrayOutputStream;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class addQR extends AppCompatActivity {
     //DATABASE STILL HAVE TROUBLE SETTING UP
