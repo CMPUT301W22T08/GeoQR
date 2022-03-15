@@ -54,7 +54,7 @@ public class DatabaseQR extends AppCompatActivity {
 //            }
 //        });
 
-        // 大概。。看着有点怪，因为userid是field data，好像不是这样access的
+
 //        getID.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
 //            @Override
 //            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -78,7 +78,6 @@ public class DatabaseQR extends AppCompatActivity {
 //    }
 
 //    public String getUserName() {
-//        // 大概应该是没什么问题，但是一个 .getId() 在document后面应该就可以解决了。。。
 //        DocumentReference getName = user_ref.document(UserID);
 //        getName.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
 //            @Override
@@ -93,10 +92,8 @@ public class DatabaseQR extends AppCompatActivity {
     public ArrayList<String> getContactList() {
         return tempStringArray;
     }
-    // 这后面应该还需要call什么然后db才能更新
 
     public String getQRScore() {
-        // 目前感觉没什么问题
         DocumentReference getQR = QR_ref.document(QRCodeID);
         getQR.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
@@ -111,6 +108,5 @@ public class DatabaseQR extends AppCompatActivity {
     public ArrayList<String> getUserList() {
         return tempStringArray;
     }
-    // 这后面应该还需要call什么然后db才能更新
 
 }
