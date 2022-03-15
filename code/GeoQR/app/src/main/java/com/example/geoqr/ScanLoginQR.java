@@ -1,12 +1,9 @@
 package com.example.geoqr;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.view.MotionEvent;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -18,40 +15,40 @@ import com.budiyev.android.codescanner.CodeScanner;
 import com.budiyev.android.codescanner.CodeScannerView;
 import com.budiyev.android.codescanner.DecodeCallback;
 import com.budiyev.android.codescanner.ScanMode;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.zxing.Result;
 
 // this class is to be implemented
 public class ScanLoginQR extends AppCompatActivity {
 
-    private CodeScanner mCodeScanner;
+    private CodeScanner CodeScanner;
     private static final int CAMERA_PERMISSION_CODE = 10;
     private String content;
-    private CodeScannerView scannerView;
+    private CodeScannerView scanLogin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.camera_v2);
+        setContentView(R.layout.scan_login);
 
-        scannerView = findViewById(R.id.scan_view);
+        scanLogin = findViewById(R.id.login_view);
+
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED) {
             ActivityCompat.requestPermissions(this, new String[] { Manifest.permission.CAMERA }, CAMERA_PERMISSION_CODE);
         }
         else {
-            scanCode();
+            scanLogin();
         }
     }
 
-    private void scanCode() {
-        mCodeScanner = new CodeScanner(this, scannerView);
-        mCodeScanner.setAutoFocusEnabled(true);
-        mCodeScanner.setFormats(CodeScanner.ALL_FORMATS);
-        mCodeScanner.setScanMode(ScanMode.CONTINUOUS);
-        mCodeScanner.setFlashEnabled(false);
+    private void scanLogin() {
+        CodeScanner = new CodeScanner(this, scanLogin);
+        CodeScanner.setAutoFocusEnabled(true);
+        CodeScanner.setFormats(CodeScanner.ALL_FORMATS);
+        CodeScanner.setScanMode(ScanMode.CONTINUOUS);
+        CodeScanner.setFlashEnabled(false);
 
-        mCodeScanner.setDecodeCallback(new DecodeCallback() {
+        CodeScanner.setDecodeCallback(new DecodeCallback() {
             @Override
             public void onDecoded(@NonNull Result result) {
                 runOnUiThread(new Runnable() {
@@ -64,10 +61,10 @@ public class ScanLoginQR extends AppCompatActivity {
             }
         });
 
-        scannerView.setOnClickListener(new View.OnClickListener() {
+        scanLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mCodeScanner.startPreview();
+                CodeScanner.startPreview();
             }
         });
     }
@@ -75,13 +72,13 @@ public class ScanLoginQR extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        mCodeScanner.startPreview();
+        CodeScanner.startPreview();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        mCodeScanner.releaseResources();
+        CodeScanner.releaseResources();
     }
 
     private void passContent() {

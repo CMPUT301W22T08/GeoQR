@@ -35,6 +35,8 @@ import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
 
+import java.io.ByteArrayOutputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -57,6 +59,7 @@ public class addQR extends AppCompatActivity {
     // private Bitmap qr_img;
     private CalculateScore score;
     FirebaseFirestore db;
+    DatabaseQR databaseQR = new DatabaseQR();
     // private Bitmap b;
 
     // Define variables that's going to be used inside this class
@@ -70,6 +73,7 @@ public class addQR extends AppCompatActivity {
     Button add_img_btn;
     Button delete_img_btn;
     ImageView QR_img_view;
+    Bitmap bitmap;
     ActivityResultLauncher<Intent> activityResultLauncher;
     @SuppressLint("UseSwitchCompatOrMaterialCode")
     Switch add_geo;
@@ -90,7 +94,6 @@ public class addQR extends AppCompatActivity {
         comment = findViewById(R.id.comments);
         add_btn = findViewById(R.id.AddBtn);
         add_geo = findViewById(R.id.add_geo_switch);
-//        add_photo = findViewById(R.id.add_photo_switch);
         add_img_btn = findViewById(R.id.Add_img);
         delete_img_btn = findViewById(R.id.Delete_img);
         QR_img_view = findViewById(R.id.QRImg);
@@ -107,7 +110,10 @@ public class addQR extends AppCompatActivity {
 
         //UserName = intent.getDataString("");
         //////////////temporary!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        UserName = "I";
+
+        UserName = databaseQR.getUserName();
+
+        // Toast.makeText(getApplicationContext(), UserName, Toast.LENGTH_LONG).show();
 
         //Calculate score
         score = new CalculateScore(qr_str);
@@ -144,7 +150,7 @@ public class addQR extends AppCompatActivity {
             public void onActivityResult(ActivityResult result) {
                 if (result.getResultCode() == RESULT_OK && result.getData() != null) {
                     Bundle bundle = result.getData().getExtras();
-                    Bitmap bitmap = (Bitmap) bundle.get("data");
+                    bitmap = (Bitmap) bundle.get("data");
                     QR_img_view.setImageBitmap(bitmap);
                 }
             }
@@ -184,7 +190,6 @@ public class addQR extends AppCompatActivity {
         String s = score.getQRHex();
 
         // define for add to database
-        final CollectionReference user_Ref = db.collection("Users");
         final CollectionReference QR_ref = db.collection("QR codes");
         // final DocumentReference QR_code_ref = db.collection("QR codes").document(s);
 
@@ -193,70 +198,166 @@ public class addQR extends AppCompatActivity {
         add_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                add_qr_db();
+                add_user_db();
+                goBack();
+            }
+        });
+    }
 
-                // 98 83 106
-                // 186
 
-                // https://www.youtube.com/watch?v=y2op1D0W8oE
-                // Add to Qr collection
+    /**
+     * go back to the class intented from
+     */
+    private void goBack(){
+        Intent camera = new Intent(addQR.this, ScanQR.class);
+        startActivity(camera);
+    }
 
-                // List<String> loc = new ArrayList<>();
-                // List<String> user = new ArrayList<>();
-//                loc.add(GeoDisplay.getText().toString());
-//                user.add(UserName);
-                // add data for the QR
-                HashMap<String, Object> data_qr = new HashMap<>();
-                //data_qr.put("Locations",loc);  //(List<String>)
-                data_qr.put("Score",QRScore);
-                //data_qr.put("User",user);
-                data_qr.put("Content", qr_str);
-                data_qr.put("Comment",comment.getText());
+    /**
+     * add the data to the user section of firestore
+     */
+    public void add_user_db(){
+        final CollectionReference user_Ref = db.collection("Users");
+        user_Ref.document(UserName)
+                .collection("QR codes")
+                .document(QRHexDisplay.getText().toString())
+                .set(user_db_content(),SetOptions.merge())
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Log.d(TAG, "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAdded");
+                    }})
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG, "NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNot added");
+                    }
+                });
+    }
 
-                // if user wants to add photo
-                if (add_img){
-                    // got bitmap and can store to database
-                    // but currently no place to put bitmap on database so implement later
-                }
+    /**
+     * prepare the data to be added to the user part of database
+     * @return user_qr - hashmap of user content
+     */
+    public HashMap<String, Object> user_db_content(){
+        //Add to user collection
+        List<String> qr = new ArrayList<>();
+        qr.add(QRHexDisplay.getText().toString());
+        HashMap<String, Object> user_qr = new HashMap<>();
+        user_qr.put("QR codes", qr);
 
-                // if user wants to add location
-                if(add_g){
-                    // get location from location class and put in hashmap
-                    // but currently no place to put location on database so implement later
-                }
+        // if user wants to add photo
+        if (add_img){
+            // got bitmap and can store to database
+            // but currently no place to put bitmap on database so implement later
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+            byte[] bytes = stream.toByteArray();
+            user_qr.put("Bytes Array", bytes);
+        }
 
-                // ID: score.getQRHex(),
-                // add new doc/ override existing
-                QR_ref.document(score.getQRHex()).set(data_qr,SetOptions.merge())
-                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                // These are a method which gets executed when the task is succeeded
-                                Log.d(TAG, "Data has been added successfully!");
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                // These are a method which gets executed if there’s any problem
-                                Log.d(TAG, "Data could not be added!" + e);
-                            }
-                        });
+        return user_qr;
+    }
 
-                Toast.makeText(getApplicationContext(),"Add Successfully",Toast.LENGTH_LONG).show();
+    /**
+     * prepare the data to be added to the qr part of database
+     * @return data_qr - hashmap of qr content
+     */
+    public HashMap<String, Object> qr_db_content(){
+        // https://www.youtube.com/watch?v=y2op1D0W8oE
+        // Add to Qr collection
+<<<<<<< Updated upstream
+        //List<String> loc = new ArrayList<>();
+        //List<String> user = new ArrayList<>();
+        //loc.add(GeoDisplay.getText().toString());
+        //user.add(UserName);
+        // add data for the QR
+        HashMap<String, Object> data_qr = new HashMap<>();
+        //data_qr.put("Locations",loc);  //(List<String>)
+        data_qr.put("Score",QRScore);
+        //data_qr.put("User",user);
+=======
+        System.out.println("Debug1, something wrong");
+        Log.d("Debug", "Debug1, something wrong");
+        // String loc;
+        // loc.add(GeoDisplay.getText().toString());
+        String username = databaseQR.getUserName();
+        // add data for the QR
+        HashMap<String, Object> data_qr = new HashMap<>();
+        // data_qr.put("Locations",loc);  //(List<String>)
+        data_qr.put("Score",QRScore);
+        data_qr.put("User",username);
+>>>>>>> Stashed changes
+        data_qr.put("Content", qr_str);
+        data_qr.put("Comment",comment.getText());
+        System.out.println("Debug2, something wrong");
+        Log.d("Debug", "Debug2, something wrong");
+        // if user wants to add location
+        if(add_g){
+            // get location from location class and put in hashmap
+            // but currently no place to put location on database so implement later
+        }
+
+        return data_qr;
+    }
+
+    /**
+     * add the data to the qr section of firestore
+     */
+    public void add_qr_db(){
+        final CollectionReference QR_ref = db.collection("QR codes");
+
+        System.out.println("Debug, something wrong");
+        Log.d("Debug", "Debug3, something wrong");
+        QR_ref.document(score.getQRHex()).set(qr_db_content(), SetOptions.merge())
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        // These are a method which gets executed when the task is succeeded
+                        Log.d(TAG, "Data has been added successfully!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        // These are a method which gets executed if there’s any problem
+                        Log.d(TAG, "Data could not be added!" + e);
+                    }
+                });
+
+        Toast.makeText(getApplicationContext(),"Add Successfully",Toast.LENGTH_LONG).show();
+    }
+
+
+
+}
+
+
+// and of course, the testcase does not want to work with me
+
+// 98 83 106
+// 186
+
+
+
+// ID: score.getQRHex(),
+// add new doc/ override existing
+
 
 //                // check if document exist
-                // all not work
-                // check method 1
+// all not work
+// check method 1
 //                QR_ref.document(score.getQRHex()).update("Locations", FieldValue.arrayUnion(GeoDisplay.getText().toString()));
 //                QR_ref.document(score.getQRHex()).update("Users", FieldValue.arrayUnion(UserName));
-                // raise error and use try
+// raise error and use try
 //
-                // check method 2
+// check method 2
 //                QR_code_ref.get().addOnCompleteListener(@NonNull Task<DocumentSnapshot> task){
 //
 //                }
 
-                // check method 3
+// check method 3
 //                List<String> qr = (ArrayList<String>) user_Ref.document(UserName).get().getResult().get("QR codes");
 
 
@@ -305,27 +406,6 @@ public class addQR extends AppCompatActivity {
 //                    }
 //                });
 
-                //Add to user collection
-                List<String> qr = new ArrayList<>();
-                qr.add(QRHexDisplay.getText().toString());
-                HashMap<String, Object> user_qr = new HashMap<>();
-                user_qr.put("QR codes", qr);
-
-                user_Ref.document(UserName)
-                        .collection("QR codes")
-                        .document(QRHexDisplay.getText().toString())
-                        .set(user_qr,SetOptions.merge())
-                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void unused) {
-                        Log.d(TAG, "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAdded");
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d(TAG, "NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNot added");
-                    }
-                });
 
 //                final List<String>[] qr = new List[]{new ArrayList<>()};
 //
@@ -368,22 +448,3 @@ public class addQR extends AppCompatActivity {
 
 //                user_Ref.document(UserName).update("QR codes", FieldValue.arrayUnion(QRHexDisplay.getText().toString()));
 //                //update user image collection?
-
-                goBack();
-            }
-        });
-    }
-
-
-    /**
-     * go back to the class intented from
-     */
-    private void goBack(){
-        Intent camera = new Intent(addQR.this, ScanQR.class);
-        startActivity(camera);
-    }
-
-}
-
-
-// and of course, the testcase does not want to work with me
