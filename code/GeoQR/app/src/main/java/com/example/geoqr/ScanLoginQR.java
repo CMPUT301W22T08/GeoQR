@@ -89,7 +89,7 @@ public class ScanLoginQR extends AppCompatActivity {
     }
 
     /**
-     * Logining in  
+     * Logining in
      */
     private void passContent() {
         Intent passName = new Intent(ScanLoginQR.this, MainActivity.class);
