@@ -42,6 +42,8 @@ public class AdminPage extends AppCompatActivity {
         setContentView(R.layout.activity_admin);
 
         admin = new Admin((Context) this);
+        admin.fetch();
+
         // Set Buttons
         playerBtn = findViewById(R.id.admin_select_players);
         qrCodeBtn = findViewById(R.id.admin_select_qr_codes);
@@ -66,7 +68,6 @@ public class AdminPage extends AppCompatActivity {
         // Set onClick Event Listeners
         playerBtn.setOnClickListener(this::toggle);
         qrCodeBtn.setOnClickListener(this::toggle);
-
 
         qrCodeList.setAdapter(admin.getQRAdapter());
         playerList.setAdapter(admin.getPlayerAdapter());
