@@ -106,9 +106,9 @@ public class AdminTest {
     @Test
     public void checkQRSelection() {
         admin.addSelectedQRAt(1);
-        admin.addSelectedQRAt(1);
+        admin.addSelectedQRAt(2);
 
-        assertEquals(1, admin.getSelectedQRIndices().size());
+        assertEquals(2, admin.getSelectedQRIndices().size());
 
         admin.deleteQRCodes();
 
