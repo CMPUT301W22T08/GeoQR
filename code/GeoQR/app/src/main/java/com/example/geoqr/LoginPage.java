@@ -41,6 +41,7 @@ public class LoginPage extends AppCompatActivity {
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private static final int CAMERA_PERMISSION_CODE = 10;
     String username_scan;
+    DatabaseQR databaseQR = new DatabaseQR();
     // private CollectionReference ref = db.collection("Users");
 
 
@@ -50,7 +51,6 @@ public class LoginPage extends AppCompatActivity {
         setContentView(R.layout.login_page);
 
         ScanQR checkCam = new ScanQR();
-        DatabaseQR databaseQR = new DatabaseQR();
 
         if (!checkCam.checkCamera(this)) {
             Toast.makeText(getApplicationContext(), "You need a camera for this app", Toast.LENGTH_LONG).show();
@@ -120,14 +120,17 @@ public class LoginPage extends AppCompatActivity {
             public void onClick(View view) {
                 Intent scan = new Intent(LoginPage.this, ScanLoginQR.class);
                 startActivity(scan);
-                boolean check = checkIfUserExists();
-                if (!check) {
-                    databaseQR.setUsername(username_scan);
-                    Intent camScan = new Intent(LoginPage.this, ScanQR.class);
-                    startActivity(camScan);
-                }
             }
         });
+    }
+
+    private void test() {
+        boolean check = checkIfUserExists();
+        if (!check) {
+            databaseQR.setUsername(username_scan);
+            Intent camScan = new Intent(LoginPage.this, ScanQR.class);
+            startActivity(camScan);
+        }
     }
 
     private boolean checkIfUserExists() {
