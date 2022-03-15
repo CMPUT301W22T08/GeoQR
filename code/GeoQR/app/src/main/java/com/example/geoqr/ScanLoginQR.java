@@ -18,6 +18,10 @@ import com.budiyev.android.codescanner.ScanMode;
 import com.google.zxing.Result;
 
 // this class is to be implemented
+
+/**
+ * this class is for login scanning
+ */
 public class ScanLoginQR extends AppCompatActivity {
 
     private CodeScanner CodeScanner;
@@ -41,6 +45,9 @@ public class ScanLoginQR extends AppCompatActivity {
         }
     }
 
+    /**
+     * provides camera to scan the user's QR code
+     */
     private void scanLogin() {
         CodeScanner = new CodeScanner(this, scanLogin);
         CodeScanner.setAutoFocusEnabled(true);
@@ -81,6 +88,9 @@ public class ScanLoginQR extends AppCompatActivity {
         CodeScanner.releaseResources();
     }
 
+    /**
+     * Logining in  
+     */
     private void passContent() {
         Intent passName = new Intent(ScanLoginQR.this, MainActivity.class);
         passName.putExtra("content", content);

@@ -21,6 +21,9 @@ import com.budiyev.android.codescanner.ScanMode;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.zxing.Result;
 
+/**
+ * This class provides the camera to scan the QR codes
+ */
 public class ScanQR extends AppCompatActivity {
 
     private CodeScanner mCodeScanner;
@@ -102,6 +105,9 @@ public class ScanQR extends AppCompatActivity {
         });
     }
 
+    /**
+     * start the preview
+     */
     private void scanCode() {
         mCodeScanner = new CodeScanner(this, scannerView);
         mCodeScanner.setAutoFocusEnabled(true);
@@ -143,6 +149,9 @@ public class ScanQR extends AppCompatActivity {
         mCodeScanner.releaseResources();
     }
 
+    /**
+     * passing the content to the addQR class and show summary
+     */
     private void passScore() {
         Intent calScore = new Intent(ScanQR.this, addQR.class);
         calScore.putExtra("content", content);
