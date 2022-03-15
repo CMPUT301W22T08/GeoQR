@@ -254,17 +254,15 @@ public class addQR extends AppCompatActivity {
     public HashMap<String, Object> qr_db_content(){
         // https://www.youtube.com/watch?v=y2op1D0W8oE
         // Add to Qr collection
-        System.out.println("Debug1, something wrong");
-        Log.d("Debug", "Debug1, something wrong");
-        List<String> loc = new ArrayList<>();
-        List<String> user = new ArrayList<>();
-        loc.add(GeoDisplay.getText().toString());
-        user.add(UserName);
+        //List<String> loc = new ArrayList<>();
+        //List<String> user = new ArrayList<>();
+        //loc.add(GeoDisplay.getText().toString());
+        //user.add(UserName);
         // add data for the QR
         HashMap<String, Object> data_qr = new HashMap<>();
-        data_qr.put("Locations",loc);  //(List<String>)
+        //data_qr.put("Locations",loc);  //(List<String>)
         data_qr.put("Score",QRScore);
-        data_qr.put("User",user);
+        //data_qr.put("User",user);
         data_qr.put("Content", qr_str);
         data_qr.put("Comment",comment.getText());
         System.out.println("Debug2, something wrong");
