@@ -1,30 +1,18 @@
 package com.example.geoqr;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-
-
-import android.app.Activity;
-import android.app.Fragment;
-import android.util.Log;
-
-import androidx.annotation.NonNull;
-
-import org.junit.Before;
-import org.junit.Rule;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 public class ProfileListTest {
 
-
     private ProfileList list;
 
-    @Before
+    @BeforeEach
     public void createList() {
         list = new ProfileList(null, new ArrayList<ListEntry>());
     }
@@ -50,6 +38,5 @@ public class ProfileListTest {
         list.addEntry(new ListEntry("hdfffdfdfdffd", "121212121", "321", "(21,33)", "9:56"));
         assertEquals(list.size(), size+1);
     }
-
 
 }
