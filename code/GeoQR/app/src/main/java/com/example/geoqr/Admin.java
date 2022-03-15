@@ -84,11 +84,14 @@ public class Admin {
      */
     public void deleteQRCodes() {
         for (AdminQRTuple qrTuple: qrSelection) {
-            db.collection("QR codes").document(qrTuple.getContents()).delete();
-            db.collection("User")
-                    .document(qrTuple.getPlayer())
-                    .collection("QR codes").document(qrTuple.getContents())
-                    .delete();
+            if (db != null) {
+                db.collection("QR codes").document(qrTuple.getContents()).delete();
+                db.collection("User")
+                        .document(qrTuple.getPlayer())
+                        .collection("QR codes").document(qrTuple.getContents())
+                        .delete();
+            }
+
             qrAdapter.remove(qrTuple);
         }
 
@@ -101,7 +104,10 @@ public class Admin {
      */
     public void deletePlayers() {
         for (AdminPlayerTuple playerTuple: playerSelection) {
-            db.collection("Users").document(playerTuple.getName()).delete();
+            if (db != null) {
+                db.collection("Users").document(playerTuple.getName()).delete();
+            }
+
             playerAdapter.remove(playerTuple);
         }
 

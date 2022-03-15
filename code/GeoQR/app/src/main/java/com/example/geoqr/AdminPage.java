@@ -69,7 +69,6 @@ public class AdminPage extends AppCompatActivity {
         playerBtn.setOnClickListener(this::toggle);
         qrCodeBtn.setOnClickListener(this::toggle);
 
-
         qrCodeList.setAdapter(admin.getQRAdapter());
         playerList.setAdapter(admin.getPlayerAdapter());
 
