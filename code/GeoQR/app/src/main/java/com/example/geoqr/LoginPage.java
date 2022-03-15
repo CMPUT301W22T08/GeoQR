@@ -41,7 +41,6 @@ public class LoginPage extends AppCompatActivity {
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private static final int CAMERA_PERMISSION_CODE = 10;
     String username_scan;
-    DatabaseQR databaseQR = new DatabaseQR();
     // private CollectionReference ref = db.collection("Users");
 
 
@@ -89,7 +88,6 @@ public class LoginPage extends AppCompatActivity {
                                 @Override
                                 public void onSuccess(DocumentReference documentReference) {
                                     Log.d(TAG, "DocumentSnapshot written with ID: " + documentReference.getId());
-                                    databaseQR.setUsername(username);
                                     Intent camScan = new Intent(LoginPage.this, ScanQR.class);
                                     startActivity(camScan);
                                 }
@@ -127,7 +125,6 @@ public class LoginPage extends AppCompatActivity {
     private void test() {
         boolean check = checkIfUserExists();
         if (!check) {
-            databaseQR.setUsername(username_scan);
             Intent camScan = new Intent(LoginPage.this, ScanQR.class);
             startActivity(camScan);
         }

@@ -35,7 +35,7 @@ public class DatabaseQR extends AppCompatActivity {
     }
 
     public String getUserName() {
-        return this.UserID;
+        return "Test";
     }
 
     public void setQR(String QRCodeID) {
