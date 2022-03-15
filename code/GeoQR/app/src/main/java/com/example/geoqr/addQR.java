@@ -246,6 +246,7 @@ public class addQR extends AppCompatActivity {
         qr.add(QRHexDisplay.getText().toString());
         HashMap<String, Object> user_qr = new HashMap<>();
         user_qr.put("QR codes", qr);
+        user_qr.put("Comment",comment.getText());
 
         // if user wants to add photo
         if (add_img){
@@ -267,32 +268,17 @@ public class addQR extends AppCompatActivity {
     public HashMap<String, Object> qr_db_content(){
         // https://www.youtube.com/watch?v=y2op1D0W8oE
         // Add to Qr collection
-<<<<<<< Updated upstream
-        //List<String> loc = new ArrayList<>();
-        //List<String> user = new ArrayList<>();
-        //loc.add(GeoDisplay.getText().toString());
-        //user.add(UserName);
+
         // add data for the QR
         HashMap<String, Object> data_qr = new HashMap<>();
-        //data_qr.put("Locations",loc);  //(List<String>)
-        data_qr.put("Score",QRScore);
-        //data_qr.put("User",user);
-=======
-        System.out.println("Debug1, something wrong");
-        Log.d("Debug", "Debug1, something wrong");
-        // String loc;
-        // loc.add(GeoDisplay.getText().toString());
+
         String username = databaseQR.getUserName();
-        // add data for the QR
-        HashMap<String, Object> data_qr = new HashMap<>();
-        // data_qr.put("Locations",loc);  //(List<String>)
         data_qr.put("Score",QRScore);
-        data_qr.put("User",username);
->>>>>>> Stashed changes
         data_qr.put("Content", qr_str);
-        data_qr.put("Comment",comment.getText());
-        System.out.println("Debug2, something wrong");
-        Log.d("Debug", "Debug2, something wrong");
+
+        //        System.out.println("Debug2, something wrong");
+        //        Log.d("Debug", "Debug2, something wrong");
+
         // if user wants to add location
         if(add_g){
             // get location from location class and put in hashmap
@@ -308,8 +294,8 @@ public class addQR extends AppCompatActivity {
     public void add_qr_db(){
         final CollectionReference QR_ref = db.collection("QR codes");
 
-        System.out.println("Debug, something wrong");
-        Log.d("Debug", "Debug3, something wrong");
+//        System.out.println("Debug, something wrong");
+//        Log.d("Debug", "Debug3, something wrong");
         QR_ref.document(score.getQRHex()).set(qr_db_content(), SetOptions.merge())
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -325,6 +311,19 @@ public class addQR extends AppCompatActivity {
                         Log.d(TAG, "Data could not be added!" + e);
                     }
                 });
+
+        // adding username inside the sub-collection
+        QR_ref.document(score.getQRHex()).collection("Users").document(databaseQR.getUserName()).set(databaseQR.getUserName()).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+                Log.d(TAG, "Data of username has been added successfully!");
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d(TAG, "~(Data of username has been added successfully!)");
+            }
+        });
 
         Toast.makeText(getApplicationContext(),"Add Successfully",Toast.LENGTH_LONG).show();
     }
