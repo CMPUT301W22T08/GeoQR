@@ -25,6 +25,8 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
@@ -50,6 +52,7 @@ public class addQR extends AppCompatActivity {
     private Location location = new Location(""); // get location somehow, work with Julian
     private Boolean add_img = false;
     private Boolean add_g = false;
+    private Location location_get;
 
     // Define variables that's related with external links like db/intent
     private String qr_str;
@@ -57,6 +60,7 @@ public class addQR extends AppCompatActivity {
     private CalculateScore score;
     FirebaseFirestore db;
     DatabaseQR databaseQR = new DatabaseQR();
+    private FusedLocationProviderClient fusedLocationClient;
     // private Bitmap b;
 
     // Define variables that's going to be used inside this class
@@ -64,7 +68,8 @@ public class addQR extends AppCompatActivity {
     TextView UNDisplay;
     TextView QRHexDisplay;
     TextView QRScoreDisplay;
-    TextView GeoDisplay;
+    TextView GeoDisplay_long;
+    TextView GeoDisplay_lati;
     EditText comment;
     Button add_btn;
     Button add_img_btn;
@@ -83,11 +88,13 @@ public class addQR extends AppCompatActivity {
         setContentView(R.layout.aqq_qr_code_v2);
 
         db = FirebaseFirestore.getInstance();
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
         UNDisplay = findViewById(R.id.UserAutoFill);
         QRHexDisplay = findViewById(R.id.QRAutoFill);
         QRScoreDisplay = findViewById(R.id.QRScoreAutoFill);
-        GeoDisplay = findViewById(R.id.GeoSharable);
+        GeoDisplay_long = findViewById(R.id.GeoSharable_Long);
+        GeoDisplay_lati = findViewById(R.id.GeoSharable_Lati);
         comment = findViewById(R.id.comments);
         add_btn = findViewById(R.id.AddBtn);
         add_geo = findViewById(R.id.add_geo_switch);
@@ -123,18 +130,30 @@ public class addQR extends AppCompatActivity {
         QRInfo.setText(qr_str);
 
         //////////////temporary!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        GeoDisplay.setText("position");
+        GeoDisplay_lati.setText(0);
+        GeoDisplay_long.setText(0);
 
         // get if user wants to add the geo or not
         add_geo.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @SuppressLint("MissingPermission")
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if (add_g){
                     add_g = false;
-                    GeoDisplay.setText("default");
+                    GeoDisplay_lati.setText(0);
+                    GeoDisplay_long.setText(0);
                 }else{
                     add_g = true;
-                    GeoDisplay.setText("current");
+                    fusedLocationClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
+                        @Override
+                        public void onSuccess(Location location) {
+                            location_get = location;
+                            if (location != null){
+                                GeoDisplay_long.setText((int) location.getLongitude());
+                                GeoDisplay_lati.setText((int) location.getLatitude());
+                            }
+                        }
+                    });
                 }
 
                 // somehow get the location object form other class
@@ -273,13 +292,9 @@ public class addQR extends AppCompatActivity {
         data_qr.put("Score", String.valueOf(QRScore));
         data_qr.put("Content", qr_str);
 
-        //        System.out.println("Debug2, something wrong");
-        //        Log.d("Debug", "Debug2, something wrong");
-
         // if user wants to add location
         if(add_g){
-            // get location from location class and put in hashmap
-            // but currently no place to put location on database so implement later
+            data_qr.put("Location", location_get);
         }
 
         return data_qr;
@@ -324,6 +339,14 @@ public class addQR extends AppCompatActivity {
                 });
 
         Toast.makeText(getApplicationContext(),"Add Successfully",Toast.LENGTH_LONG).show();
+    }
+
+    private void total_score_and_count(){
+        // get user
+        // get user field
+        // get data
+        // update data
+        // store/merge/overwrite data
     }
 
 
