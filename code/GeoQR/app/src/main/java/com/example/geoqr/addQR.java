@@ -217,10 +217,9 @@ public class addQR extends AppCompatActivity {
      * add the data to the user section of firestore
      */
     public void add_user_db() {
-        final CollectionReference user_Ref = db.collection("Users");
-        user_Ref.document(UserName)
-                .collection("QR codes")
-                .document(QRHexDisplay.getText().toString())
+        final CollectionReference user_Ref = db.collection("Users").document(UserName)
+                .collection("QR codes");
+        user_Ref.document(QRHexDisplay.getText().toString())
                 .set(user_db_content(),SetOptions.merge())
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -311,7 +310,7 @@ public class addQR extends AppCompatActivity {
                 });
 
         // adding username inside the sub-collection
-        db.collection("QR codes").document(score.getQRHex()).collection("Users").document(databaseQR.getUserName()).set(databaseQR.getUserName())
+        QR_ref.document(score.getQRHex()).collection("Users").document(databaseQR.getUserName()).set(databaseQR.getUserName())
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
