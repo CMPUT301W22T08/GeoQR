@@ -2,7 +2,9 @@ package com.example.geoqr;
 
 import androidx.fragment.app.FragmentActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -11,6 +13,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.example.geoqr.databinding.ActivityMapBinding;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 
@@ -31,7 +34,15 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-
+        // to be tested
+        FloatingActionButton scan_btn = findViewById(R.id.scan);
+        scan_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent back = new Intent(MapActivity.this, ScanQR.class);
+                startActivity(back);
+            }
+        });
     }
 
     /**
@@ -63,7 +74,6 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         //set the camera to a specified position
         mMap.moveCamera(CameraUpdateFactory.zoomTo(15.0f));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(53.523988,-113.527551)));
-
     }
 
     private void updateMap(ArrayList<pointGIS> locations) {
