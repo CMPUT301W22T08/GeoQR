@@ -222,7 +222,7 @@ public class addQR extends AppCompatActivity {
 
 
     /**
-     * go back to the class intented from
+     * go back to the class intent from
      */
     private void goBack(int code){
         Intent camera = new Intent(addQR.this, ScanQR.class);
@@ -234,6 +234,7 @@ public class addQR extends AppCompatActivity {
         }
         camera.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(camera);
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
     }
 
     /**
