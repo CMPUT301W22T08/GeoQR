@@ -49,7 +49,8 @@ public class ScanLoginQR extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent login = new Intent(ScanLoginQR.this, LoginPage.class);
-                login.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                login.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                login.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(login);
             }
         });
