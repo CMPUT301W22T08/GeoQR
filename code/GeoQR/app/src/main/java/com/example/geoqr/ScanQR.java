@@ -90,13 +90,13 @@ public class ScanQR extends AppCompatActivity {
                         y2 = motionEvent.getY();
                         if (x1 < x2) {
                             Intent left = new Intent(ScanQR.this, MapActivity.class);
-                            left.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            left.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(left);
                             overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
                         }
                         else if (x1 > x2) {
                             Intent right = new Intent(ScanQR.this, MainActivity.class);
-                            right.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            right.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(right);
                             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                         }
@@ -156,7 +156,7 @@ public class ScanQR extends AppCompatActivity {
      */
     private void passScore() {
         Intent calScore = new Intent(ScanQR.this, addQR.class);
-        calScore.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        calScore.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         calScore.putExtra("content", content);
         startActivity(calScore);
     }

@@ -232,7 +232,7 @@ public class addQR extends AppCompatActivity {
         else {
             Toast.makeText(getApplicationContext(), "Data is not saved", Toast.LENGTH_LONG).show();
         }
-        camera.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        camera.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(camera);
     }
 

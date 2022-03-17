@@ -89,7 +89,7 @@ public class LoginPage extends AppCompatActivity {
                                 public void onSuccess(DocumentReference documentReference) {
                                     Log.d(TAG, "DocumentSnapshot written with ID: " + documentReference.getId());
                                     Intent camScan = new Intent(LoginPage.this, ScanQR.class);
-                                    camScan.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                    camScan.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                     startActivity(camScan);
                                 }
                             })
@@ -118,7 +118,7 @@ public class LoginPage extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent scan = new Intent(LoginPage.this, ScanLoginQR.class);
-                scan.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                scan.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(scan);
             }
         });
@@ -134,13 +134,19 @@ public class LoginPage extends AppCompatActivity {
     }
 
     private void test() {
-        boolean check = checkIfUserExists();
-        if (!check) {
+        boolean checkUser = checkIfUserExists();
+        boolean checkAdmin = checkIfAdmin();
+        if (!checkAdmin) {
             Intent camScan = new Intent(LoginPage.this, ScanQR.class);
+            camScan.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(camScan);
         }
     }
 
+    // check if the user is admin
+    private boolean checkIfAdmin() {
+        return false;
+    }
 
     // this is for scanning QR code login
     private boolean checkIfUserExists() {

@@ -15,6 +15,7 @@ import com.budiyev.android.codescanner.CodeScanner;
 import com.budiyev.android.codescanner.CodeScannerView;
 import com.budiyev.android.codescanner.DecodeCallback;
 import com.budiyev.android.codescanner.ScanMode;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.zxing.Result;
 
 // this class is to be implemented
@@ -35,7 +36,7 @@ public class ScanLoginQR extends AppCompatActivity {
         setContentView(R.layout.scan_login);
 
         scanLogin = findViewById(R.id.login_view);
-
+        FloatingActionButton cancel = findViewById(R.id.cancel_btn_login);
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED) {
             ActivityCompat.requestPermissions(this, new String[] { Manifest.permission.CAMERA }, CAMERA_PERMISSION_CODE);
@@ -43,6 +44,15 @@ public class ScanLoginQR extends AppCompatActivity {
         else {
             scanLogin();
         }
+
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent login = new Intent(ScanLoginQR.this, LoginPage.class);
+                login.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(login);
+            }
+        });
     }
 
     /**
