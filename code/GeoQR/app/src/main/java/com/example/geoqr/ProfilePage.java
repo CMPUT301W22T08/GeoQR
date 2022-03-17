@@ -1,17 +1,15 @@
 package com.example.geoqr;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextClock;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -102,7 +100,7 @@ public class ProfilePage extends AppCompatActivity implements ListFragment.OnFra
             totalCodes.setText(String.format("Total Code: %s", entryDataList.size()));
             highScore.setText(String.format("Highest Score: %s", largestScore));
             lowScore.setText(String.format("Lowest Score: %s", smallestScore));
-            
+
         });
 
         Button generateUserQR = findViewById(R.id.generate_login_qr);
