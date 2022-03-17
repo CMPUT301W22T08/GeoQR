@@ -132,8 +132,8 @@ public class addQR extends AppCompatActivity {
         QRInfo.setText(qr_str);
 
         //////////////temporary!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        GeoDisplay_lati.setText(0);
-        GeoDisplay_long.setText(0);
+        GeoDisplay_lati.setText(String.valueOf(0));
+        GeoDisplay_long.setText(String.valueOf(0));
 
         // get if user wants to add the geo or not
         add_geo.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {

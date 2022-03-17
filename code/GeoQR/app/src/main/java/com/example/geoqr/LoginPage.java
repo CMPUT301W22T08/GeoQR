@@ -141,6 +141,11 @@ public class LoginPage extends AppCompatActivity {
             camScan.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(camScan);
         }
+        else {
+            Intent admin_page = new Intent(this, AdminPage.class);
+            admin_page.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(admin_page);
+        }
     }
 
     // check if the user is admin
