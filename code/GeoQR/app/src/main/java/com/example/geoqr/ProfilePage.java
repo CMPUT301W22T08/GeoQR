@@ -50,8 +50,8 @@ public class ProfilePage extends AppCompatActivity implements ListFragment.OnFra
         profileList = findViewById(R.id.profile_list);
         profileTotal = findViewById(R.id.total_score);
         totalCodes = findViewById(R.id.total_codes);
-        // highScore = findViewById(R.id.highest_score);
-        // lowScore = findViewById(R.id.lowest_score);
+        highScore = findViewById(R.id.highest_score);
+        lowScore = findViewById(R.id.lowest_score);
 
         db = FirebaseFirestore.getInstance();
 
@@ -100,10 +100,9 @@ public class ProfilePage extends AppCompatActivity implements ListFragment.OnFra
             listAdapter.notifyDataSetChanged();
             profileTotal.setText(String.format("Total Score: %s", totalScore));
             totalCodes.setText(String.format("Total Code: %s", entryDataList.size()));
-            // highScore.setText(String.valueOf(largestScore));
-            // lowScore.setText(String.valueOf(smallestScore));
-
-
+            highScore.setText(String.format("Highest Score: %s", largestScore));
+            lowScore.setText(String.format("Lowest Score: %s", smallestScore));
+            
         });
 
         Button generateUserQR = findViewById(R.id.generate_login_qr);

@@ -22,7 +22,7 @@
             android:textSize="30sp" />
 
         <TextView
-            android:id="@+id/total_score"
+            android:id="@+id/highest_score"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="left"
@@ -30,6 +30,23 @@
             android:textSize="20sp"
             android:paddingTop="10dp" />
 
+        <TextView
+            android:id="@+id/lowest_score"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:text="@string/default_txt"
+            android:textSize="20sp"
+            android:paddingTop="10dp" />
+
+        <TextView
+            android:id="@+id/total_score"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:text="@string/default_txt"
+            android:textSize="20sp"
+            android:paddingTop="10dp" />
 
         <TextView
             android:id="@+id/total_codes"
