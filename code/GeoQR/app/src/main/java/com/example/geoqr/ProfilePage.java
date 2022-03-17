@@ -5,7 +5,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextClock;
@@ -43,13 +45,13 @@ public class ProfilePage extends AppCompatActivity implements ListFragment.OnFra
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getSupportActionBar().hide();
-        setContentView(R.layout.activity_profile);
+        setContentView(R.layout.activity_profile_v3);
 
         profileList = findViewById(R.id.profile_list);
         profileTotal = findViewById(R.id.total_score);
         totalCodes = findViewById(R.id.total_codes);
-        highScore = findViewById(R.id.highest_score);
-        lowScore = findViewById(R.id.lowest_score);
+        // highScore = findViewById(R.id.highest_score);
+        // lowScore = findViewById(R.id.lowest_score);
 
         db = FirebaseFirestore.getInstance();
 
@@ -64,6 +66,7 @@ public class ProfilePage extends AppCompatActivity implements ListFragment.OnFra
             Intent intent = new Intent(ProfilePage.this, ScanQR.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
+            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
         });
 
 
@@ -95,12 +98,28 @@ public class ProfilePage extends AppCompatActivity implements ListFragment.OnFra
             }
 
             listAdapter.notifyDataSetChanged();
-            profileTotal.setText(String.valueOf(totalScore));
-            totalCodes.setText(String.valueOf(entryDataList.size()));
-            highScore.setText(String.valueOf(largestScore));
-            lowScore.setText(String.valueOf(smallestScore));
+            profileTotal.setText(String.format("Total Score: %s", totalScore));
+            totalCodes.setText(String.format("Total Code: %s", entryDataList.size()));
+            // highScore.setText(String.valueOf(largestScore));
+            // lowScore.setText(String.valueOf(smallestScore));
 
 
+        });
+
+        Button generateUserQR = findViewById(R.id.generate_login_qr);
+        generateUserQR.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // to be done (generate a QR)
+            }
+        });
+
+        Button generateStatusQR = findViewById(R.id.generate_status_qr);
+        generateStatusQR.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // to be done (generate a QR)
+            }
         });
 
 
