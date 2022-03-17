@@ -17,12 +17,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         // setContentView(R.layout.login_page);
 
-        ScanQR cam = new ScanQR();
-        if (!cam.checkCamera(this)) {
-            Toast.makeText(getApplicationContext(), "You do not have camera on this device", Toast.LENGTH_LONG).show();
-            finish();
-        }
-
         Button btn = findViewById(R.id.test_btn);
 
         btn.setOnClickListener(new View.OnClickListener() {

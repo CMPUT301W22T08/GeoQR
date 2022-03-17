@@ -3,6 +3,7 @@ package com.example.geoqr;
 import static android.content.ContentValues.TAG;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -18,6 +19,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -49,9 +51,7 @@ public class LoginPage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_page);
 
-        ScanQR checkCam = new ScanQR();
-
-        if (!checkCam.checkCamera(this)) {
+        if (!checkCamera(this)) {
             Toast.makeText(getApplicationContext(), "You need a camera for this app", Toast.LENGTH_LONG).show();
             finish();
         }
@@ -89,6 +89,7 @@ public class LoginPage extends AppCompatActivity {
                                 public void onSuccess(DocumentReference documentReference) {
                                     Log.d(TAG, "DocumentSnapshot written with ID: " + documentReference.getId());
                                     Intent camScan = new Intent(LoginPage.this, ScanQR.class);
+                                    camScan.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                     startActivity(camScan);
                                 }
                             })
@@ -105,7 +106,6 @@ public class LoginPage extends AppCompatActivity {
             }
         });
 
-
         btnGenerate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -113,13 +113,24 @@ public class LoginPage extends AppCompatActivity {
             }
         });
 
+        // scanning login button
         scanLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent scan = new Intent(LoginPage.this, ScanLoginQR.class);
+                scan.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(scan);
             }
         });
+    }
+
+    /**
+     * This class helps device to check if it does have camera (hardware)
+     * @return boolean
+     * Return False if there is no camera, true otherwise
+     */
+    private boolean checkCamera(Context context) {
+        return context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY);
     }
 
     private void test() {
@@ -130,6 +141,8 @@ public class LoginPage extends AppCompatActivity {
         }
     }
 
+
+    // this is for scanning QR code login
     private boolean checkIfUserExists() {
         Intent intent = getIntent();
         username_scan = intent.getStringExtra("content");

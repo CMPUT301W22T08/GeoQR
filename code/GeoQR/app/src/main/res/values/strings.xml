@@ -17,4 +17,5 @@
     <string name="delete_image">Delete Image</string>
     <string name="qr_content">QR Content</string>
     <string name="title_activity_map">MapActivity</string>
+    <string name="cancel_btn">Cancel</string>
 </resources>

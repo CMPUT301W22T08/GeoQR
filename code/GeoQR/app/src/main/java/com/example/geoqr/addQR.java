@@ -72,6 +72,7 @@ public class addQR extends AppCompatActivity {
     TextView GeoDisplay_lati;
     EditText comment;
     Button add_btn;
+    Button cancel_btn;
     Button add_img_btn;
     Button delete_img_btn;
     ImageView QR_img_view;
@@ -97,6 +98,7 @@ public class addQR extends AppCompatActivity {
         GeoDisplay_lati = findViewById(R.id.GeoSharable_Lati);
         comment = findViewById(R.id.comments);
         add_btn = findViewById(R.id.AddBtn);
+        cancel_btn = findViewById(R.id.CancelBtn);
         add_geo = findViewById(R.id.add_geo_switch);
         add_img_btn = findViewById(R.id.Add_img);
         delete_img_btn = findViewById(R.id.Delete_img);
@@ -166,6 +168,7 @@ public class addQR extends AppCompatActivity {
             public void onActivityResult(ActivityResult result) {
                 if (result.getResultCode() == RESULT_OK && result.getData() != null) {
                     Bundle bundle = result.getData().getExtras();
+                    QR_img_view.setVisibility(View.VISIBLE);
                     bitmap = (Bitmap) bundle.get("data");
                     QR_img_view.setImageBitmap(bitmap);
                 }
@@ -176,22 +179,11 @@ public class addQR extends AppCompatActivity {
         add_img_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                add_photo();
-//                Intent intent = getIntent();
-//                byte[] bytes = intent.getByteArrayExtra("image");
-//                add_img = true;
-//                // set image to imageview
-//                Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-//
-//                QR_img_view.setImageBitmap(bitmap);
-
                 // to be tested
                 Intent cam = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 if (cam.resolveActivity(getPackageManager()) != null) {
                     activityResultLauncher.launch(cam);
-                    QR_img_view.setVisibility(View.VISIBLE);
                 }
-
             }
         });
 
@@ -214,11 +206,16 @@ public class addQR extends AppCompatActivity {
         add_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Toast.makeText(getApplicationContext(), , Toast.LENGTH_LONG).show();
                 add_user_db();
                 add_qr_db();
+                goBack(0);
+            }
+        });
 
-                goBack();
+        cancel_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                goBack(1);
             }
         });
     }
@@ -227,8 +224,15 @@ public class addQR extends AppCompatActivity {
     /**
      * go back to the class intented from
      */
-    private void goBack(){
+    private void goBack(int code){
         Intent camera = new Intent(addQR.this, ScanQR.class);
+        if (code == 0) {
+            Toast.makeText(getApplicationContext(), "Data saved", Toast.LENGTH_LONG).show();
+        }
+        else {
+            Toast.makeText(getApplicationContext(), "Data is not saved", Toast.LENGTH_LONG).show();
+        }
+        camera.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(camera);
     }
 
