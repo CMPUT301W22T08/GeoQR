@@ -84,6 +84,14 @@
                 android:layout_marginLeft="10dp"
                 android:text="Generate\nStatus QR" />
 
+            <Button
+                android:id="@+id/logout"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:text="Logout" />
+
         </LinearLayout>
 
         <LinearLayout
