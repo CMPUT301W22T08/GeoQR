@@ -142,8 +142,8 @@ public class addQR extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if (add_g){
                     add_g = false;
-                    GeoDisplay_lati.setText(0);
-                    GeoDisplay_long.setText(0);
+                    GeoDisplay_lati.setText("1");
+                    GeoDisplay_long.setText("1");
                 }else{
                     add_g = true;
                     fusedLocationClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
@@ -151,8 +151,8 @@ public class addQR extends AppCompatActivity {
                         public void onSuccess(Location location) {
                             location_get = location;
                             if (location != null){
-                                GeoDisplay_long.setText((int) location.getLongitude());
-                                GeoDisplay_lati.setText((int) location.getLatitude());
+                                GeoDisplay_long.setText(String.valueOf(location.getLongitude()));
+                                GeoDisplay_lati.setText(String.valueOf(location.getLatitude()));
                             }
                         }
                     });
