@@ -25,7 +25,7 @@ import com.google.zxing.Result;
  */
 public class ScanLoginQR extends AppCompatActivity {
 
-    private CodeScanner CodeScanner;
+    private CodeScanner lCodeScanner;
     private static final int CAMERA_PERMISSION_CODE = 10;
     private String content;
     private CodeScannerView scanLogin;
@@ -49,7 +49,7 @@ public class ScanLoginQR extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent login = new Intent(ScanLoginQR.this, LoginPage.class);
-                login.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                login.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(login);
             }
         });
@@ -59,13 +59,13 @@ public class ScanLoginQR extends AppCompatActivity {
      * provides camera to scan the user's QR code
      */
     private void scanLogin() {
-        CodeScanner = new CodeScanner(this, scanLogin);
-        CodeScanner.setAutoFocusEnabled(true);
-        CodeScanner.setFormats(CodeScanner.ALL_FORMATS);
-        CodeScanner.setScanMode(ScanMode.CONTINUOUS);
-        CodeScanner.setFlashEnabled(false);
+        lCodeScanner = new CodeScanner(this, scanLogin);
+        lCodeScanner.setAutoFocusEnabled(true);
+        lCodeScanner.setFormats(CodeScanner.ALL_FORMATS);
+        lCodeScanner.setScanMode(ScanMode.CONTINUOUS);
+        lCodeScanner.setFlashEnabled(false);
 
-        CodeScanner.setDecodeCallback(new DecodeCallback() {
+        lCodeScanner.setDecodeCallback(new DecodeCallback() {
             @Override
             public void onDecoded(@NonNull Result result) {
                 runOnUiThread(new Runnable() {
@@ -81,7 +81,7 @@ public class ScanLoginQR extends AppCompatActivity {
         scanLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                CodeScanner.startPreview();
+                lCodeScanner.startPreview();
             }
         });
     }
@@ -89,13 +89,13 @@ public class ScanLoginQR extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        CodeScanner.startPreview();
+        lCodeScanner.startPreview();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        CodeScanner.releaseResources();
+        lCodeScanner.releaseResources();
     }
 
     /**
