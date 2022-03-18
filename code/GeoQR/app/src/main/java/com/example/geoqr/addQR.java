@@ -2,11 +2,9 @@ package com.example.geoqr;
 
 import static android.content.ContentValues.TAG;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.location.Location;
 import android.os.Bundle;
@@ -27,27 +25,23 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
+import com.google.gson.Gson;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Objects;
 
 /**
  * add the QR codes details to the database
@@ -96,6 +90,7 @@ public class addQR extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.aqq_qr_code_v2);
+        Objects.requireNonNull(getSupportActionBar()).hide();
 
         db = FirebaseFirestore.getInstance();
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
@@ -279,22 +274,29 @@ public class addQR extends AppCompatActivity {
      */
     public HashMap<String, Object> user_db_content(){
         //Add to user collection
-        List<String> qr = new ArrayList<>();
-        qr.add(QRHexDisplay.getText().toString());
+        // List<String> qr = new ArrayList<>();
+        // qr.add(QRHexDisplay.getText().toString());
         HashMap<String, Object> user_qr = new HashMap<>();
-        user_qr.put("QR codes", qr);
+        user_qr.put("QR codes", QRHexDisplay.getText().toString());
         user_qr.put("Comment",comment.getText().toString());
+        user_qr.put("Location", "loc");
+        user_qr.put("Date", "date");
 
         // if user wants to add photo
         // to be edited
         // if you do not add the image, nothing will crash
-        if (add_img){
+        System.out.println(add_img);
+        if (add_img) {
             // got bitmap and can store to database
             // but currently no place to put bitmap on database so implement later
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
             byte[] bytes = stream.toByteArray();
-            user_qr.put("Bytes Array", bytes);
+            // user_qr.put("Bytes Array", bytes);
+
+            Gson gson = new Gson();
+            String byte_array = gson.toJson(bytes);
+            user_qr.put("Bytes Array", byte_array);
         }
 
         return user_qr;
@@ -370,6 +372,11 @@ public class addQR extends AppCompatActivity {
         docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
               @Override
               public void onSuccess(DocumentSnapshot documentSnapshot) {
+
+//                  DatabaseQR test = new DatabaseQR();
+//                  Integer high_score = Integer.parseInt(test.getQRHighestScore());
+//                  System.out.println(high_score);
+
                   Integer highest_score = Integer.valueOf(documentSnapshot.getString("Highest Score"));
                   Integer lowest_score = Integer.valueOf(documentSnapshot.getString("Lowest Score"));
                   Integer total_score = Integer.valueOf(documentSnapshot.getString("Total Score"));

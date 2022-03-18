@@ -5,6 +5,10 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -24,6 +28,8 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
@@ -35,6 +41,7 @@ public class ListFragment extends DialogFragment {
     private OnFragmentInteractionListener listener;
     final String TAG = "Sample";
     FirebaseFirestore db;
+    ProfilePage getBytes = new ProfilePage();
 
     public interface OnFragmentInteractionListener {
         void onDeletePressed(ListEntry entry);
@@ -65,6 +72,11 @@ public class ListFragment extends DialogFragment {
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_list_entry, null);
         comments = view.findViewById(R.id.comments);
         photo = view.findViewById(R.id.qr_image);
+
+//        byte[] byte_array = getBytes.getByteArray();
+//        Bitmap bitmap = BitmapFactory.decodeByteArray(byte_array, 0, byte_array.length);
+//        photo.setImageBitmap(bitmap);
+
         Picasso.get()
                 .load("https://firebasestorage.googleapis.com/v0/b/qrdatabase-301geoqr.appspot.com/o/testqr.png?alt=media&token=49e71a4f-e2b6-4792-a5b7-95b03535926b")
                 .into(photo);

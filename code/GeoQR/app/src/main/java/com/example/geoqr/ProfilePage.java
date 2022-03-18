@@ -15,19 +15,25 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.google.gson.Gson;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Objects;
 
 
@@ -40,6 +46,7 @@ public class ProfilePage extends AppCompatActivity implements ListFragment.OnFra
     private TextView lowScore;
     private String username;
     ImageView show_QR;
+    byte[] current;
 
     private ArrayAdapter<ListEntry> listAdapter;
     private ArrayList<ListEntry> entryDataList;
@@ -211,5 +218,25 @@ public class ProfilePage extends AppCompatActivity implements ListFragment.OnFra
         catch (WriterException e) {
             e.printStackTrace();
         }
+    }
+
+    public byte[] getByteArray() {
+        Gson gson = new Gson();
+        db.collection("Users").document(username).collection("QR codes").document("c7be1ed902fb8dd4d48997c6452f5d7e509fbcdbe2808b16bcf4edce4c07d14e").get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        String obj = documentSnapshot.getString("Bytes Array");
+                        current = gson.fromJson(obj, byte[].class);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        e.printStackTrace();
+                    }
+                });
+        System.out.println(Arrays.toString(current));
+        return current;
     }
 }

@@ -20,6 +20,8 @@ import com.budiyev.android.codescanner.ScanMode;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.zxing.Result;
 
+import java.util.Objects;
+
 // this class is to be implemented
 
 /**
@@ -36,6 +38,7 @@ public class ScanLoginQR extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.scan_login);
+        Objects.requireNonNull(getSupportActionBar()).hide();
 
         scanLogin = findViewById(R.id.login_view);
         FloatingActionButton cancel = findViewById(R.id.cancel_btn_login);

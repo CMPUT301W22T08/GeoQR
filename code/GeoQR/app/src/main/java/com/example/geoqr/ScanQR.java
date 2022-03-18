@@ -22,6 +22,8 @@ import com.budiyev.android.codescanner.ScanMode;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.zxing.Result;
 
+import java.util.Objects;
+
 /**
  * This class provides the camera to scan the QR codes
  */
@@ -38,8 +40,7 @@ public class ScanQR extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.camera_v2);
-
-
+        Objects.requireNonNull(getSupportActionBar()).hide();
 
         scannerView = findViewById(R.id.login_view);
         FloatingActionButton profile_btn = findViewById(R.id.profile_btn);

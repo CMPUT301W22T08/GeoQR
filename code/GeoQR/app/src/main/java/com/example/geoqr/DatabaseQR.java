@@ -1,9 +1,12 @@
 package com.example.geoqr;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
@@ -17,10 +20,8 @@ public class DatabaseQR extends AppCompatActivity {
     FirebaseFirestore db;
     CollectionReference user_ref;
     CollectionReference QR_ref;
-    private String UserID, QRCodeID, Geo;
-    private String userID, userName, QRScore;
-    ArrayList<Integer> tempIntArray = new ArrayList<>();
-    ArrayList<String> tempStringArray = new ArrayList<>();
+    private String QRTotalScore, QRHighestScore, QRLowestScore;
+    String contact, username;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,85 +29,80 @@ public class DatabaseQR extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
         user_ref = db.collection("Users");
         QR_ref = db.collection("QR codes");
+
+        SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
+        username = sharedPreferences.getString("username", null);
+
     }
 
-    public void setUsername(String UserID) {
-        this.UserID = UserID;
+    public String getContact() {
+        user_ref.document(username).get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        contact = documentSnapshot.getString("Contact");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        e.printStackTrace();
+                    }
+                });
+
+        return contact;
     }
 
-    public String getUserName() {
-        return "Test";
+    public String getQRTotalScore() {
+        user_ref.document(username).get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        QRTotalScore = documentSnapshot.getString("Total Score");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        e.printStackTrace();
+                    }
+                });
+        return QRTotalScore;
     }
 
-    public void setQR(String QRCodeID) {
-        this.QRCodeID = QRCodeID;
+    public String getQRHighestScore() {
+        user_ref.document(username).get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        QRHighestScore = documentSnapshot.getString("Highest Score");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        e.printStackTrace();
+                    }
+                });
+        return QRHighestScore;
     }
 
-
-    // going to test if addOnComplete or addOnSuccess is more suitable
-//    public String getUserID() {
-//        DocumentReference getID = user_ref.document(UserID);
-//
-//        getID.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-//            @Override
-//            public void onSuccess(DocumentSnapshot documentSnapshot) {
-//                userID = documentSnapshot.getString("ID");
-//            }
-//        });
-
-
-//        getID.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-//                if (task.isSuccessful()) {
-//                    DocumentSnapshot document = task.getResult();
-//                    if (document.exists()) {
-//                        Log.d(TAG, "DocumentSnapshot data: " + document.getData());
-//                        userID = document.getString("ID");
-//                    }
-//                    else {
-//                        Log.d(TAG, "No such document");
-//                    }
-//                }
-//                else {
-//                    Log.d(TAG, "get failed with ", task.getException());
-//                }
-//            }
-//        });
-
-//        return userID;
-//    }
-
-//    public String getUserName() {
-//        DocumentReference getName = user_ref.document(UserID);
-//        getName.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-//            @Override
-//            public void onSuccess(DocumentSnapshot documentSnapshot) {
-//                userName = documentSnapshot.getString("username");
-//            }
-//        });
-//        return userName;
-//    }
-
-    // to be written
-    public ArrayList<String> getContactList() {
-        return tempStringArray;
+    public String getQRLowestScore() {
+        user_ref.document(username).get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        QRLowestScore = documentSnapshot.getString("Lowest Score");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        e.printStackTrace();
+                    }
+                });
+        return QRLowestScore;
     }
 
-    public String getQRScore() {
-        DocumentReference getQR = QR_ref.document(QRCodeID);
-        getQR.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                QRScore = documentSnapshot.getString("Score");
-            }
-        });
-        return QRScore;
-    }
-
-    // to be written
-    public ArrayList<String> getUserList() {
-        return tempStringArray;
-    }
 
 }
