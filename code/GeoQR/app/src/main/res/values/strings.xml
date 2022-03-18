@@ -18,4 +18,11 @@
     <string name="qr_content">QR Content</string>
     <string name="title_activity_map">MapActivity</string>
     <string name="cancel_btn">Cancel</string>
+    <string name="generate_login_qr">Generate\nLogin QR</string>
+    <string name="generate_status_qr">Generate\nStatus QR</string>
+    <string name="logout">Logout</string>
+    <string name="content">Content</string>
+    <string name="score">Score</string>
+    <string name="location">Location</string>
+    <string name="time">Time</string>
 </resources>

@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -27,10 +28,10 @@ import com.google.zxing.Result;
 public class ScanQR extends AppCompatActivity {
 
     private CodeScanner mCodeScanner;
-    private static final int CAMERA_PERMISSION_CODE = 10;
     public String content;
     private CodeScannerView scannerView;
     float x1, x2, y1, y2;
+    String username;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -38,32 +39,14 @@ public class ScanQR extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.camera_v2);
 
+
+
         scannerView = findViewById(R.id.login_view);
         FloatingActionButton profile_btn = findViewById(R.id.profile_btn);
 
-//        String[] permissions = {
-//                Manifest.permission.CAMERA
-//        };
-
-//        int check = 0;
-//        for (int i = 0; ; i++ ) {
-//            if (check == 3) {
-//                Toast.makeText(this, "Camera Permission Needed", Toast.LENGTH_LONG).show();
-//                finish();
-//                break;
-//            }
-//            if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED) {
-//                check++;
-//                ActivityCompat.requestPermissions(this, new String[] { Manifest.permission.CAMERA }, CAMERA_PERMISSION_CODE);
-//            }
-//            else {
-//                scanCode();
-//                break;
-//            }
-//        }
-
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED) {
-            ActivityCompat.requestPermissions(this, new String[] { Manifest.permission.CAMERA }, CAMERA_PERMISSION_CODE);
+            Toast.makeText(getApplicationContext(), "Camera Permission Needed", Toast.LENGTH_LONG).show();
+            finish();
         }
         else {
             scanCode();

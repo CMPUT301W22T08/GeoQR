@@ -2,8 +2,11 @@ package com.example.geoqr;
 
 import static android.content.ContentValues.TAG;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.location.Location;
 import android.os.Bundle;
@@ -24,6 +27,8 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -35,6 +40,7 @@ import com.google.firebase.firestore.SetOptions;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -56,12 +62,10 @@ public class addQR extends AppCompatActivity {
 
     // Define variables that's related with external links like db/intent
     private String qr_str;
-    // private Bitmap qr_img;
     private CalculateScore score;
     FirebaseFirestore db;
     DatabaseQR databaseQR = new DatabaseQR();
     private FusedLocationProviderClient fusedLocationClient;
-    // private Bitmap b;
 
     // Define variables that's going to be used inside this class
     TextView QRInfo;
@@ -108,18 +112,12 @@ public class addQR extends AppCompatActivity {
 
 
         // Call from Camera class
-        Intent intent = getIntent();
-        Bundle b = intent.getExtras();
+        Intent text = getIntent();
 
-        qr_str = b.getString("content");
-//        qr_byte = intent.getByteArrayExtra("image");
+        qr_str = text.getStringExtra("content");
+        SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
+        UserName = sharedPreferences.getString("username", null);
 
-        //UserName = intent.getDataString("");
-        //////////////temporary!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-        UserName = databaseQR.getUserName();
-
-        // Toast.makeText(getApplicationContext(), UserName, Toast.LENGTH_LONG).show();
 
         //Calculate score
         score = new CalculateScore(qr_str);
