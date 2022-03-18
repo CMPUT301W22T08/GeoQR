@@ -374,7 +374,11 @@ public class addQR extends AppCompatActivity {
         docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
               @Override
               public void onSuccess(DocumentSnapshot documentSnapshot) {
-                  highest_score
+                  Integer highest_score = Integer.valueOf(documentSnapshot.getString("Highest Score"));
+                  Integer lowest_score = Integer.valueOf(documentSnapshot.getString("Lowest Score"));
+                  Integer total_score = Integer.valueOf(documentSnapshot.getString("Total Score"));
+
+                  
               }
           });
 //                                                   OnCompleteListener<DocumentSnapshot>() {
