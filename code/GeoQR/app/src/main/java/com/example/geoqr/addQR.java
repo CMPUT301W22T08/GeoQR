@@ -253,9 +253,6 @@ public class addQR extends AppCompatActivity {
      * add the data to the user section of firestore
      */
     public void add_user_db() {
-
-
-
         final CollectionReference user_Ref = db.collection("Users").document(UserName.toString())
                 .collection("QR codes");
 
@@ -264,14 +261,16 @@ public class addQR extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
-                        Log.d(TAG, "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAdded");
+                        Log.d(TAG, "Added");
                     }})
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.d(TAG, "NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNot added");
+                        Log.d(TAG, "Not added");
                     }
                 });
+
+        total_score_and_count();
     }
 
 
@@ -289,6 +288,7 @@ public class addQR extends AppCompatActivity {
 
         // if user wants to add photo
         // to be edited
+        // if you do not add the image, nothing will crash
         if (add_img){
             // got bitmap and can store to database
             // but currently no place to put bitmap on database so implement later
@@ -347,29 +347,26 @@ public class addQR extends AppCompatActivity {
                     }
                 });
 
+        HashMap<String, Object> k = new HashMap<>();
         // adding username inside the sub-collection
-//        QR_ref.document(score.getQRHex()).collection("Users").document(databaseQR.getUserName()).set(databaseQR.getUserName())  //change to hashmap
-//                .addOnSuccessListener(new OnSuccessListener<Void>() {
-//                    @Override
-//                    public void onSuccess(Void unused) {
-//                        Log.d(TAG, "Data of username has been added successfully!");
-//                    }})
-//                .addOnFailureListener(new OnFailureListener() {
-//                    @Override
-//                    public void onFailure(@NonNull Exception e) {
-//                        Log.d(TAG, "~(Data of username has been added successfully!)");
-//                    }
-//                });
+        QR_ref.document(score.getQRHex()).collection("Users").document(UserName)
+                .set(k)  //change to hashmap
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Log.d(TAG, "Data of username has been added successfully!");
+                    }})
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG, "~(Data of username has been added successfully!)");
+                    }
+                });
 
         Toast.makeText(getApplicationContext(),"Add Successfully",Toast.LENGTH_LONG).show();
     }
 
     private void total_score_and_count(){
-        final Map<String, Object>[] map = new Map[]{new HashMap<>()};
-        int highest_score;
-        int lowest_score;
-        int total_score;
-
         DocumentReference docRef = db.collection("Users").document(UserName);
         docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
               @Override
@@ -378,149 +375,22 @@ public class addQR extends AppCompatActivity {
                   Integer lowest_score = Integer.valueOf(documentSnapshot.getString("Lowest Score"));
                   Integer total_score = Integer.valueOf(documentSnapshot.getString("Total Score"));
 
-                  
+                  Integer qr_score = score.find_total();
+
+                  if (highest_score < qr_score){
+                      highest_score = qr_score;
+                  }
+                  if(lowest_score > qr_score){
+                      lowest_score = qr_score;
+                  }else if(lowest_score == 0){
+                      lowest_score = qr_score;
+                  }
+                  total_score += qr_score;
+
+                  docRef.update("Highest Score", String.valueOf(highest_score));
+                  docRef.update("Lowest Score", String.valueOf(lowest_score));
+                  docRef.update("Total Score", String.valueOf(total_score));
               }
           });
-//                                                   OnCompleteListener<DocumentSnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-//                if (task.isSuccessful()) {
-//                    DocumentSnapshot document = task.getResult();
-//                    if (document.exists()) {
-//                        highest_score = document.get
-//
-//                        Log.d(TAG, "DocumentSnapshot data: " + document.getData());
-//                    } else {
-//                        Log.d(TAG, "No such document");
-//                    }
-//                } else {
-//                    Log.d(TAG, "get failed with ", task.getException());
-//                }
-//            }
-//        });
-        // get user
-        // get user field
-        // get data
-        // update data
-        // store/merge/overwrite data
     }
-
-
-
 }
-
-
-// and of course, the testcase does not want to work with me
-
-// 98 83 106
-// 186
-
-
-
-// ID: score.getQRHex(),
-// add new doc/ override existing
-
-
-//                // check if document exist
-// all not work
-// check method 1
-//                QR_ref.document(score.getQRHex()).update("Locations", FieldValue.arrayUnion(GeoDisplay.getText().toString()));
-//                QR_ref.document(score.getQRHex()).update("Users", FieldValue.arrayUnion(UserName));
-// raise error and use try
-//
-// check method 2
-//                QR_code_ref.get().addOnCompleteListener(@NonNull Task<DocumentSnapshot> task){
-//
-//                }
-
-// check method 3
-//                List<String> qr = (ArrayList<String>) user_Ref.document(UserName).get().getResult().get("QR codes");
-
-
-//
-//                // Add to user collection
-//                DocumentSnapshot s = user_Ref.document(UserName).get().getResult();
-//                if(s.exists()){
-//                    user_Ref.document(UserName).update("QR codes", FieldValue.arrayUnion(QRHexDisplay.getText().toString()));
-//                }else{
-//                    List<String> qr = new ArrayList<>();
-//                    qr.add(QRHexDisplay.getText().toString());
-//                    HashMap<String, Object> user_qr = new HashMap<>();
-//                    user_qr.put("QR codes",qr);
-//                    // user_qr.put("Image")
-//
-//                    // using username as document
-//                    user_Ref
-//                            .document(UserName)
-//                            .set(user_qr, SetOptions.merge());
-//                }
-
-
-//                List<Object> list = new ArrayList<>();
-//
-//                user_Ref.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                        if (task.isSuccessful()){
-//                            // DOC EXIST
-//
-//
-////                            for (QueryDocumentSnapshot document : task.getResult()){
-////                                list.add(document.getId());
-////                            }
-//                        }else{
-//                            // doc DNE
-//
-//                            //Add to user collection
-//                            List<String> qr = new ArrayList<>();
-//                            qr.add(QRHexDisplay.getText().toString());
-//                            HashMap<String, Object> user_qr = new HashMap<>();
-//                            user_qr.put("QR codes", qr);
-//                            // user_qr.put("Image")
-//                            // using username as document
-//                        }
-//                    }
-//                });
-
-
-//                final List<String>[] qr = new List[]{new ArrayList<>()};
-//
-//                DocumentReference s = user_Ref.document(UserName);
-//                s.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-//                        if (task.isSuccessful()){
-//                            DocumentSnapshot d = task.getResult();
-//                            if (d.exists()){
-//                                qr[0] = (List<String>) user_Ref.document(UserName).get(Source.valueOf("QR codes"));
-//                                qr[0].add(QRHexDisplay.getText().toString());
-//                                HashMap<String, Object> user_qr = new HashMap<>();
-//                                user_qr.put("QR codes", qr[0]);
-////                    user_qr.put("Image")
-//                                // using username as document
-//                                user_Ref
-//                                        .document(UserName)
-//                                        .set(user_qr,SetOptions.merge());
-//                            }else{
-//                                // Add to user collection
-//                                //List<String> qr = new ArrayList<>();
-//                                qr[0].add(QRHexDisplay.getText().toString());
-//                                HashMap<String, Object> user_qr = new HashMap<>();
-//                                user_qr.put("QR codes", qr[0]);
-////                    user_qr.put("Image")
-//                                // using username as document
-//                                user_Ref
-//                                        .document(UserName)
-//                                        .set(user_qr,SetOptions.merge());
-//                            }
-//                        }else{
-//                            Log.d(TAG, "get failed with ", task.getException());
-//                        }
-//                    }
-//                });
-
-//                user_Ref.document(UserName).update("QR codes", FieldValue.arrayUnion(QRHexDisplay.getText().toString()));
-//                //update user image collection?
-
-//                user_Ref.document(UserName).update("QR codes", FieldValue.arrayUnion(QRHexDisplay.getText().toString()));
-//                //update user image collection?
