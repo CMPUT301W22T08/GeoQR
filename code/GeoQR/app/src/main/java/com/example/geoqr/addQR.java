@@ -143,8 +143,6 @@ public class addQR extends AppCompatActivity {
 
                 if (b) {
                     add_g = true;
-                    GeoDisplay_lati.setVisibility(View.VISIBLE);
-                    GeoDisplay_long.setVisibility(View.VISIBLE);
                     fusedLocationClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
                         @Override
                         public void onSuccess(Location location) {
@@ -162,7 +160,8 @@ public class addQR extends AppCompatActivity {
                             }
                         }
                     });
-
+                    GeoDisplay_lati.setVisibility(View.VISIBLE);
+                    GeoDisplay_long.setVisibility(View.VISIBLE);
                 }
                 else {
                     add_g = false;
