@@ -63,7 +63,7 @@ public class addQR extends AppCompatActivity {
     private String qr_str;
     private CalculateScore score;
     FirebaseFirestore db;
-    DatabaseQR databaseQR = new DatabaseQR();
+    DatabaseQR databaseQR;
     private FusedLocationProviderClient fusedLocationClient;
 
     // Define variables that's going to be used inside this class
@@ -117,7 +117,7 @@ public class addQR extends AppCompatActivity {
         SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
         UserName = sharedPreferences.getString("username", null);
 
-
+        databaseQR = new DatabaseQR(UserName);
         //Calculate score
         score = new CalculateScore(qr_str);
         QRScore = score.find_total();
@@ -127,8 +127,6 @@ public class addQR extends AppCompatActivity {
         QRScoreDisplay.setText(String.valueOf(QRScore));
         QRHexDisplay.setText(score.getQRHex());
         QRInfo.setText(qr_str);
-
-        //////////////temporary!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
         // get if user wants to add the geo or not
         add_geo.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {

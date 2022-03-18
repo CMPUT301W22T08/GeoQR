@@ -15,29 +15,30 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 
-public class DatabaseQR extends AppCompatActivity {
+public class DatabaseQR{
 
-    FirebaseFirestore db;
-    CollectionReference user_ref;
-    CollectionReference QR_ref;
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    final CollectionReference user_ref = db.collection("Users");
+    final CollectionReference QR_ref = db.collection("QR codes");
     private String QRTotalScore, QRHighestScore, QRLowestScore;
-    String contact, username;
+    String contact;
+    private String username;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        db = FirebaseFirestore.getInstance();
-        user_ref = db.collection("Users");
-        QR_ref = db.collection("QR codes");
-
-        SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
-        username = sharedPreferences.getString("username", null);
-
+    public DatabaseQR(String userName){
+        username = userName;
     }
+//    @Override
+//    protected void onCreate(Bundle savedInstanceState) {
+//        super.onCreate(savedInstanceState);
+//
+//        SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
+//        username = sharedPreferences.getString("username", null);
+//
+//    }
 
     public String getContact() {
-        user_ref.document(username).get()
-                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+        DocumentReference d = user_ref.document(username);
+                d.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         contact = documentSnapshot.getString("Contact");
@@ -71,6 +72,7 @@ public class DatabaseQR extends AppCompatActivity {
     }
 
     public String getQRHighestScore() {
+        final CollectionReference user_ref = db.collection("Users");
         user_ref.document(username).get()
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
