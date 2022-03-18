@@ -32,9 +32,13 @@ import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
 
@@ -361,6 +365,39 @@ public class addQR extends AppCompatActivity {
     }
 
     private void total_score_and_count(){
+        final Map<String, Object>[] map = new Map[]{new HashMap<>()};
+        int highest_score;
+        int lowest_score;
+        int total_score;
+
+        DocumentReference docRef = db.collection("Users").document(UserName);
+        docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+              @Override
+              public void onSuccess(DocumentSnapshot documentSnapshot) {
+                  Integer highest_score = Integer.valueOf(documentSnapshot.getString("Highest Score"));
+                  Integer lowest_score = Integer.valueOf(documentSnapshot.getString("Lowest Score"));
+                  Integer total_score = Integer.valueOf(documentSnapshot.getString("Total Score"));
+
+                  
+              }
+          });
+//                                                   OnCompleteListener<DocumentSnapshot>() {
+//            @Override
+//            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+//                if (task.isSuccessful()) {
+//                    DocumentSnapshot document = task.getResult();
+//                    if (document.exists()) {
+//                        highest_score = document.get
+//
+//                        Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+//                    } else {
+//                        Log.d(TAG, "No such document");
+//                    }
+//                } else {
+//                    Log.d(TAG, "get failed with ", task.getException());
+//                }
+//            }
+//        });
         // get user
         // get user field
         // get data
