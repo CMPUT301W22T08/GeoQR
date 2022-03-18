@@ -129,7 +129,6 @@ public class LoginPage extends AppCompatActivity {
         user_detail.put("Total Score", 0 );
         user_detail.put("Highest Score", 0);
         user_detail.put("Lowest Score", 0);
-        user_detail.put("Total QR codes", 0);
         db.collection("Users").document(username).set(user_detail);
     }
 

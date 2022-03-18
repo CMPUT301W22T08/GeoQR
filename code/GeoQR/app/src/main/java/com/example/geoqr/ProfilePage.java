@@ -28,6 +28,7 @@ import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 
 public class ProfilePage extends AppCompatActivity implements ListFragment.OnFragmentInteractionListener {
@@ -54,7 +55,7 @@ public class ProfilePage extends AppCompatActivity implements ListFragment.OnFra
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getSupportActionBar().hide();
+        Objects.requireNonNull(getSupportActionBar()).hide();
         setContentView(R.layout.activity_profile_v3);
 
         // to be tested
