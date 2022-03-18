@@ -58,7 +58,7 @@ public class addQR extends AppCompatActivity {
     private String Comments;
     private Location location = new Location(""); // get location somehow, work with Julian
     private Boolean add_img = false;
-    private Boolean add_g = false;
+    private Boolean add_g  = false;
     private Location location_get;
 
     // Define variables that's related with external links like db/intent
@@ -136,15 +136,11 @@ public class addQR extends AppCompatActivity {
             @SuppressLint("MissingPermission")
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                GeoDisplay_lati.setVisibility(View.VISIBLE);
-                GeoDisplay_long.setVisibility(View.VISIBLE);
-                if (b = false){
-                    add_g = false;
-                    GeoDisplay_lati.setText("null");
-                    GeoDisplay_long.setText("null");
-                }else{
-                    add_g = true;
 
+                if (b) {
+                    add_g = true;
+                    GeoDisplay_lati.setVisibility(View.VISIBLE);
+                    GeoDisplay_long.setVisibility(View.VISIBLE);
                     fusedLocationClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
                         @Override
                         public void onSuccess(Location location) {
@@ -156,13 +152,18 @@ public class addQR extends AppCompatActivity {
 //                                Log.d(TAG, "long"+location.getLongitude());
 //                                Log.d(TAG, "lati"+location.getLatitude());
                                 GeoDisplay_lati.setText(String.valueOf(location.getLatitude()));
-                            }else{
+                            } else {
                                 GeoDisplay_long.setText("Location Longitude is NULL");
                                 GeoDisplay_lati.setText("Location Latitude is NULL");
                             }
                         }
                     });
 
+                }
+                else {
+                    add_g = false;
+                    GeoDisplay_lati.setVisibility(View.INVISIBLE);
+                    GeoDisplay_long.setVisibility(View.INVISIBLE);
                 }
             }
         });
@@ -185,11 +186,14 @@ public class addQR extends AppCompatActivity {
             public void onClick(View view) {
                 // to be tested
                 Intent cam = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                add_img = true;
                 if (cam.resolveActivity(getPackageManager()) != null) {
                     activityResultLauncher.launch(cam);
                 }
             }
+
         });
+
 
         delete_img_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -246,27 +250,13 @@ public class addQR extends AppCompatActivity {
      */
     public void add_user_db() {
 
-        List<String> qr = new ArrayList<>();
-        qr.add(QRHexDisplay.getText().toString());
-        HashMap<String, Object> user_qr = new HashMap<>();
-        user_qr.put("QR codes", qr);
-        user_qr.put("Comment",comment.getText().toString());
 
-        // if user wants to add photo
-        if (add_img){
-            // got bitmap and can store to database
-            // but currently no place to put bitmap on database so implement later
-            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-            byte[] bytes = stream.toByteArray();
-            user_qr.put("Bytes Array", bytes);
-        }
 
         final CollectionReference user_Ref = db.collection("Users").document(UserName.toString())
                 .collection("QR codes");
 
         user_Ref.document(QRHexDisplay.getText().toString())
-                .set(user_qr,SetOptions.merge())
+                .set(user_db_content(),SetOptions.merge())
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
@@ -285,26 +275,27 @@ public class addQR extends AppCompatActivity {
      * prepare the data to be added to the user part of database
      * @return user_qr - hashmap of user content
      */
-//    public HashMap<String, Object> user_db_content(){
-//        //Add to user collection
-//        List<String> qr = new ArrayList<>();
-//        qr.add(QRHexDisplay.getText().toString());
-//        HashMap<String, Object> user_qr = new HashMap<>();
-//        user_qr.put("QR codes", qr);
-//        user_qr.put("Comment",comment.getText());
-//
-//        // if user wants to add photo
-//        if (add_img){
-//            // got bitmap and can store to database
-//            // but currently no place to put bitmap on database so implement later
-//            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-//            bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-//            byte[] bytes = stream.toByteArray();
-//            user_qr.put("Bytes Array", bytes);
-//        }
-//
-//        return user_qr;
-//    }
+    public HashMap<String, Object> user_db_content(){
+        //Add to user collection
+        List<String> qr = new ArrayList<>();
+        qr.add(QRHexDisplay.getText().toString());
+        HashMap<String, Object> user_qr = new HashMap<>();
+        user_qr.put("QR codes", qr);
+        user_qr.put("Comment",comment.getText().toString());
+
+        // if user wants to add photo
+        // to be edited
+        if (add_img){
+            // got bitmap and can store to database
+            // but currently no place to put bitmap on database so implement later
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+            byte[] bytes = stream.toByteArray();
+            user_qr.put("Bytes Array", bytes);
+        }
+
+        return user_qr;
+    }
 
     /**
      * prepare the data to be added to the qr part of database

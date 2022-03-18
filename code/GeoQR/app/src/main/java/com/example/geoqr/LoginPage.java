@@ -126,9 +126,10 @@ public class LoginPage extends AppCompatActivity {
     public void add_user_detail() {
         HashMap<String, Object> user_detail = new HashMap<>();
         user_detail.put("Contact", "null");
-        user_detail.put("Total Score", "0");
-        user_detail.put("Highest Score", "0");
-        user_detail.put("Lowest Score", "0");
+        user_detail.put("Total Score", 0 );
+        user_detail.put("Highest Score", 0);
+        user_detail.put("Lowest Score", 0);
+        user_detail.put("Total QR codes", 0);
         db.collection("Users").document(username).set(user_detail);
     }
 
