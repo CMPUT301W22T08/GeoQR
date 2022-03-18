@@ -131,18 +131,19 @@ public class addQR extends AppCompatActivity {
         QRInfo.setText(qr_str);
 
         //////////////temporary!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        GeoDisplay_lati.setText(String.valueOf(0));
-        GeoDisplay_long.setText(String.valueOf(0));
+        GeoDisplay_lati.setVisibility(View.INVISIBLE);
+        GeoDisplay_long.setVisibility(View.INVISIBLE);
 
         // get if user wants to add the geo or not
         add_geo.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @SuppressLint("MissingPermission")
+            GeoDisplay_lati.setVisibility(View.VISIBLE);
+            GeoDisplay_long.setVisibility(View.VISIBLE);
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if (b = false){
                     add_g = false;
-                    GeoDisplay_lati.setText("1");
-                    GeoDisplay_long.setText("1");
+                    GeoDisplay_lati.setText("null");
+                    GeoDisplay_long.setText("null");
                 }else{
                     add_g = true;
 
@@ -158,15 +159,13 @@ public class addQR extends AppCompatActivity {
 //                                Log.d(TAG, "lati"+location.getLatitude());
                                 GeoDisplay_lati.setText(String.valueOf(location.getLatitude()));
                             }else{
-
+                                GeoDisplay_long.setText("Location Longitude is NULL");
+                                GeoDisplay_lati.setText("Location Latitude is NULL");
                             }
                         }
                     });
 
                 }
-
-                // somehow get the location object form other class
-                // GeoDisplay.setText("the return string");
             }
         });
 
