@@ -90,7 +90,7 @@ public class ProfilePage extends AppCompatActivity implements ListFragment.OnFra
 
 
 
-        final CollectionReference collectionReference = db.collection("Users").document("3FmLnxuiGMAJxStHRqMq").collection("QR codes");
+        final CollectionReference collectionReference = db.collection("Users").document(username).collection("QR codes");
 
         collectionReference.addSnapshotListener((queryDocumentSnapshots, error) -> {
             entryDataList.clear();
@@ -98,20 +98,20 @@ public class ProfilePage extends AppCompatActivity implements ListFragment.OnFra
                 Log.d(TAG, String.valueOf(doc.getData().get("QR codes")));
                 String content = (String) doc.getData().get("Content");
                 String score = (String) doc.getData().get("Score");
-                int intScore = Integer.parseInt(score);
+//                int intScore = Integer.parseInt(score);
 
                 String time = (String) doc.getData().get("Time");
                 String location = (String) doc.getData().get("Location");
                 String qrcode = (String) doc.getId();
 
-                totalScore = totalScore + intScore;
-
-                if (intScore > largestScore) {
-                    largestScore = intScore;
-                }
-                if (smallestScore == 0 || intScore < smallestScore) {
-                    smallestScore = intScore;
-                }
+//                totalScore = totalScore + intScore;
+//
+//                if (intScore > largestScore) {
+//                    largestScore = intScore;
+//                }
+//                if (smallestScore == 0 || intScore < smallestScore) {
+//                    smallestScore = intScore;
+//                }
 
                 entryDataList.add(new ListEntry(qrcode, content, score, location, time));
             }
@@ -179,7 +179,7 @@ public class ProfilePage extends AppCompatActivity implements ListFragment.OnFra
 
 
         db.collection("Users")
-                .document("3FmLnxuiGMAJxStHRqMq")
+                .document(username)
                 .collection("QR codes")
                 .document(entry.getQrcode())
                 .delete()

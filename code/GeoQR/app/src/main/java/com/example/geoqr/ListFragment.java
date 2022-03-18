@@ -88,7 +88,7 @@ public class ListFragment extends DialogFragment {
 
 
         Bundle entryBundle = getArguments();
-        ListEntry entry = (ListEntry) getArguments().getSerializable("entry");
+        ListEntry entry = (ListEntry) entryBundle.getSerializable("entry");
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 
