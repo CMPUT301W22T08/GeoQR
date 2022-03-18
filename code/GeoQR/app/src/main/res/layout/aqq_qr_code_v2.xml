@@ -116,7 +116,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
-            android:text="GeoLocation Longitude" />
+            android:text="GeoLocation Longitude:" />
 
         <TextView
             android:id="@+id/GeoSharable_Long"
@@ -124,7 +124,8 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="20dp"
-            android:text="@string/default_txt" />
+            android:text="@string/default_txt"
+            android:visibility="invisible" />
     </LinearLayout>
 
     <!--geo location_lati-->
@@ -139,7 +140,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
-            android:text="GeoLocation Latitude" />
+            android:text="GeoLocation Latitude:" />
 
         <TextView
             android:id="@+id/GeoSharable_Lati"
@@ -147,7 +148,8 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="20dp"
-            android:text="@string/default_txt" />
+            android:text="@string/default_txt"
+            android:visibility="invisible" />
     </LinearLayout>
 
     <!--add geo switch-->

@@ -108,7 +108,6 @@ public class addQR extends AppCompatActivity {
         add_img_btn = findViewById(R.id.Add_img);
         delete_img_btn = findViewById(R.id.Delete_img);
         QR_img_view = findViewById(R.id.QRImg);
-
         QRInfo = findViewById(R.id.QRInfo);
 
 
@@ -131,15 +130,14 @@ public class addQR extends AppCompatActivity {
         QRInfo.setText(qr_str);
 
         //////////////temporary!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        GeoDisplay_lati.setVisibility(View.INVISIBLE);
-        GeoDisplay_long.setVisibility(View.INVISIBLE);
 
         // get if user wants to add the geo or not
         add_geo.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            GeoDisplay_lati.setVisibility(View.VISIBLE);
-            GeoDisplay_long.setVisibility(View.VISIBLE);
+            @SuppressLint("MissingPermission")
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                GeoDisplay_lati.setVisibility(View.VISIBLE);
+                GeoDisplay_long.setVisibility(View.VISIBLE);
                 if (b = false){
                     add_g = false;
                     GeoDisplay_lati.setText("null");
@@ -212,8 +210,8 @@ public class addQR extends AppCompatActivity {
         add_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                add_user_db();
                 add_qr_db();
+                add_user_db();
                 goBack(0);
             }
         });
@@ -248,29 +246,6 @@ public class addQR extends AppCompatActivity {
      */
     public void add_user_db() {
 
-        final CollectionReference user_Ref = db.collection("Users").document(UserName)
-                .collection("QR codes");
-        user_Ref.document(QRHexDisplay.getText().toString())
-                .set(user_db_content(),SetOptions.merge())
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void unused) {
-                        Log.d(TAG, "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAdded");
-                    }})
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d(TAG, "NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNot added");
-                    }
-                });
-    }
-
-    /**
-     * prepare the data to be added to the user part of database
-     * @return user_qr - hashmap of user content
-     */
-    public HashMap<String, Object> user_db_content(){
-        //Add to user collection
         List<String> qr = new ArrayList<>();
         qr.add(QRHexDisplay.getText().toString());
         HashMap<String, Object> user_qr = new HashMap<>();
@@ -287,8 +262,49 @@ public class addQR extends AppCompatActivity {
             user_qr.put("Bytes Array", bytes);
         }
 
-        return user_qr;
+        final CollectionReference user_Ref = db.collection("Users").document(UserName.toString())
+                .collection("QR codes");
+
+        user_Ref.document(QRHexDisplay.getText().toString())
+                .set(user_qr,SetOptions.merge())
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Log.d(TAG, "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAdded");
+                    }})
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG, "NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNot added");
+                    }
+                });
     }
+
+
+    /**
+     * prepare the data to be added to the user part of database
+     * @return user_qr - hashmap of user content
+     */
+//    public HashMap<String, Object> user_db_content(){
+//        //Add to user collection
+//        List<String> qr = new ArrayList<>();
+//        qr.add(QRHexDisplay.getText().toString());
+//        HashMap<String, Object> user_qr = new HashMap<>();
+//        user_qr.put("QR codes", qr);
+//        user_qr.put("Comment",comment.getText());
+//
+//        // if user wants to add photo
+//        if (add_img){
+//            // got bitmap and can store to database
+//            // but currently no place to put bitmap on database so implement later
+//            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+//            bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+//            byte[] bytes = stream.toByteArray();
+//            user_qr.put("Bytes Array", bytes);
+//        }
+//
+//        return user_qr;
+//    }
 
     /**
      * prepare the data to be added to the qr part of database

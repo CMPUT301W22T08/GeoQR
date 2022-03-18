@@ -36,7 +36,6 @@ public class LoginPage extends AppCompatActivity {
 
     private EditText etUsername;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private static final int CAMERA_PERMISSION_CODE = 10;
     String username_scan, username;
     // private CollectionReference ref = db.collection("Users");
 
@@ -124,6 +123,15 @@ public class LoginPage extends AppCompatActivity {
         });
     }
 
+    public void add_user_detail() {
+        HashMap<String, Object> user_detail = new HashMap<>();
+        user_detail.put("Contact", "null");
+        user_detail.put("Total Score", "0");
+        user_detail.put("Highest Score", "0");
+        user_detail.put("Lowest Score", "0");
+        db.collection("Users").document(username).set(user_detail);
+    }
+
     /**
      * This class helps device to check if it does have camera (hardware)
      * @return boolean
@@ -140,6 +148,10 @@ public class LoginPage extends AppCompatActivity {
         boolean checkAdmin = checkIfAdmin(username);
         if (!checkAdmin) {
             Intent camScan = new Intent(LoginPage.this, ScanQR.class);
+            // if (checkUser == false)
+            if (!checkUser) {
+                add_user_detail(); // we need to check if the user exists, or we do not have to proceed this line
+            }
             Toast.makeText(getApplicationContext(), String.format("Login as '%s'", username), Toast.LENGTH_LONG).show();
             camScan.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(camScan);
@@ -157,6 +169,7 @@ public class LoginPage extends AppCompatActivity {
     }
 
     // this is for scanning QR code login
+    // return false if user is not in the db, otherwise true.
     public boolean checkIfUserExists(String username) {
         return false;
     }
