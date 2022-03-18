@@ -43,6 +43,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * add the QR codes details to the database
@@ -138,22 +139,30 @@ public class addQR extends AppCompatActivity {
             @SuppressLint("MissingPermission")
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if (add_g){
+                if (b = false){
                     add_g = false;
                     GeoDisplay_lati.setText("1");
                     GeoDisplay_long.setText("1");
                 }else{
                     add_g = true;
+
                     fusedLocationClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
                         @Override
                         public void onSuccess(Location location) {
                             location_get = location;
+//                            Log.d(TAG, "long"+location);
+//                            Log.d(TAG, "lati"+location);
                             if (location != null){
                                 GeoDisplay_long.setText(String.valueOf(location.getLongitude()));
+//                                Log.d(TAG, "long"+location.getLongitude());
+//                                Log.d(TAG, "lati"+location.getLatitude());
                                 GeoDisplay_lati.setText(String.valueOf(location.getLatitude()));
+                            }else{
+
                             }
                         }
                     });
+
                 }
 
                 // somehow get the location object form other class
@@ -239,6 +248,7 @@ public class addQR extends AppCompatActivity {
      * add the data to the user section of firestore
      */
     public void add_user_db() {
+
         final CollectionReference user_Ref = db.collection("Users").document(UserName)
                 .collection("QR codes");
         user_Ref.document(QRHexDisplay.getText().toString())
@@ -328,18 +338,18 @@ public class addQR extends AppCompatActivity {
                 });
 
         // adding username inside the sub-collection
-        QR_ref.document(score.getQRHex()).collection("Users").document(databaseQR.getUserName()).set(databaseQR.getUserName())
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void unused) {
-                        Log.d(TAG, "Data of username has been added successfully!");
-                    }})
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d(TAG, "~(Data of username has been added successfully!)");
-                    }
-                });
+//        QR_ref.document(score.getQRHex()).collection("Users").document(databaseQR.getUserName()).set(databaseQR.getUserName())  //change to hashmap
+//                .addOnSuccessListener(new OnSuccessListener<Void>() {
+//                    @Override
+//                    public void onSuccess(Void unused) {
+//                        Log.d(TAG, "Data of username has been added successfully!");
+//                    }})
+//                .addOnFailureListener(new OnFailureListener() {
+//                    @Override
+//                    public void onFailure(@NonNull Exception e) {
+//                        Log.d(TAG, "~(Data of username has been added successfully!)");
+//                    }
+//                });
 
         Toast.makeText(getApplicationContext(),"Add Successfully",Toast.LENGTH_LONG).show();
     }
