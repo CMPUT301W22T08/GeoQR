@@ -250,7 +250,7 @@ public class addQR extends AppCompatActivity {
         qr.add(QRHexDisplay.getText().toString());
         HashMap<String, Object> user_qr = new HashMap<>();
         user_qr.put("QR codes", qr);
-        user_qr.put("Comment",comment.getText());
+        user_qr.put("Comment",comment.getText().toString());
 
         // if user wants to add photo
         if (add_img){
