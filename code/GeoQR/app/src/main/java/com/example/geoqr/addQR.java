@@ -214,7 +214,7 @@ public class addQR extends AppCompatActivity {
         add_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                add_qr_db();
+                add_qr_db(location_get);
                 add_user_db();
                 goBack(0);
             }
@@ -249,11 +249,26 @@ public class addQR extends AppCompatActivity {
      * add the data to the user section of firestore
      */
     public void add_user_db() {
-        final CollectionReference user_Ref = db.collection("Users").document(UserName.toString())
-                .collection("QR codes");
+        final Boolean[] exist = new Boolean[1];
+        // only add score if subarray in Users, QR codes, if the document does not exist
+        DocumentReference docRef = db.collection("Users")
+                .document(UserName)
+                .collection("QR codes")
+                .document(score.getQRHex());
 
-        user_Ref.document(QRHexDisplay.getText().toString())
-                .set(user_db_content(),SetOptions.merge())
+        docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                exist[0] = true;
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                exist[0] = false;
+            }
+        });
+
+        docRef.set(user_db_content(),SetOptions.merge())
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
@@ -266,7 +281,10 @@ public class addQR extends AppCompatActivity {
                     }
                 });
 
-        total_score_and_count();
+        if (!exist[0]){
+            total_score_and_count();
+        }
+
     }
 
 
@@ -281,7 +299,7 @@ public class addQR extends AppCompatActivity {
         HashMap<String, Object> user_qr = new HashMap<>();
         user_qr.put("QR codes", QRHexDisplay.getText().toString());
         user_qr.put("Comment",comment.getText().toString());
-        user_qr.put("Location", "loc");
+//        user_qr.put("Location", "loc");
         user_qr.put("Date", getCurrentTime());
 
         // if user wants to add photo
@@ -318,18 +336,13 @@ public class addQR extends AppCompatActivity {
         data_qr.put("Score", String.valueOf(QRScore));
         data_qr.put("Content", qr_str);
 
-        // if user wants to add location
-        if (add_g){
-            data_qr.put("Location", location_get);
-        }
-
         return data_qr;
     }
 
     /**
      * add the data to the qr section of firestore
      */
-    public void add_qr_db(){
+    public void add_qr_db(Location location){
         final CollectionReference QR_ref = db.collection("QR codes");
 
 //        System.out.println("Debug, something wrong");
@@ -351,6 +364,10 @@ public class addQR extends AppCompatActivity {
                 });
 
         HashMap<String, Object> k = new HashMap<>();
+        // if user wants to add location
+        if (add_g){
+            k.put("Location", location);
+        }
         // adding username inside the sub-collection
         QR_ref.document(score.getQRHex()).collection("Users").document(UserName)
                 .set(k)  //change to hashmap
