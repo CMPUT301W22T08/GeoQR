@@ -28,8 +28,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -149,8 +151,6 @@ public class addQR extends AppCompatActivity {
 //                            Log.d(TAG, "lati"+location);
                             if (location != null) {
                                 GeoDisplay_long.setText(String.valueOf(location.getLongitude()));
-//                                Log.d(TAG, "long"+location.getLongitude());
-//                                Log.d(TAG, "lati"+location.getLatitude());
                                 GeoDisplay_lati.setText(String.valueOf(location.getLatitude()));
                             } else {
                                 GeoDisplay_long.setText("null");
@@ -249,41 +249,39 @@ public class addQR extends AppCompatActivity {
      * add the data to the user section of firestore
      */
     public void add_user_db() {
-        final Boolean[] exist = new Boolean[1];
         // only add score if subarray in Users, QR codes, if the document does not exist
         DocumentReference docRef = db.collection("Users")
                 .document(UserName)
                 .collection("QR codes")
                 .document(score.getQRHex());
 
-        docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                exist[0] = true;
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                exist[0] = false;
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()){
+                    boolean exist = task.getResult().exists();
+
+                    docRef.set(user_db_content(),SetOptions.merge())
+                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void unused) {
+                                    Log.d(TAG, "Added");
+                                }})
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Log.d(TAG, "Not added");
+                                }
+                            });
+
+                    if (!exist){
+                        total_score_and_count();
+                    }
+                }
             }
         });
 
-        docRef.set(user_db_content(),SetOptions.merge())
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void unused) {
-                        Log.d(TAG, "Added");
-                    }})
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d(TAG, "Not added");
-                    }
-                });
 
-        if (!exist[0]){
-            total_score_and_count();
-        }
 
     }
 
