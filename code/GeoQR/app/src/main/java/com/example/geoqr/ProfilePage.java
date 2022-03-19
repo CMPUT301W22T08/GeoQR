@@ -1,5 +1,6 @@
 package com.example.geoqr;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -8,8 +9,11 @@ import android.media.Image;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -45,7 +49,10 @@ public class ProfilePage extends AppCompatActivity implements ListFragment.OnFra
     private TextView highScore;
     private TextView lowScore;
     private String username;
+    private EditText contact_bar;
+    TextView contact_text;
     ImageView show_QR;
+    String contact;
     byte[] current;
 
     private ArrayAdapter<ListEntry> listAdapter;
@@ -69,9 +76,24 @@ public class ProfilePage extends AppCompatActivity implements ListFragment.OnFra
         // Intent user = getIntent();
         // username = user.getStringExtra("username");
         // to be tested
-
+        db = FirebaseFirestore.getInstance();
         SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
         username = sharedPreferences.getString("username", null);
+
+        db.collection("Users").document(username).get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        contact = documentSnapshot.getString("Contact");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        e.printStackTrace();
+                        Log.d(TAG, "Failed to access contact");
+                    }
+                });
 
         TextView show_username = findViewById(R.id.username);
         profileList = findViewById(R.id.profile_list);
@@ -80,8 +102,16 @@ public class ProfilePage extends AppCompatActivity implements ListFragment.OnFra
         highScore = findViewById(R.id.highest_score);
         lowScore = findViewById(R.id.lowest_score);
         show_QR = findViewById(R.id.showQR);
+        contact_bar = findViewById(R.id.contact_edit);
+        contact_text  = findViewById(R.id.show_contact);
+        Button contact_ok = findViewById(R.id.contact_ok);
+        Button contact_cancel = findViewById(R.id.contact_cancel);
+        Button contact_btn = findViewById(R.id.contact_btn);
 
-        db = FirebaseFirestore.getInstance();
+        if (!contact.equals("null")) {
+            contact_text.setText(contact);
+        }
+
 
         entryDataList = new ArrayList<>();
         listAdapter = new ProfileList(this, entryDataList);
@@ -170,6 +200,63 @@ public class ProfilePage extends AppCompatActivity implements ListFragment.OnFra
             }
         });
 
+        contact_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                contact_btn.setVisibility(View.GONE);
+                contact_ok.setVisibility(View.VISIBLE);
+                contact_cancel.setVisibility(View.VISIBLE);
+                contact_text.setVisibility(View.GONE);
+                contact_bar.setVisibility(View.VISIBLE);
+                if (contact.equals("null")) {
+                    contact_bar.setText("");
+                }
+                else {
+                    contact_bar.setText(contact);
+                }
+                contact_bar.requestFocus();
+                showKeyboard(ProfilePage.this);
+                contact_ok.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        hideKeyboard(ProfilePage.this);
+                        contact_btn.setVisibility(View.VISIBLE);
+                        contact_ok.setVisibility(View.GONE);
+                        contact_cancel.setVisibility(View.GONE);
+                        contact = contact_bar.getText().toString();
+                        contact_bar.setVisibility(View.GONE);
+                        contact_text.setVisibility(View.VISIBLE);
+                        contact_text.setText(contact);
+                        db.collection("Users").document(username)
+                                .update("Contact", contact)
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void unused) {
+                                        Log.d(TAG, "Contact Updated Successfully");
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Log.d(TAG, "Contact Updated Unsuccessfully");
+                                    }
+                                });
+                    }
+                });
+                contact_cancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        hideKeyboard(ProfilePage.this);
+                        contact_btn.setVisibility(View.VISIBLE);
+                        contact_ok.setVisibility(View.GONE);
+                        contact_cancel.setVisibility(View.GONE);
+                        contact_bar.setVisibility(View.GONE);
+                        contact_text.setVisibility(View.VISIBLE);
+                    }
+                });
+            }
+        });
+
 
     }
 
@@ -239,4 +326,17 @@ public class ProfilePage extends AppCompatActivity implements ListFragment.OnFra
         System.out.println(Arrays.toString(current));
         return current;
     }
+
+    public static void hideKeyboard(Activity activity) {
+        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
+    }
+
+    public static void showKeyboard(Activity activity) {
+        if (activity.getCurrentFocus().requestFocus()) {
+            InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+            imm.showSoftInput(activity.getCurrentFocus(), InputMethodManager.SHOW_IMPLICIT);
+        }
+    }
+
 }

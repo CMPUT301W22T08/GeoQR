@@ -15,7 +15,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 
-public class DatabaseQR{
+public class DatabaseQR {
 
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     final CollectionReference user_ref = db.collection("Users");

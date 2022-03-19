@@ -25,4 +25,10 @@
     <string name="score">Score</string>
     <string name="location">Location</string>
     <string name="time">Time</string>
+    <string name="contact">Contact:</string>
+    <string name="enter_contact">Enter Contact</string>
+    <string name="edit">Edit</string>
+    <string name="click_edit_button_to_add">Click Edit Button To Add</string>
+    <string name="contact_x">X</string>
+    <string name="contact_o">O</string>
 </resources>
