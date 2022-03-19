@@ -15,7 +15,7 @@
     <string name="add_btn">Add</string>
     <string name="add_image">Add Image</string>
     <string name="delete_image">Delete Image</string>
-    <string name="qr_content">QR Content</string>
+    <string name="qr_content">QR Content:</string>
     <string name="title_activity_map">MapActivity</string>
     <string name="cancel_btn">Cancel</string>
     <string name="generate_login_qr">Generate\nLogin QR</string>

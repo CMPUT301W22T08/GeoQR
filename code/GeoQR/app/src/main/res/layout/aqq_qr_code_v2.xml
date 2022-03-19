@@ -11,14 +11,15 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingTop="10dp" >
 
         <TextView
             android:id="@+id/UserTag"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
+            android:textSize="20sp"
             android:text="@string/user_hint" />
 
         <TextView
@@ -27,20 +28,22 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="20dp"
+            android:textSize="20sp"
             android:text="@string/default_txt" />
     </LinearLayout>
     <!--QR code-->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingTop="10dp" >
 
         <TextView
             android:id="@+id/QRCodeTag"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
+            android:textSize="20sp"
             android:text="@string/qr_code_hint" />
 
         <TextView
@@ -49,6 +52,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="20dp"
+            android:textSize="20sp"
             android:text="@string/default_txt" />
 
     </LinearLayout>
@@ -58,14 +62,15 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingTop="10dp" >
 
         <TextView
             android:id="@+id/QRContent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
+            android:textSize="20sp"
             android:text="@string/qr_content" />
 
         <TextView
@@ -74,6 +79,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="20dp"
+            android:textSize="20sp"
             android:text="@string/default_txt" />
 
     </LinearLayout>
@@ -85,14 +91,15 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingTop="10dp" >
 
         <TextView
             android:id="@+id/QRScoreTag"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
+            android:textSize="20sp"
             android:text="@string/qr_score_hint" />
 
         <TextView
@@ -101,6 +108,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="20dp"
+            android:textSize="20sp"
             android:text="@string/default_txt" />
     </LinearLayout>
 
@@ -108,7 +116,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:paddingTop="10dp"
         android:orientation="horizontal">
 
         <TextView
@@ -116,7 +124,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
-            android:text="GeoLocation Longitude:" />
+            android:textSize="20sp"
+            android:text="Longitude:" />
 
         <TextView
             android:id="@+id/GeoSharable_Long"
@@ -124,6 +133,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="20dp"
+            android:textSize="20sp"
             android:text="@string/default_txt"
             android:visibility="invisible" />
     </LinearLayout>
@@ -132,7 +142,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:paddingTop="10dp"
         android:orientation="horizontal">
 
         <TextView
@@ -140,7 +150,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
-            android:text="GeoLocation Latitude:" />
+            android:textSize="20sp"
+            android:text="Latitude:" />
 
         <TextView
             android:id="@+id/GeoSharable_Lati"
@@ -148,6 +159,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="20dp"
+            android:textSize="20sp"
             android:text="@string/default_txt"
             android:visibility="invisible" />
     </LinearLayout>
@@ -156,7 +168,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:paddingTop="10dp"
         android:gravity="center"
         android:orientation="horizontal">
 
@@ -165,6 +177,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/add_location_switch"
+            android:textSize="15sp"
             tools:ignore="UseSwitchCompatOrMaterialXml,TouchTargetSizeCheck" />
 
     </LinearLayout>
@@ -173,10 +186,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:paddingTop="10dp"
         android:gravity="center"
         android:orientation="horizontal">
-
 
         <Button
             android:id="@+id/Add_img"
@@ -219,7 +231,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:paddingTop="10dp"
         android:gravity="center"
         android:orientation="horizontal">
 
@@ -231,6 +243,7 @@
             android:layout_marginRight="20dp"
             android:autofillHints=""
             android:ems="10"
+            android:lines="10"
             android:hint="@string/comment_hint"
             android:inputType="textPersonName"
             android:paddingTop="5dp"
@@ -242,7 +255,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:paddingTop="10dp"
         android:gravity="center"
         android:orientation="horizontal">
 
@@ -250,7 +263,6 @@
             android:id="@+id/AddBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="10dp"
             android:text="@string/add_btn"
             tools:ignore="ButtonStyle" />
 

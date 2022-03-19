@@ -319,7 +319,7 @@ public class addQR extends AppCompatActivity {
         data_qr.put("Content", qr_str);
 
         // if user wants to add location
-        if(add_g){
+        if (add_g){
             data_qr.put("Location", location_get);
         }
 
