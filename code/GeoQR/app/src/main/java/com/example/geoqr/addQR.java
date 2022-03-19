@@ -38,10 +38,15 @@ import com.google.firebase.firestore.SetOptions;
 import com.google.gson.Gson;
 
 import java.io.ByteArrayOutputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
+import java.util.logging.SimpleFormatter;
 
 /**
  * add the QR codes details to the database
@@ -142,14 +147,14 @@ public class addQR extends AppCompatActivity {
                             location_get = location;
 //                            Log.d(TAG, "long"+location);
 //                            Log.d(TAG, "lati"+location);
-                            if (location != null){
+                            if (location != null) {
                                 GeoDisplay_long.setText(String.valueOf(location.getLongitude()));
 //                                Log.d(TAG, "long"+location.getLongitude());
 //                                Log.d(TAG, "lati"+location.getLatitude());
                                 GeoDisplay_lati.setText(String.valueOf(location.getLatitude()));
                             } else {
-                                GeoDisplay_long.setText("Location Longitude is NULL");
-                                GeoDisplay_lati.setText("Location Latitude is NULL");
+                                GeoDisplay_long.setText("null");
+                                GeoDisplay_lati.setText("null");
                             }
                         }
                     });
@@ -180,7 +185,6 @@ public class addQR extends AppCompatActivity {
         add_img_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // to be tested
                 Intent cam = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 add_img = true;
                 if (cam.resolveActivity(getPackageManager()) != null) {
@@ -278,7 +282,7 @@ public class addQR extends AppCompatActivity {
         user_qr.put("QR codes", QRHexDisplay.getText().toString());
         user_qr.put("Comment",comment.getText().toString());
         user_qr.put("Location", "loc");
-        user_qr.put("Date", "date");
+        user_qr.put("Date", getCurrentTime());
 
         // if user wants to add photo
         // to be edited
@@ -363,6 +367,12 @@ public class addQR extends AppCompatActivity {
                 });
 
         Toast.makeText(getApplicationContext(),"Add Successfully",Toast.LENGTH_LONG).show();
+    }
+
+    private String getCurrentTime() {
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss zzzz", Locale.getDefault());
+        return dateFormat.format(calendar.getTime());
     }
 
     private void total_score_and_count(){

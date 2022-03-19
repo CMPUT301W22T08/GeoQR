@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -80,20 +81,20 @@ public class ProfilePage extends AppCompatActivity implements ListFragment.OnFra
         SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
         username = sharedPreferences.getString("username", null);
 
-        db.collection("Users").document(username).get()
-                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                    @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        contact = documentSnapshot.getString("Contact");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        e.printStackTrace();
-                        Log.d(TAG, "Failed to access contact");
-                    }
-                });
+//        db.collection("Users").document(username).get()
+//                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+//                    @Override
+//                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+//                        contact = documentSnapshot.getString("Contact");
+//                    }
+//                })
+//                .addOnFailureListener(new OnFailureListener() {
+//                    @Override
+//                    public void onFailure(@NonNull Exception e) {
+//                        e.printStackTrace();
+//                        Log.d(TAG, "Failed to access contact");
+//                    }
+//                });
 
         TextView show_username = findViewById(R.id.username);
         profileList = findViewById(R.id.profile_list);
@@ -108,9 +109,9 @@ public class ProfilePage extends AppCompatActivity implements ListFragment.OnFra
         Button contact_cancel = findViewById(R.id.contact_cancel);
         Button contact_btn = findViewById(R.id.contact_btn);
 
-        if (!contact.equals("null")) {
-            contact_text.setText(contact);
-        }
+//        if (!contact.equals("null")) {
+//            contact_text.setText(contact);
+//        }
 
 
         entryDataList = new ArrayList<>();
@@ -176,6 +177,7 @@ public class ProfilePage extends AppCompatActivity implements ListFragment.OnFra
             @Override
             public void onClick(View view) {
                 // to be done (generate a QR)
+
                 String status = String.format("Username: %s\nTotal Score: %s\nTotal Scans: %s\n" +
                         "Highest Score: %s\nLowest Score: %s", username, totalScore, entryDataList.size(),
                         largestScore, smallestScore);
@@ -188,12 +190,10 @@ public class ProfilePage extends AppCompatActivity implements ListFragment.OnFra
             @Override
             public void onClick(View view) {
                 Intent log_page = new Intent(ProfilePage.this, LoginPage.class);
-                // to be tested
                 SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.clear();
                 editor.apply();
-
                 Toast.makeText(getApplicationContext(), String.format("%s has been logged out", username), Toast.LENGTH_LONG).show();
                 log_page.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(log_page);
@@ -257,6 +257,13 @@ public class ProfilePage extends AppCompatActivity implements ListFragment.OnFra
             }
         });
 
+        profileList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int pos, long l) {
+                // to be written
+            }
+        });
+
 
     }
 
@@ -290,17 +297,22 @@ public class ProfilePage extends AppCompatActivity implements ListFragment.OnFra
 
         QRCodeWriter writer = new QRCodeWriter();
         try {
-            BitMatrix bitMatrix = writer.encode(content, BarcodeFormat.QR_CODE, 512, 512);
-            int width = bitMatrix.getWidth();
-            int height = bitMatrix.getHeight();
-            Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
-            for (int i = 0; i < width; i++) {
-                for (int j = 0; j < height; j++) {
-                    bitmap.setPixel(i, j, bitMatrix.get(i, j) ? Color.BLACK : Color.WHITE);
+            if (show_QR.getVisibility() == View.GONE) {
+                BitMatrix bitMatrix = writer.encode(content, BarcodeFormat.QR_CODE, 512, 512);
+                int width = bitMatrix.getWidth();
+                int height = bitMatrix.getHeight();
+                Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
+                for (int i = 0; i < width; i++) {
+                    for (int j = 0; j < height; j++) {
+                        bitmap.setPixel(i, j, bitMatrix.get(i, j) ? Color.BLACK : Color.WHITE);
+                    }
                 }
+                show_QR.setImageBitmap(bitmap);
+                show_QR.setVisibility(View.VISIBLE);
             }
-            show_QR.setImageBitmap(bitmap);
-            show_QR.setVisibility(View.VISIBLE);
+            else {
+                show_QR.setVisibility(View.GONE);
+            }
         }
         catch (WriterException e) {
             e.printStackTrace();
