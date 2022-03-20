@@ -297,22 +297,17 @@ public class ProfilePage extends AppCompatActivity implements ListFragment.OnFra
 
         QRCodeWriter writer = new QRCodeWriter();
         try {
-            if (show_QR.getVisibility() == View.GONE) {
-                BitMatrix bitMatrix = writer.encode(content, BarcodeFormat.QR_CODE, 512, 512);
-                int width = bitMatrix.getWidth();
-                int height = bitMatrix.getHeight();
-                Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
-                for (int i = 0; i < width; i++) {
-                    for (int j = 0; j < height; j++) {
-                        bitmap.setPixel(i, j, bitMatrix.get(i, j) ? Color.BLACK : Color.WHITE);
-                    }
+            BitMatrix bitMatrix = writer.encode(content, BarcodeFormat.QR_CODE, 512, 512);
+            int width = bitMatrix.getWidth();
+            int height = bitMatrix.getHeight();
+            Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
+            for (int i = 0; i < width; i++) {
+                for (int j = 0; j < height; j++) {
+                    bitmap.setPixel(i, j, bitMatrix.get(i, j) ? Color.BLACK : Color.WHITE);
                 }
-                show_QR.setImageBitmap(bitmap);
-                show_QR.setVisibility(View.VISIBLE);
             }
-            else {
-                show_QR.setVisibility(View.GONE);
-            }
+            show_QR.setImageBitmap(bitmap);
+            show_QR.setVisibility(View.VISIBLE);
         }
         catch (WriterException e) {
             e.printStackTrace();

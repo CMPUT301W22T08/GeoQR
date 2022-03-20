@@ -147,8 +147,6 @@ public class addQR extends AppCompatActivity {
                         @Override
                         public void onSuccess(Location location) {
                             location_get = location;
-//                            Log.d(TAG, "long"+location);
-//                            Log.d(TAG, "lati"+location);
                             if (location != null) {
                                 GeoDisplay_long.setText(String.valueOf(location.getLongitude()));
                                 GeoDisplay_lati.setText(String.valueOf(location.getLatitude()));
@@ -235,7 +233,7 @@ public class addQR extends AppCompatActivity {
     private void goBack(int code){
         Intent camera = new Intent(addQR.this, ScanQR.class);
         if (code == 0) {
-            Toast.makeText(getApplicationContext(), "Data saved", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "Data saved successfully", Toast.LENGTH_LONG).show();
         }
         else {
             Toast.makeText(getApplicationContext(), "Data is not saved", Toast.LENGTH_LONG).show();
@@ -277,6 +275,13 @@ public class addQR extends AppCompatActivity {
                     if (!exist){
                         total_score_and_count();
                     }
+                    else {
+                        Intent camera = new Intent(addQR.this, ScanQR.class);
+                        Toast.makeText(getApplicationContext(), "The QR has been added before", Toast.LENGTH_LONG).show();
+                        camera.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(camera);
+                        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+                    }
                 }
             }
         });
@@ -297,7 +302,6 @@ public class addQR extends AppCompatActivity {
         HashMap<String, Object> user_qr = new HashMap<>();
         user_qr.put("QR codes", QRHexDisplay.getText().toString());
         user_qr.put("Comment",comment.getText().toString());
-//        user_qr.put("Location", "loc");
         user_qr.put("Date", getCurrentTime());
 
         // if user wants to add photo
@@ -380,8 +384,6 @@ public class addQR extends AppCompatActivity {
                         Log.d(TAG, "~(Data of username has been added successfully!)");
                     }
                 });
-
-        Toast.makeText(getApplicationContext(),"Add Successfully",Toast.LENGTH_LONG).show();
     }
 
     private String getCurrentTime() {
