@@ -140,7 +140,7 @@ public class ScanQR extends AppCompatActivity {
      */
     private void passScore() {
         Intent calScore = new Intent(ScanQR.this, addQR.class);
-        calScore.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        // calScore.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         calScore.putExtra("content", content);
         startActivity(calScore);
     }

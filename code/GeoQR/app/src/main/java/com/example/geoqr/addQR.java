@@ -232,6 +232,7 @@ public class addQR extends AppCompatActivity {
      */
     private void goBack(int code){
         Intent camera = new Intent(addQR.this, ScanQR.class);
+        System.out.println("Checkpoint 0");
         if (code == 0) {
             Toast.makeText(getApplicationContext(), "Data saved successfully", Toast.LENGTH_LONG).show();
         }
@@ -276,8 +277,9 @@ public class addQR extends AppCompatActivity {
                         total_score_and_count();
                     }
                     else {
-                        Intent camera = new Intent(addQR.this, ScanQR.class);
+                        System.out.println("Checkpoint 1");
                         Toast.makeText(getApplicationContext(), "The QR has been added before", Toast.LENGTH_LONG).show();
+                        Intent camera = new Intent(addQR.this, ScanQR.class);
                         camera.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(camera);
                         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
