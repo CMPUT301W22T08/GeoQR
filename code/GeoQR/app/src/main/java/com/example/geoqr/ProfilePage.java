@@ -131,7 +131,11 @@ public class ProfilePage extends AppCompatActivity implements ListFragment.OnFra
 
         totalCodes.setText(String.format("Total Code: %s", entryDataList.size()));
 
+<<<<<<< HEAD
          final CollectionReference collectionReference = db.collection("Users").document(username).collection("QR codes");
+=======
+        final CollectionReference collectionReference = db.collection("Users").document(username).collection("QR codes");
+>>>>>>> 62901f83cb53c9cafd5311bf3e2d33137e297025
 
         collectionReference.addSnapshotListener((queryDocumentSnapshots, error) -> {
             entryDataList.clear();
@@ -139,6 +143,7 @@ public class ProfilePage extends AppCompatActivity implements ListFragment.OnFra
                 Log.d(TAG, String.valueOf(doc.getData().get("QR codes")));
                 String content = (String) doc.getData().get("Content");
                 String score = (String) doc.getData().get("Score");
+<<<<<<< HEAD
 
                 String qrcode = (String) doc.getId();
                 entryDataList.add(new ListEntry(qrcode, content, score));
@@ -150,6 +155,21 @@ public class ProfilePage extends AppCompatActivity implements ListFragment.OnFra
             totalCodes.setText(String.format("Total Code: %s", entryDataList.size()));
 
 
+=======
+//                int intScore = Integer.parseInt(score);
+
+                String time = (String) doc.getData().get("Time");
+                String location = (String) doc.getData().get("Location");
+                String qrcode = (String) doc.getId();
+
+
+                entryDataList.add(new ListEntry(qrcode, content, score, location, time));
+            }
+            listAdapter.notifyDataSetChanged();
+            show_username.setText(username);
+            profileTotal.setText(String.format("Total Score: %s", totalScore));
+            totalCodes.setText(String.format("Total Code: %s", entryDataList.size()));
+>>>>>>> 62901f83cb53c9cafd5311bf3e2d33137e297025
         });
 
 
@@ -277,9 +297,11 @@ public class ProfilePage extends AppCompatActivity implements ListFragment.OnFra
         int total_score = Integer.parseInt(totalScore) - removeScore;
         totalScore = String.valueOf(total_score);
 
-        profilelist.deleteEntry(entry);
+        // profilelist.deleteEntry(entry);
 
         //entryDataList.remove(entry);
+        /////////////////////////////////////added this part which might help
+        listAdapter.remove(entry);
         listAdapter.notifyDataSetChanged();
 
 
