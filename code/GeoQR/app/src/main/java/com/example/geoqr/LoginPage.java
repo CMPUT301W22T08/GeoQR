@@ -147,7 +147,7 @@ public class LoginPage extends AppCompatActivity {
     // this is for scanning QR code login
     // return false if user is not in the db, otherwise true.
     public boolean checkIfUserExists(String username) {
-        return true;
+        return false;
     }
 
 
