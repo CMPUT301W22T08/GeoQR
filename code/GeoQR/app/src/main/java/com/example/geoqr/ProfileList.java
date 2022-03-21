@@ -1,8 +1,6 @@
 package com.example.geoqr;
 
 import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +9,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 
@@ -21,8 +18,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
 
 public class ProfileList extends ArrayAdapter<ListEntry> {
-
-//    private ArrayAdapter<ListEntry> list;
 
     private ArrayList<ListEntry> qrlist;
     private Context context;
@@ -38,6 +33,8 @@ public class ProfileList extends ArrayAdapter<ListEntry> {
      * ADD SORT FUNCTIONALITY
      *
      */
+
+
 
     @NonNull
     @Override
@@ -61,27 +58,16 @@ public class ProfileList extends ArrayAdapter<ListEntry> {
 
         content.setText(entry.getContent());
         score.setText(entry.getScore());
+        location.setText(entry.getLocation());
+        time.setText(entry.getTime());
 
-        view.setOnLongClickListener(new View.OnLongClickListener() {
+        view.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onLongClick(View view) {
-
+            public void onClick(View view) {
                 FragmentManager manager = ((FragmentActivity) view.getContext()).getSupportFragmentManager();
                 new ListFragment().newInstance(entry).show(manager, "ENTRY FRAGMENT");
-
-
-                return false;
             }
         });
-//
-//        view.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//
-//                FragmentManager manager = ((FragmentActivity) view.getContext()).getSupportFragmentManager();
-//                new ListFragment().newInstance(entry).show(manager, "ENTRY FRAGMENT");
-//            }
-//        });
 
 
         return view;

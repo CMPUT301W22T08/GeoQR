@@ -42,7 +42,6 @@ import com.google.zxing.qrcode.QRCodeWriter;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Objects;
 
 
@@ -55,16 +54,12 @@ public class ProfilePage extends AppCompatActivity implements ListFragment.OnFra
     private TextView lowScore;
     private String username;
     private EditText contact_bar;
-
     TextView contact_text;
     ImageView show_QR;
     String contact;
     byte[] current;
 
-
-    //private ArrayList<String> testList;
-
-    private ArrayAdapter listAdapter;
+    private ArrayAdapter<ListEntry> listAdapter;
     private ArrayList<ListEntry> entryDataList;
     private final String TAG = "Sample";
     FirebaseFirestore db;
@@ -121,21 +116,13 @@ public class ProfilePage extends AppCompatActivity implements ListFragment.OnFra
         entryDataList = new ArrayList<>();
         listAdapter = new ProfileList(this, entryDataList);
 
-
-//        testList = new ArrayList<>();
-//        listAdapter = new ArrayAdapter<>(this, R.layout.tempcontent, testList);
-
         profileList.setAdapter(listAdapter);
 
         show_username.setText(username);
 
         totalCodes.setText(String.format("Total Code: %s", entryDataList.size()));
 
-<<<<<<< HEAD
-         final CollectionReference collectionReference = db.collection("Users").document(username).collection("QR codes");
-=======
         final CollectionReference collectionReference = db.collection("Users").document(username).collection("QR codes");
->>>>>>> 62901f83cb53c9cafd5311bf3e2d33137e297025
 
         collectionReference.addSnapshotListener((queryDocumentSnapshots, error) -> {
             entryDataList.clear();
@@ -143,19 +130,6 @@ public class ProfilePage extends AppCompatActivity implements ListFragment.OnFra
                 Log.d(TAG, String.valueOf(doc.getData().get("QR codes")));
                 String content = (String) doc.getData().get("Content");
                 String score = (String) doc.getData().get("Score");
-<<<<<<< HEAD
-
-                String qrcode = (String) doc.getId();
-                entryDataList.add(new ListEntry(qrcode, content, score));
-
-
-//                testList.add(String.format("%s                  %s", score, content));
-            }
-            listAdapter.notifyDataSetChanged();
-            totalCodes.setText(String.format("Total Code: %s", entryDataList.size()));
-
-
-=======
 //                int intScore = Integer.parseInt(score);
 
                 String time = (String) doc.getData().get("Time");
@@ -169,7 +143,6 @@ public class ProfilePage extends AppCompatActivity implements ListFragment.OnFra
             show_username.setText(username);
             profileTotal.setText(String.format("Total Score: %s", totalScore));
             totalCodes.setText(String.format("Total Code: %s", entryDataList.size()));
->>>>>>> 62901f83cb53c9cafd5311bf3e2d33137e297025
         });
 
 
@@ -278,17 +251,13 @@ public class ProfilePage extends AppCompatActivity implements ListFragment.OnFra
         profileList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int pos, long l) {
-                Intent intent = new Intent(ProfilePage.this, ProfileDetails.class);
-
-
-
-                intent.putExtra("item", String.valueOf(pos));
-                startActivity(intent);
-
+                // to be written
             }
         });
 
+
     }
+
 
     @Override
     public void onDeletePressed(ListEntry entry) {
