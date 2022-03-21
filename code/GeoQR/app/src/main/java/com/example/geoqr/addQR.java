@@ -71,6 +71,7 @@ public class addQR extends AppCompatActivity {
     private CalculateScore score;
     FirebaseFirestore db;
     DatabaseQR databaseQR;
+    DocumentReference docRef;
     private FusedLocationProviderClient fusedLocationClient;
 
     // Define variables that's going to be used inside this class
@@ -212,9 +213,27 @@ public class addQR extends AppCompatActivity {
         add_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                add_qr_db(location_get);
-                add_user_db();
-                goBack(0);
+                docRef = db.collection("Users")
+                        .document(UserName)
+                        .collection("QR codes")
+                        .document(score.getQRHex());
+
+                docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            boolean exist = task.getResult().exists();
+                            if (!exist) {
+                                add_user_db();
+                                add_qr_db(location_get);
+                                goBack(0);
+                            } else {
+                                Toast.makeText(getApplicationContext(), "The QR has been added before", Toast.LENGTH_LONG).show();
+                                goBack(1);
+                            }
+                        }
+                    }
+                });
             }
         });
 
@@ -249,7 +268,7 @@ public class addQR extends AppCompatActivity {
      */
     public void add_user_db() {
         // only add score if subarray in Users, QR codes, if the document does not exist
-        DocumentReference docRef = db.collection("Users")
+        docRef = db.collection("Users")
                 .document(UserName)
                 .collection("QR codes")
                 .document(score.getQRHex());
@@ -258,8 +277,6 @@ public class addQR extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()){
-                    boolean exist = task.getResult().exists();
-
                     docRef.set(user_db_content(),SetOptions.merge())
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
@@ -272,24 +289,10 @@ public class addQR extends AppCompatActivity {
                                     Log.d(TAG, "Not added");
                                 }
                             });
-
-                    if (!exist){
-                        total_score_and_count();
-                    }
-                    else {
-                        System.out.println("Checkpoint 1");
-                        Toast.makeText(getApplicationContext(), "The QR has been added before", Toast.LENGTH_LONG).show();
-                        Intent camera = new Intent(addQR.this, ScanQR.class);
-                        camera.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        startActivity(camera);
-                        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
-                    }
+                    total_score_and_count();
                 }
             }
         });
-
-
-
     }
 
 

@@ -23,10 +23,13 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -60,9 +63,7 @@ public class ProfilePage extends AppCompatActivity implements ListFragment.OnFra
     private ArrayList<ListEntry> entryDataList;
     private final String TAG = "Sample";
     FirebaseFirestore db;
-    int totalScore = 0;
-    int largestScore = 0;
-    int smallestScore = 0;
+    String totalScore, largestScore, smallestScore;
 
     ProfileList profilelist;
 
@@ -73,29 +74,7 @@ public class ProfilePage extends AppCompatActivity implements ListFragment.OnFra
         Objects.requireNonNull(getSupportActionBar()).hide();
         setContentView(R.layout.activity_profile_v3);
 
-        // to be tested
-        // Intent user = getIntent();
-        // username = user.getStringExtra("username");
-        // to be tested
         db = FirebaseFirestore.getInstance();
-        SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
-        username = sharedPreferences.getString("username", null);
-
-//        db.collection("Users").document(username).get()
-//                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-//                    @Override
-//                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-//                        contact = documentSnapshot.getString("Contact");
-//                    }
-//                })
-//                .addOnFailureListener(new OnFailureListener() {
-//                    @Override
-//                    public void onFailure(@NonNull Exception e) {
-//                        e.printStackTrace();
-//                        Log.d(TAG, "Failed to access contact");
-//                    }
-//                });
-
         TextView show_username = findViewById(R.id.username);
         profileList = findViewById(R.id.profile_list);
         profileTotal = findViewById(R.id.total_score);
@@ -109,15 +88,65 @@ public class ProfilePage extends AppCompatActivity implements ListFragment.OnFra
         Button contact_cancel = findViewById(R.id.contact_cancel);
         Button contact_btn = findViewById(R.id.contact_btn);
 
-//        if (!contact.equals("null")) {
-//            contact_text.setText(contact);
-//        }
+        SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
+        username = sharedPreferences.getString("username", null);
 
+        DocumentReference user_ref = db.collection("Users").document(username);
+        user_ref.get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        contact = documentSnapshot.getString("Contact");
+                        totalScore = documentSnapshot.getString("Total Score");
+                        largestScore = documentSnapshot.getString("Highest Score");
+                        smallestScore = documentSnapshot.getString("Lowest Score");
+                        profileTotal.setText(String.format("Total Score: %s", totalScore));
+                        highScore.setText(String.format("Highest Score: %s", largestScore));
+                        lowScore.setText(String.format("Lowest Score: %s", smallestScore));
+                        System.out.printf("%s, %s, %s, %s", contact, totalScore, largestScore, smallestScore);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        System.out.println("failed");
+                    }
+                });
 
         entryDataList = new ArrayList<>();
         listAdapter = new ProfileList(this, entryDataList);
 
         profileList.setAdapter(listAdapter);
+
+        show_username.setText(username);
+
+        totalCodes.setText(String.format("Total Code: %s", entryDataList.size()));
+
+        // final CollectionReference collectionReference = db.collection("Users").document(username).collection("QR codes");
+
+//        collectionReference.addSnapshotListener((queryDocumentSnapshots, error) -> {
+//            entryDataList.clear();
+//            for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+//                Log.d(TAG, String.valueOf(doc.getData().get("QR codes")));
+//                String content = (String) doc.getData().get("Content");
+//                String score = (String) doc.getData().get("Score");
+////                int intScore = Integer.parseInt(score);
+//
+//                String time = (String) doc.getData().get("Time");
+//                String location = (String) doc.getData().get("Location");
+//                String qrcode = (String) doc.getId();
+
+
+//                entryDataList.add(new ListEntry(qrcode, content, score, location, time));
+//            }
+//            listAdapter.notifyDataSetChanged();
+//            show_username.setText(username);
+//            profileTotal.setText(String.format("Total Score: %s", totalScore));
+//            totalCodes.setText(String.format("Total Code: %s", entryDataList.size()));
+//
+//
+//        });
+
 
         final FloatingActionButton returnButton = findViewById(R.id.return_to_camera);
         returnButton.setOnClickListener((v) -> {
@@ -127,47 +156,10 @@ public class ProfilePage extends AppCompatActivity implements ListFragment.OnFra
             overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
         });
 
-
-
-        final CollectionReference collectionReference = db.collection("Users").document(username).collection("QR codes");
-
-        collectionReference.addSnapshotListener((queryDocumentSnapshots, error) -> {
-            entryDataList.clear();
-            for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
-                Log.d(TAG, String.valueOf(doc.getData().get("QR codes")));
-                String content = (String) doc.getData().get("Content");
-                String score = (String) doc.getData().get("Score");
-//                int intScore = Integer.parseInt(score);
-
-                String time = (String) doc.getData().get("Time");
-                String location = (String) doc.getData().get("Location");
-                String qrcode = (String) doc.getId();
-
-//                totalScore = totalScore + intScore;
-//
-//                if (intScore > largestScore) {
-//                    largestScore = intScore;
-//                }
-//                if (smallestScore == 0 || intScore < smallestScore) {
-//                    smallestScore = intScore;
-//                }
-
-                entryDataList.add(new ListEntry(qrcode, content, score, location, time));
-            }
-            listAdapter.notifyDataSetChanged();
-            show_username.setText(username);
-            profileTotal.setText(String.format("Total Score: %s", totalScore));
-            totalCodes.setText(String.format("Total Code: %s", entryDataList.size()));
-            highScore.setText(String.format("Highest Score: %s", largestScore));
-            lowScore.setText(String.format("Lowest Score: %s", smallestScore));
-
-        });
-
         Button generateUserQR = findViewById(R.id.generate_login_qr);
         generateUserQR.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // to be done (generate a QR)
                 generateQRCode(username);
             }
         });
@@ -176,8 +168,6 @@ public class ProfilePage extends AppCompatActivity implements ListFragment.OnFra
         generateStatusQR.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // to be done (generate a QR)
-
                 String status = String.format("Username: %s\nTotal Score: %s\nTotal Scans: %s\n" +
                         "Highest Score: %s\nLowest Score: %s", username, totalScore, entryDataList.size(),
                         largestScore, smallestScore);
@@ -241,6 +231,9 @@ public class ProfilePage extends AppCompatActivity implements ListFragment.OnFra
                                         Log.d(TAG, "Contact Updated Unsuccessfully");
                                     }
                                 });
+                        if (contact.equals("")) {
+                            contact_text.setText("Click Edit Button To Add");
+                        }
                     }
                 });
                 contact_cancel.setOnClickListener(new View.OnClickListener() {
@@ -272,7 +265,8 @@ public class ProfilePage extends AppCompatActivity implements ListFragment.OnFra
     public void onDeletePressed(ListEntry entry) {
 
         int removeScore = Integer.parseInt(entry.getScore());
-        totalScore = totalScore - removeScore;
+        int total_score = Integer.parseInt(totalScore) - removeScore;
+        totalScore = String.valueOf(total_score);
 
         profilelist.deleteEntry(entry);
 

@@ -69,35 +69,11 @@ public class LoginPage extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 username = etUsername.getText().toString();
-                Map<String, Object> data = new HashMap<>();
-                data.put("Comment","");
-                data.put("Content","");
-                data.put("Location","");
-                data.put("Score","");
-                data.put("Time","");
 
                 if (!TextUtils.isEmpty(username)) {  // if the username is not empty
-                    db.collection("Users").document(username).collection("QR codes")
-                            .add(data)
-                            .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                                @Override
-                                public void onSuccess(DocumentReference documentReference) {
-                                    Log.d(TAG, "DocumentSnapshot written with ID: " + documentReference.getId());
-                                    // Intent camScan = new Intent(LoginPage.this, ScanQR.class);
-                                    Toast.makeText(getApplicationContext(), String.format("Login as '%s'", username), Toast.LENGTH_LONG).show();
-                                    writeFile(username);
-                                    openScan(username);
-                                    // camScan.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                    // startActivity(camScan);
-                                }
-                            })
-                            .addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Log.w(TAG, "Error adding document", e);
-                                }
-                            });
-
+                    Toast.makeText(getApplicationContext(), String.format("Login as '%s'", username), Toast.LENGTH_LONG).show();
+                    writeFile(username);
+                    openScan(username);
                 } else {
                     Toast.makeText(LoginPage.this, "Username cannot be empty, please re-enter!", Toast.LENGTH_SHORT).show();
                 }
@@ -171,7 +147,7 @@ public class LoginPage extends AppCompatActivity {
     // this is for scanning QR code login
     // return false if user is not in the db, otherwise true.
     public boolean checkIfUserExists(String username) {
-        return false;
+        return true;
     }
 
 
