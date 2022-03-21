@@ -15,6 +15,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class ProfileDetails extends AppCompatActivity {
 
     TextView detail_content, detail_score, detail_date, detail_loc, detail_comment;
@@ -23,11 +27,13 @@ public class ProfileDetails extends AppCompatActivity {
     Button detail_edit, detail_o, detail_x;
     EditText detail_edit_bar;
     String new_comment;
+    private String[] list;
 
     @Override
     protected void onCreate(Bundle savedStateInstance) {
         super.onCreate(savedStateInstance);
         setContentView(R.layout.qr_detail);
+        Intent intent = getIntent();
 
         db = FirebaseFirestore.getInstance();
         detail_content = findViewById(R.id.detail_content);
@@ -56,7 +62,19 @@ public class ProfileDetails extends AppCompatActivity {
         del_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // to be written
+
+//
+//
+//                String str = intent.getStringExtra("item");
+//                int pos = Integer.parseInt(str);
+//
+
+//                list = intent.getArra("array");
+////                ArrayList<String> newList = new ArrayList<String>(Arrays.asList(list));
+//                ArrayList<String> newList = (ArrayList<String>) intent.getSerializableExtra("array");
+//                newList.remove(pos);
+
+
             }
         });
 

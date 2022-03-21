@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
+import android.content.SharedPreferences;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -42,6 +43,8 @@ public class ListFragment extends DialogFragment {
     final String TAG = "Sample";
     FirebaseFirestore db;
     ProfilePage getBytes = new ProfilePage();
+    private String username;
+
 
     public interface OnFragmentInteractionListener {
         void onDeletePressed(ListEntry entry);
@@ -71,23 +74,24 @@ public class ListFragment extends DialogFragment {
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_list_entry, null);
         comments = view.findViewById(R.id.comments);
-        photo = view.findViewById(R.id.qr_image);
+//        photo = view.findViewById(R.id.qr_image);
 
 //        byte[] byte_array = getBytes.getByteArray();
 //        Bitmap bitmap = BitmapFactory.decodeByteArray(byte_array, 0, byte_array.length);
 //        photo.setImageBitmap(bitmap);
 
-        Picasso.get()
-                .load("https://firebasestorage.googleapis.com/v0/b/qrdatabase-301geoqr.appspot.com/o/testqr.png?alt=media&token=49e71a4f-e2b6-4792-a5b7-95b03535926b")
-                .into(photo);
+//        Picasso.get()
+//                .load("https://firebasestorage.googleapis.com/v0/b/qrdatabase-301geoqr.appspot.com/o/testqr.png?alt=media&token=49e71a4f-e2b6-4792-a5b7-95b03535926b")
+//                .into(photo);
 
 
-        ListEntry editEntry = (ListEntry) getArguments().getSerializable("entry");
+        Bundle entryBundle = getArguments();
+        ListEntry editEntry = (ListEntry) entryBundle.getSerializable("entry");
         String qrcode = editEntry.getQrcode();
         db = FirebaseFirestore.getInstance();
 
 
-        final DocumentReference documentReference = db.collection("Users").document("3FmLnxuiGMAJxStHRqMq").collection("QR codes").document(qrcode);
+        final DocumentReference documentReference = db.collection("Users").document(username).collection("QR codes").document(qrcode);
 
 
         documentReference.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
@@ -99,8 +103,8 @@ public class ListFragment extends DialogFragment {
         });
 
 
-        Bundle entryBundle = getArguments();
-        ListEntry entry = (ListEntry) entryBundle.getSerializable("entry");
+//        Bundle entryBundle = getArguments();
+//        ListEntry entry = (ListEntry) entryBundle.getSerializable("entry");
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 
@@ -109,7 +113,7 @@ public class ListFragment extends DialogFragment {
                 .setNegativeButton("DELETE QR", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        listener.onDeletePressed(entry);
+                        listener.onDeletePressed(editEntry);
                     }
                 })
                 .setPositiveButton("Close Menu", new DialogInterface.OnClickListener() {
