@@ -147,6 +147,7 @@ public class ProfilePage extends AppCompatActivity {
                                     Log.d(TAG, "QR - User Delete Failed");
                                 }
                             });
+                    updateScore();
                     updateView();
                     db.collection("Users").document(username)
                             .update("Total Score", String.valueOf(Integer.parseInt(totalScore) - Integer.parseInt(current_score)));
@@ -354,6 +355,10 @@ public class ProfilePage extends AppCompatActivity {
         catch (WriterException e) {
             e.printStackTrace();
         }
+    }
+
+    private void updateScore() {
+
     }
 
     public static void hideKeyboard(Activity activity) {
