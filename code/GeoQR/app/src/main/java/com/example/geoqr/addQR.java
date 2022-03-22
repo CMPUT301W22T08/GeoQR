@@ -392,6 +392,9 @@ public class addQR extends AppCompatActivity {
                         Log.d(TAG, "~(Data of username has been added successfully!)");
                     }
                 });
+
+
+        // QR_ref.document(score.getQRHex()).collection("QR Data").document()
     }
 
     private String getCurrentTime() {
