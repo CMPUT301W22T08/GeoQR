@@ -113,7 +113,6 @@ public class ProfileDetails extends AppCompatActivity {
                         detail_content.setText(content);
                         detail_score.setText(score);
                         detail_date.setText(date);
-                        System.out.println(String.format("Comment check point: %s", comment));
                         if (!comment.equals("")) {
                             detail_comment.setText(comment);
                         }
@@ -209,7 +208,6 @@ public class ProfileDetails extends AppCompatActivity {
                 detail_edit.setVisibility(View.GONE);
                 detail_edit_bar.setVisibility(View.VISIBLE);
                 getComment();
-                System.out.println(String.format("This is comment: %s", comment));
                 detail_edit_bar.requestFocus();
                 showKeyboard(ProfileDetails.this);
                 detail_o.setOnClickListener(new View.OnClickListener() {
@@ -312,7 +310,6 @@ public class ProfileDetails extends AppCompatActivity {
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         comment = documentSnapshot.getString("Comment");
                         assert comment != null;
-                        System.out.println(String.format("New Comment: %s", comment));
                         if (comment.equals("")) {
                             detail_edit_bar.setText("");
                         }
