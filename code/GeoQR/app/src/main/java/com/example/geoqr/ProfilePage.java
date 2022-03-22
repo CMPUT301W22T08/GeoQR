@@ -1,15 +1,14 @@
 package com.example.geoqr;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.media.Image;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -23,17 +22,14 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.google.gson.Gson;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
@@ -42,11 +38,10 @@ import com.google.zxing.qrcode.QRCodeWriter;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Objects;
 
 
-public class ProfilePage extends AppCompatActivity implements ListFragment.OnFragmentInteractionListener {
+public class ProfilePage extends AppCompatActivity {
 
     private ListView profileList;
     private TextView profileTotal;
@@ -55,29 +50,26 @@ public class ProfilePage extends AppCompatActivity implements ListFragment.OnFra
     private TextView lowScore;
     private String username;
     private EditText contact_bar;
-
     TextView contact_text;
     ImageView show_QR;
-    String contact;
+    String contact, content, current_score;
     byte[] current;
 
 
     //private ArrayList<String> testList;
 
-    private ArrayAdapter listAdapter;
+    private ArrayAdapter<ListEntry> listAdapter;
     private ArrayList<ListEntry> entryDataList;
     private final String TAG = "Sample";
     FirebaseFirestore db;
     String totalScore, largestScore, smallestScore;
-
-    ProfileList profilelist;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Objects.requireNonNull(getSupportActionBar()).hide();
         setContentView(R.layout.activity_profile_v3);
+        String notice = "Click Edit Button To Add";
 
         db = FirebaseFirestore.getInstance();
         TextView show_username = findViewById(R.id.username);
@@ -105,10 +97,13 @@ public class ProfilePage extends AppCompatActivity implements ListFragment.OnFra
                         totalScore = documentSnapshot.getString("Total Score");
                         largestScore = documentSnapshot.getString("Highest Score");
                         smallestScore = documentSnapshot.getString("Lowest Score");
+                        if (!contact.equals("null")) {
+                            contact_text.setText(contact);
+                        }
                         profileTotal.setText(String.format("Total Score: %s", totalScore));
                         highScore.setText(String.format("Highest Score: %s", largestScore));
                         lowScore.setText(String.format("Lowest Score: %s", smallestScore));
-                        System.out.printf("%s, %s, %s, %s", contact, totalScore, largestScore, smallestScore);
+                        System.out.printf("%s, %s, %s, %s\n", contact, totalScore, largestScore, smallestScore);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -120,56 +115,106 @@ public class ProfilePage extends AppCompatActivity implements ListFragment.OnFra
 
         entryDataList = new ArrayList<>();
         listAdapter = new ProfileList(this, entryDataList);
-
-
-//        testList = new ArrayList<>();
-//        listAdapter = new ArrayAdapter<>(this, R.layout.tempcontent, testList);
-
         profileList.setAdapter(listAdapter);
-
         show_username.setText(username);
 
-        totalCodes.setText(String.format("Total Code: %s", entryDataList.size()));
-
-<<<<<<< HEAD
-         final CollectionReference collectionReference = db.collection("Users").document(username).collection("QR codes");
-=======
         final CollectionReference collectionReference = db.collection("Users").document(username).collection("QR codes");
->>>>>>> 62901f83cb53c9cafd5311bf3e2d33137e297025
-
         collectionReference.addSnapshotListener((queryDocumentSnapshots, error) -> {
             entryDataList.clear();
             for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
                 Log.d(TAG, String.valueOf(doc.getData().get("QR codes")));
-                String content = (String) doc.getData().get("Content");
+                content = (String) doc.getData().get("Content");
                 String score = (String) doc.getData().get("Score");
-<<<<<<< HEAD
-
-                String qrcode = (String) doc.getId();
-                entryDataList.add(new ListEntry(qrcode, content, score));
-
-
-//                testList.add(String.format("%s                  %s", score, content));
+                String qrcode = doc.getId();
+                entryDataList.add(new ListEntry(username, qrcode, content, score));
             }
-            listAdapter.notifyDataSetChanged();
-            totalCodes.setText(String.format("Total Code: %s", entryDataList.size()));
-
-
-=======
-//                int intScore = Integer.parseInt(score);
-
-                String time = (String) doc.getData().get("Time");
-                String location = (String) doc.getData().get("Location");
-                String qrcode = (String) doc.getId();
-
-
-                entryDataList.add(new ListEntry(qrcode, content, score, location, time));
-            }
-            listAdapter.notifyDataSetChanged();
-            show_username.setText(username);
+            informUpdate();
             profileTotal.setText(String.format("Total Score: %s", totalScore));
             totalCodes.setText(String.format("Total Code: %s", entryDataList.size()));
->>>>>>> 62901f83cb53c9cafd5311bf3e2d33137e297025
+        });
+
+        profileList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+                ListEntry list = entryDataList.get(i);
+                db.collection("Users").document(username).collection("QR codes").document(list.getQrcode())
+                        .get()
+                        .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                            @Override
+                            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                current_score = documentSnapshot.getString("Score");
+                                System.out.println(String.format("This is %s", current_score));
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                System.out.println("Failed to access current score");
+                            }
+                        });
+                AlertDialog.Builder alert = new AlertDialog.Builder(ProfilePage.this);
+                alert.setTitle("Delete Confirmation");
+                alert.setMessage(String.format("Are you sure you want to delete '%s'?", content));
+                alert.setPositiveButton(android.R.string.yes, (dialogInterface, i1) -> {
+                    listAdapter.remove(list);
+                    entryDataList.remove(list);
+                    informUpdate();
+                    db.collection("Users")
+                        .document(username)
+                        .collection("QR codes")
+                        .document(list.getQrcode())
+                        .delete()
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void unused) {
+                                Log.d(TAG, "User - QR Successfully deleted");
+                                System.out.println("User - QR Successfully deleted");
+                            }
+                        })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Log.d(TAG, "User - QR Delete Failed");
+                                }
+                            });
+                    db.collection("QR codes")
+                            .document(list.getQrcode())
+                            .collection("Users")
+                            .document(username)
+                            .delete()
+                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void unused) {
+                                    Log.d(TAG, "QR - User Successfully Deleted");
+                                    System.out.println("QR - User Successfully Deleted");
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Log.d(TAG, "QR - User Delete Failed");
+                                }
+                            });
+                    getTotal();
+                    db.collection("Users").document(username)
+                            .update("Total Score", String.valueOf(Integer.parseInt(totalScore) - Integer.parseInt(current_score)));
+                    getTotal();
+
+                });
+                alert.setNegativeButton(android.R.string.no, ((dialogInterface, i1) -> dialogInterface.cancel()));
+                alert.show();
+                return true;
+            }
+        });
+
+        profileList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                ListEntry list = entryDataList.get(i);
+                Intent details = new Intent(ProfilePage.this, ProfileDetails.class);
+                details.putExtra("QR", list.getQrcode());
+                startActivity(details);
+            }
         });
 
 
@@ -204,14 +249,21 @@ public class ProfilePage extends AppCompatActivity implements ListFragment.OnFra
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent log_page = new Intent(ProfilePage.this, LoginPage.class);
-                SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.clear();
-                editor.apply();
-                Toast.makeText(getApplicationContext(), String.format("%s has been logged out", username), Toast.LENGTH_LONG).show();
-                log_page.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(log_page);
+                AlertDialog.Builder alert = new AlertDialog.Builder(ProfilePage.this);
+                alert.setTitle("Logout Confirmation");
+                alert.setMessage(String.format("Are you sure you want to Logout '%s'?", username));
+                alert.setPositiveButton(android.R.string.yes, (dialogInterface, i1) -> {
+                    Intent log_page = new Intent(ProfilePage.this, LoginPage.class);
+                    SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.clear();
+                    editor.apply();
+                    Toast.makeText(getApplicationContext(), String.format("%s has been logged out", username), Toast.LENGTH_LONG).show();
+                    log_page.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(log_page);
+                });
+                alert.setNegativeButton(android.R.string.no, ((dialogInterface, i1) -> dialogInterface.cancel()));
+                alert.show();
             }
         });
 
@@ -242,6 +294,9 @@ public class ProfilePage extends AppCompatActivity implements ListFragment.OnFra
                         contact_bar.setVisibility(View.GONE);
                         contact_text.setVisibility(View.VISIBLE);
                         contact_text.setText(contact);
+                        if (contact.equals("")) {
+                            contact = "null";
+                        }
                         db.collection("Users").document(username)
                                 .update("Contact", contact)
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -256,8 +311,8 @@ public class ProfilePage extends AppCompatActivity implements ListFragment.OnFra
                                         Log.d(TAG, "Contact Updated Unsuccessfully");
                                     }
                                 });
-                        if (contact.equals("")) {
-                            contact_text.setText("Click Edit Button To Add");
+                        if (contact.equals("null")) {
+                            contact_text.setText(notice);
                         }
                     }
                 });
@@ -275,48 +330,58 @@ public class ProfilePage extends AppCompatActivity implements ListFragment.OnFra
             }
         });
 
-        profileList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int pos, long l) {
-                Intent intent = new Intent(ProfilePage.this, ProfileDetails.class);
-
-
-
-                intent.putExtra("item", String.valueOf(pos));
-                startActivity(intent);
-
-            }
-        });
-
     }
 
-    @Override
-    public void onDeletePressed(ListEntry entry) {
-
-        int removeScore = Integer.parseInt(entry.getScore());
-        int total_score = Integer.parseInt(totalScore) - removeScore;
-        totalScore = String.valueOf(total_score);
-
-        // profilelist.deleteEntry(entry);
-
-        //entryDataList.remove(entry);
-        /////////////////////////////////////added this part which might help
-        listAdapter.remove(entry);
-        listAdapter.notifyDataSetChanged();
-
-
-        db.collection("Users")
-                .document(username)
-                .collection("QR codes")
-                .document(entry.getQrcode())
-                .delete()
-                .addOnSuccessListener((OnSuccessListener) (unused) -> {
-                    Log.d(TAG, "Document has been deleted");
+    private void getTotal() {
+        db.collection("Users").document(username).get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        totalScore = documentSnapshot.getString("Total Score");
+                        profileTotal.setText(String.format("Total Score: %s", totalScore));
+                        System.out.println(String.format("TotalScore: %s", totalScore));
+                    }
                 })
-                .addOnFailureListener((e) -> {
-                    Log.d(TAG, "Document cannot be deleted");
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        System.out.println("Failed to get total score in delete");
+                    }
                 });
     }
+
+    public void informUpdate() {
+        listAdapter.notifyDataSetChanged();
+    }
+
+
+//    @Override
+//    public void onDeletePressed(ListEntry entry) {
+//
+//        int removeScore = Integer.parseInt(entry.getScore());
+//        int total_score = Integer.parseInt(totalScore) - removeScore;
+//        totalScore = String.valueOf(total_score);
+//
+//        // profilelist.deleteEntry(entry);
+//
+//        //entryDataList.remove(entry);
+//        /////////////////////////////////////added this part which might help
+//        listAdapter.remove(entry);
+//        listAdapter.notifyDataSetChanged();
+//
+//
+//        db.collection("Users")
+//                .document(username)
+//                .collection("QR codes")
+//                .document(entry.getQrcode())
+//                .delete()
+//                .addOnSuccessListener((OnSuccessListener) (unused) -> {
+//                    Log.d(TAG, "Document has been deleted");
+//                })
+//                .addOnFailureListener((e) -> {
+//                    Log.d(TAG, "Document cannot be deleted");
+//                });
+//    }
 
     private void generateQRCode(String content) {
 
@@ -370,5 +435,4 @@ public class ProfilePage extends AppCompatActivity implements ListFragment.OnFra
             imm.showSoftInput(activity.getCurrentFocus(), InputMethodManager.SHOW_IMPLICIT);
         }
     }
-
 }

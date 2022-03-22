@@ -5,7 +5,13 @@
       <map>
         <entry key="..\:/Users/Matthew/AndroidStudioProjects/GeoQR/code/GeoQR/app/src/main/res/layout/activity_profile.xml" value="0.33" />
         <entry key="..\:/Users/Matthew/AndroidStudioProjects/GeoQR/code/GeoQR/app/src/main/res/layout/activity_profile_v3.xml" value="0.8433734939759037" />
+        <entry key="app/src/main/res/layout/activity_profile_v3.xml" value="0.34846343994140627" />
+        <entry key="app/src/main/res/layout/aqq_qr_code_v2.xml" value="0.30078430175781246" />
+        <entry key="app/src/main/res/layout/del_profile_frag.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/fragment_list_entry.xml" value="0.13958333333333334" />
+        <entry key="app/src/main/res/layout/list_profile_content.xml" value="0.2539154052734375" />
         <entry key="app/src/main/res/layout/login_page.xml" value="0.327445652173913" />
+        <entry key="app/src/main/res/layout/qr_detail.xml" value="0.30689655172413793" />
       </map>
     </option>
   </component>

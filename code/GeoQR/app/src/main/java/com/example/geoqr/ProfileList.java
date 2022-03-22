@@ -1,5 +1,6 @@
 package com.example.geoqr;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -24,13 +25,13 @@ public class ProfileList extends ArrayAdapter<ListEntry> {
 
 //    private ArrayAdapter<ListEntry> list;
 
-    private ArrayList<ListEntry> qrlist;
-    private Context context;
+    private final ArrayList<ListEntry> QRList;
+    private final Context context;
     FirebaseFirestore db;
 
-    public ProfileList(Context context, ArrayList<ListEntry> qrlist) {
-        super(context, 0, qrlist);
-        this.qrlist = qrlist;
+    public ProfileList(@NonNull Context context, ArrayList<ListEntry> QRList) {
+        super(context, 0, QRList);
+        this.QRList = QRList;
         this.context = context;
     }
 
@@ -52,55 +53,30 @@ public class ProfileList extends ArrayAdapter<ListEntry> {
             view = LayoutInflater.from(context).inflate(R.layout.list_profile_content, parent, false);
         }
 
-        final ListEntry entry = qrlist.get(position);
-
+        final ListEntry entry = QRList.get(position);
         final TextView content = view.findViewById(R.id.pl_content);
         final TextView score = view.findViewById(R.id.pl_score);
-        final TextView location = view.findViewById(R.id.pl_location);
-        final TextView time = view.findViewById(R.id.pl_time);
 
         content.setText(entry.getContent());
         score.setText(entry.getScore());
-
-        view.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-
-                FragmentManager manager = ((FragmentActivity) view.getContext()).getSupportFragmentManager();
-                new ListFragment().newInstance(entry).show(manager, "ENTRY FRAGMENT");
-
-
-                return false;
-            }
-        });
-//
-//        view.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//
-//                FragmentManager manager = ((FragmentActivity) view.getContext()).getSupportFragmentManager();
-//                new ListFragment().newInstance(entry).show(manager, "ENTRY FRAGMENT");
-//            }
-//        });
-
 
         return view;
 
     }
 
     public void addEntry(ListEntry entry) {
-        qrlist.add(entry);
+        QRList.add(entry);
     }
 
     public void deleteEntry(ListEntry entry) {
-        if (qrlist.contains(entry)) {
-            qrlist.remove(entry);
+        if (QRList.contains(entry)) {
+            QRList.remove(entry);
         } else {
             throw new IllegalArgumentException();
         }
     }
 
     public int size() {
-        return qrlist.size();
+        return QRList.size();
     }
 }

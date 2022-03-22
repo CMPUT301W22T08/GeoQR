@@ -6,7 +6,7 @@
     <string name="scan_hint">Scan</string>
     <string name="qr_code_hint">QR Code:</string>
     <string name="user_hint">User:</string>
-    <string name="default_txt">To Be Set</string>
+    <string name="default_txt">Loading</string>
     <string name="qr_score_hint">QR Code Score:</string>
     <string name="geo_hint">Geolocation:</string>
     <string name="add_location_switch">Add Location</string>
@@ -36,4 +36,7 @@
     <string name="score_title">Score:</string>
     <string name="comment_title">Comment:</string>
     <string name="enter_the_comment">Enter the comment</string>
+    <string name="delete_qr">Delete QR</string>
+    <string name="edit_comment">Edit Comment</string>
+    <string name="qr_hex">QR Hex:</string>
 </resources>

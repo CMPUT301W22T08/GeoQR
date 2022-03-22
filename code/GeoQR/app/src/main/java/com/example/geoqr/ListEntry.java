@@ -6,12 +6,22 @@ public class ListEntry implements Serializable {
     private String qrcode;
     private String content;
     private String score;
+    private String username;
 
-    public ListEntry(String qrcode, String content, String score) {
+
+    ListEntry(String username, String qrcode, String content, String score) {
+        this.username = username;
         this.qrcode = qrcode;
         this.content = content;
         this.score = score;
+    }
 
+    public void setUser(String username) {
+        this.username = username;
+    }
+
+    public String getUsername() {
+        return this.username;
     }
 
 

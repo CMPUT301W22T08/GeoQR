@@ -190,7 +190,6 @@ public class addQR extends AppCompatActivity {
                     activityResultLauncher.launch(cam);
                 }
             }
-
         });
 
 
@@ -308,11 +307,12 @@ public class addQR extends AppCompatActivity {
         user_qr.put("QR codes", QRHexDisplay.getText().toString());
         user_qr.put("Comment",comment.getText().toString());
         user_qr.put("Date", getCurrentTime());
+        user_qr.put("Content", qr_str);
+        user_qr.put("Score", String.valueOf(QRScore));
 
         // if user wants to add photo
         // to be edited
         // if you do not add the image, nothing will crash
-        System.out.println(add_img);
         if (add_img) {
             // got bitmap and can store to database
             // but currently no place to put bitmap on database so implement later
@@ -324,6 +324,9 @@ public class addQR extends AppCompatActivity {
             Gson gson = new Gson();
             String byte_array = gson.toJson(bytes);
             user_qr.put("Bytes Array", byte_array);
+        }
+        if (!add_img) {
+            user_qr.put("Bytes Array", "null");
         }
 
         return user_qr;
