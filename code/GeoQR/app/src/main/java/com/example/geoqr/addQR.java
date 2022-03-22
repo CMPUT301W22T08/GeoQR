@@ -376,25 +376,42 @@ public class addQR extends AppCompatActivity {
         HashMap<String, Object> k = new HashMap<>();
         // if user wants to add location
         if (add_g){
-            k.put("Location", location);
+            k.put("Longitude",location.getLongitude());
+            k.put("Latitude",location.getLatitude());
+            k.put("Content",qr_str);
+
+//            k.put("Location", location);
         }
-        // adding username inside the sub-collection
-        QR_ref.document(score.getQRHex()).collection("Users").document(UserName)
-                .set(k)  //change to hashmap
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void unused) {
-                        Log.d(TAG, "Data of username has been added successfully!");
-                    }})
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d(TAG, "~(Data of username has been added successfully!)");
-                    }
-                });
+//        // adding username inside the sub-collection
+//        QR_ref.document(score.getQRHex()).collection("Users").document(UserName)
+//                .set(k)  //change to hashmap
+//                .addOnSuccessListener(new OnSuccessListener<Void>() {
+//                    @Override
+//                    public void onSuccess(Void unused) {
+//                        Log.d(TAG, "Data of username has been added successfully!");
+//                    }})
+//                .addOnFailureListener(new OnFailureListener() {
+//                    @Override
+//                    public void onFailure(@NonNull Exception e) {
+//                        Log.d(TAG, "~(Data of username has been added successfully!)");
+//                    }
+//                });
 
 
-        // QR_ref.document(score.getQRHex()).collection("QR Data").document()
+         QR_ref.document(score.getQRHex()).collection("QR Data")
+                 .add(k).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                     @Override
+                     public void onSuccess(DocumentReference documentReference) {
+                         Toast.makeText(getApplicationContext(), "Added for location", Toast.LENGTH_LONG).show();
+                         Log.d(TAG, "Added for location");
+                     }
+                 }).addOnFailureListener(new OnFailureListener() {
+                     @Override
+                     public void onFailure(@NonNull Exception e) {
+                         Toast.makeText(getApplicationContext(), "Not Added for location", Toast.LENGTH_LONG).show();
+                         Log.d(TAG, "Not Added for location");
+                     }
+                 });
     }
 
     private String getCurrentTime() {
