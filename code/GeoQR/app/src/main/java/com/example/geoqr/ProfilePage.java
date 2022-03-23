@@ -20,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -28,14 +29,18 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Objects;
 
 
@@ -97,6 +102,24 @@ public class ProfilePage extends AppCompatActivity {
                             @Override
                             public void onSuccess(DocumentSnapshot documentSnapshot) {
                                 current_score = documentSnapshot.getString("Score");
+
+
+
+
+                                updateScoreTester();
+//
+//                                if (current_score == highScore.toString()){
+//                                    updateScoreTester();
+//                                }else if(current_score == highScore.toString()){
+//                                    updateScoreTester();
+//                                }
+
+
+
+
+
+
+
                             }
                         })
                         .addOnFailureListener(new OnFailureListener() {
@@ -130,7 +153,7 @@ public class ProfilePage extends AppCompatActivity {
                                     Log.d(TAG, "User - QR Delete Failed");
                                 }
                             });
-                    updateScore();
+
                     db.collection("QR codes")
                             .document(list.getQrcode())
                             .collection("Users")
@@ -357,21 +380,55 @@ public class ProfilePage extends AppCompatActivity {
         }
     }
 
+    private void updateScoreTester(){
+        CollectionReference Ref = db.collection("Users").document(username).collection("QR codes");
+        Ref.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                String largest;
+                ArrayList<String> s = new ArrayList<>();
+                for (QueryDocumentSnapshot doc : value) {
+                    s.add((String) doc.get("Score"));
+                    s.add("8");
+                    s.add("9");
+
+                    largest = s.get(0);
+                    for (int i = 1; i < s.size(); i++){
+                        // says s is null
+                        if(Integer.valueOf(largest)  < Integer.valueOf(s.get(i))){
+                            largest = s.get(i);
+                        }
+                    }
+                    HashMap<String,String> x = new HashMap<>();
+                    Ref.document("temp").set(x);
+
+                }
+            }
+        });
+
+    }
+
     private void updateScore() {
 
-        ArrayList<Integer> list_temp = new ArrayList<>();
+
         DocumentReference docRef = db.collection("Users").document(username);
         db.collection("Users").document(username).collection("QR codes")
                 .addSnapshotListener((queryDocuments, error) -> {
+                    ArrayList<Integer> list_temp = new ArrayList<>();
                     for (QueryDocumentSnapshot doc : queryDocuments) {
                         String score = doc.getString("Score");
                         int int_score = Integer.parseInt(score);
                         System.out.println(String.format("score: %s", int_score));
                         list_temp.add(int_score);
+                        list_temp.add(1);
+                        list_temp.add(2);
+
+                        Log.d(TAG, "updateScore111111111: "+list_temp);
+                        Log.d(TAG, "updateScore11111111111: "+list_temp.size());
                     }
+                    Log.d(TAG, "updateScore: "+list_temp+378);
+                    Log.d(TAG, "updateScore: "+list_temp.size());
                 });
-        System.out.println(list_temp);
-        System.out.println(list_temp.size());
 
 //        final CollectionReference collectionReference = db.collection("Users").document(username).collection("QR codes");
 //        final DocumentReference docRef = db.collection("Users").document(username);
