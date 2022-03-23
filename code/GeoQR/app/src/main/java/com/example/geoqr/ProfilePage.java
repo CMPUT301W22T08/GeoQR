@@ -376,11 +376,9 @@ public class ProfilePage extends AppCompatActivity {
                                 if (Integer.parseInt(score) > Integer.parseInt(largestScore)) {
                                     docRef
                                             .update("Highest Score", score);
-                                    highScore.setText(String.format("Highest Score: %s", largestScore));
                                 } else if (Integer.parseInt(score) < Integer.parseInt(smallestScore)) {
                                     docRef
                                             .update("Lowest Score", score);
-                                    lowScore.setText(String.format("Lowest Score: %s", smallestScore));
                                 }
 
 
