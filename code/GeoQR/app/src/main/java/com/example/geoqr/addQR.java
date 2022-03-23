@@ -220,6 +220,7 @@ public class addQR extends AppCompatActivity {
 
     @SuppressLint("MissingPermission")
     private void getLocationFromDevice() {
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         fusedLocationClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
             @Override
             public void onSuccess(Location location) {
