@@ -56,7 +56,7 @@ public class ProfilePage extends AppCompatActivity {
     private ArrayList<ListEntry> entryDataList;
     private final String TAG = "Sample";
     FirebaseFirestore db;
-    String totalScore, largestScore, smallestScore, small;
+    String totalScore, largestScore, smallestScore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,7 +82,7 @@ public class ProfilePage extends AppCompatActivity {
         SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
         username = sharedPreferences.getString("username", null);
 
-        updateScore();
+        // updateScore();
         updateView();
 
 
@@ -130,6 +130,7 @@ public class ProfilePage extends AppCompatActivity {
                                     Log.d(TAG, "User - QR Delete Failed");
                                 }
                             });
+                    updateScore();
                     db.collection("QR codes")
                             .document(list.getQrcode())
                             .collection("Users")
@@ -148,7 +149,6 @@ public class ProfilePage extends AppCompatActivity {
                                     Log.d(TAG, "QR - User Delete Failed");
                                 }
                             });
-                    updateScore();
                     updateView();
                     db.collection("Users").document(username)
                             .update("Total Score", String.valueOf(Integer.parseInt(totalScore) - Integer.parseInt(current_score)));
@@ -359,42 +359,57 @@ public class ProfilePage extends AppCompatActivity {
 
     private void updateScore() {
 
-        final CollectionReference collectionReference = db.collection("Users").document(username).collection("QR codes");
-        final DocumentReference docRef = db.collection("Users").document(username);
-        docRef.get()
-                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                    @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        largestScore = documentSnapshot.getString("Highest Score");
-                        smallestScore = documentSnapshot.getString("Highest Score");
-                        collectionReference.addSnapshotListener((queryDocumentSnapshots, error) -> {
-                            assert queryDocumentSnapshots != null;
-                            for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
-                                Log.d(TAG, String.valueOf(doc.getData().get("QR codes")));
-                                String score = (String) doc.getData().get("Score");
-
-
-                                if (Integer.parseInt(score) > Integer.parseInt(largestScore)) {
-                                    docRef
-                                            .update("Highest Score", score);
-                                }
-                                if (Integer.parseInt(score) < Integer.parseInt(smallestScore)) {
-                                    docRef
-                                            .update("Lowest Score", score);
-                                }
-
-
-                            }
-                        });
-
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        System.out.println("failed");
+        ArrayList<Integer> list_temp = new ArrayList<>();
+        DocumentReference docRef = db.collection("Users").document(username);
+        db.collection("Users").document(username).collection("QR codes")
+                .addSnapshotListener((queryDocuments, error) -> {
+                    for (QueryDocumentSnapshot doc : queryDocuments) {
+                        String score = doc.getString("Score");
+                        int int_score = Integer.parseInt(score);
+                        System.out.println(String.format("score: %s", int_score));
+                        list_temp.add(int_score);
                     }
                 });
+        System.out.println(list_temp);
+        System.out.println(list_temp.size());
+
+//        final CollectionReference collectionReference = db.collection("Users").document(username).collection("QR codes");
+//        final DocumentReference docRef = db.collection("Users").document(username);
+//        docRef.get()
+//                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+//                    @Override
+//                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+//                        String large = documentSnapshot.getString("Highest Score");
+//                        String small = documentSnapshot.getString("Lowest Score");
+//                        collectionReference.addSnapshotListener((queryDocumentSnapshots, error) -> {
+//                            System.out.println("I came here and go");
+//                            assert queryDocumentSnapshots != null;
+//                            for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+//                                Log.d(TAG, String.valueOf(doc.getData().get("QR codes")));
+//                                String score = (String) doc.getData().get("Score");
+//
+//                                assert score != null;
+//                                if (Integer.parseInt(score) > Integer.parseInt(large)) {
+//                                    docRef.update("Highest Score", score);
+//                                    System.out.println("large here");
+//                                }
+//                                if (Integer.parseInt(score) < Integer.parseInt(small)) {
+//                                    docRef.update("Lowest Score", score);
+//                                    System.out.println("small here");
+//                                }
+//                                System.out.println("going to run updateView");
+//                                updateView();
+//                            }
+//                        });
+//
+//                    }
+//                })
+//                .addOnFailureListener(new OnFailureListener() {
+//                    @Override
+//                    public void onFailure(@NonNull Exception e) {
+//                        System.out.println("failed");
+//                    }
+//                });
 
 
 
