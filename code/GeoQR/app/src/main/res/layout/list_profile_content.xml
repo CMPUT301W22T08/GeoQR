@@ -5,6 +5,7 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:paddingTop="10dp"
+    android:paddingBottom="10dp"
     android:gravity="center"
     android:baselineAligned="false">
 
@@ -15,6 +16,7 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_weight="1"
+        android:lines="1"
         android:gravity="center"
         android:textSize="20sp" />
 
@@ -27,20 +29,5 @@
         android:layout_weight="1"
         android:gravity="center"
         android:textSize="20sp" />
-
-    <!--    <TextView-->
-<!--        android:id="@+id/pl_location"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginRight="15dp"-->
-<!--        android:textSize="20sp"></TextView>-->
-
-<!--    <TextView-->
-<!--        android:id="@+id/pl_time"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginRight="15dp"-->
-<!--        android:textSize="20sp"></TextView>-->
-
 
 </LinearLayout>

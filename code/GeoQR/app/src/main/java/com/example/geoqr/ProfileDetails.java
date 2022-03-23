@@ -126,14 +126,17 @@ public class ProfileDetails extends AppCompatActivity {
                     }
                 });
 
-        db.collection("QR codes").document(hex).collection("QR data").document(username).get()
+        db.collection("QR codes").document(hex).collection("Users").document(username).get()
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         longitude = documentSnapshot.getString("Longitude");
                         latitude = documentSnapshot.getString("Latitude");
-                        if (!longitude.equals("null") && !latitude.equals("null")) {
-                            String location = String.format("[%s, %s]", longitude, latitude);
+                        if (longitude == null) {
+                            detail_loc.setText(null_notice);
+                        }
+                        else if (!longitude.equals("null") && !latitude.equals("null")) {
+                            String location = String.format("[%s, %s]", latitude, longitude);
                             detail_loc.setText(location);
                         }
                         else {

@@ -53,7 +53,7 @@ public class addQR extends AppCompatActivity {
     //DATABASE STILL HAVE TROUBLE SETTING UP
 
     // Define values that's gonna display on the xml
-    private String UserName;
+    private String UserName, notice;
     private Integer QRScore;
     private Boolean add_img = false;
     private Boolean add_g  = false;
@@ -90,7 +90,7 @@ public class addQR extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.aqq_qr_code_v2);
         Objects.requireNonNull(getSupportActionBar()).hide();
-        String notice = "null";
+        notice = "null";
 
         db = FirebaseFirestore.getInstance();
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
@@ -136,29 +136,18 @@ public class addQR extends AppCompatActivity {
 
                 if (b) {
                     add_g = true;
-                    fusedLocationClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
-                        @Override
-                        public void onSuccess(Location location) {
-                            location_get = location;
-                            if (location != null) {
-                                GeoDisplay_long.setText(String.valueOf(location.getLongitude()));
-                                GeoDisplay_lati.setText(String.valueOf(location.getLatitude()));
-                            } else {
-                                Toast.makeText(getApplicationContext(), "This device does not support geolocation recording", Toast.LENGTH_LONG).show();
-                                GeoDisplay_long.setText(notice);
-                                GeoDisplay_lati.setText(notice);
-                            }
-                        }
-                    });
+                    getLocationFromDevice();
                     GeoDisplay_lati.setVisibility(View.VISIBLE);
                     GeoDisplay_long.setVisibility(View.VISIBLE);
                 }
                 else {
                     add_g = false;
+                    getLocationFromDevice();
                     GeoDisplay_lati.setVisibility(View.INVISIBLE);
                     GeoDisplay_long.setVisibility(View.INVISIBLE);
                 }
             }
+
         });
 
         activityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
@@ -225,6 +214,24 @@ public class addQR extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 goBack(1);
+            }
+        });
+    }
+
+    @SuppressLint("MissingPermission")
+    private void getLocationFromDevice() {
+        fusedLocationClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
+            @Override
+            public void onSuccess(Location location) {
+                location_get = location;
+                if (location != null) {
+                    GeoDisplay_long.setText(String.valueOf(location.getLongitude()));
+                    GeoDisplay_lati.setText(String.valueOf(location.getLatitude()));
+                } else {
+                    Toast.makeText(getApplicationContext(), "This device does not support geolocation recording", Toast.LENGTH_LONG).show();
+                    GeoDisplay_long.setText(notice);
+                    GeoDisplay_lati.setText(notice);
+                }
             }
         });
     }
@@ -359,8 +366,14 @@ public class addQR extends AppCompatActivity {
 
         // if user wants to add location
         if (add_g){
-            m.put("Latitude", location_get.getLatitude());
-            m.put("Longitude", location_get.getLongitude());
+            if (location_get == null) {
+                m.put("Latitude", "null");
+                m.put("Longitude", "null");
+            }
+            else {
+                m.put("Latitude", String.valueOf(location_get.getLatitude()));
+                m.put("Longitude", String.valueOf(location_get.getLongitude()));
+            }
         }
         // adding username inside the sub-collection
         QR_ref.document(score.getQRHex()).collection("Users").document(UserName)
@@ -379,8 +392,8 @@ public class addQR extends AppCompatActivity {
 
         HashMap<String, Object> k = new HashMap<>();
         if (location_get != null){
-            k.put("Longitude",location_get.getLongitude());
-            k.put("Latitude",location_get.getLatitude());
+            k.put("Longitude",String.valueOf(location_get.getLongitude()));
+            k.put("Latitude",String.valueOf(location_get.getLatitude()));
         } else{
             k.put("Longitude","null");
             k.put("Latitude","null");

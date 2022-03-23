@@ -1,6 +1,5 @@
 package com.example.geoqr;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 
 import android.content.Intent;
@@ -89,7 +88,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
     }
 
     private ArrayList<pointGIS> createPointsList() {
-        ArrayList<pointGIS> points = new ArrayList<>();
+        ArrayList<pointGIS> points = new ArrayList<pointGIS>();
         // connect to firebase here
 
         // loop through firebase connection and create points for every one on the list
