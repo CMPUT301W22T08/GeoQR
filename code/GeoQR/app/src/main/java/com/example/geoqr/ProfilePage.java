@@ -81,7 +81,10 @@ public class ProfilePage extends AppCompatActivity {
 
         SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
         username = sharedPreferences.getString("username", null);
+
+        updateScore();
         updateView();
+
 
         profileList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
@@ -354,6 +357,46 @@ public class ProfilePage extends AppCompatActivity {
     }
 
     private void updateScore() {
+
+        final CollectionReference collectionReference = db.collection("Users").document(username).collection("QR codes");
+        final DocumentReference docRef = db.collection("Users").document(username);
+        docRef.get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        largestScore = documentSnapshot.getString("Highest Score");
+                        smallestScore = documentSnapshot.getString("Lowest Score");
+                        collectionReference.addSnapshotListener((queryDocumentSnapshots, error) -> {
+                            assert queryDocumentSnapshots != null;
+                            for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                                Log.d(TAG, String.valueOf(doc.getData().get("QR codes")));
+                                String score = (String) doc.getData().get("Score");
+
+
+                                if (Integer.parseInt(score) > Integer.parseInt(largestScore)) {
+                                    docRef
+                                            .update("Highest Score", score);
+                                    highScore.setText(String.format("Highest Score: %s", largestScore));
+                                } else if (Integer.parseInt(score) < Integer.parseInt(smallestScore)) {
+                                    docRef
+                                            .update("Lowest Score", score);
+                                    lowScore.setText(String.format("Lowest Score: %s", smallestScore));
+                                }
+
+
+                            }
+                        });
+
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        System.out.println("failed");
+                    }
+                });
+
+
 
     }
 
