@@ -1,5 +1,6 @@
 package com.example.geoqr;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 
 import android.content.Intent;
@@ -32,6 +33,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
+        assert mapFragment != null;
         mapFragment.getMapAsync(this);
 
         // to be tested
@@ -57,7 +59,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
      * installed Google Play services and returned to the app.
      */
     @Override
-    public void onMapReady(GoogleMap googleMap) {
+    public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
 
         /* Add a marker in Sydney and move the camera
@@ -88,7 +90,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
     }
 
     private ArrayList<pointGIS> createPointsList() {
-        ArrayList<pointGIS> points = new ArrayList<pointGIS>();
+        ArrayList<pointGIS> points = new ArrayList<>();
         // connect to firebase here
 
         // loop through firebase connection and create points for every one on the list

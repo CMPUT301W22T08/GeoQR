@@ -1,9 +1,6 @@
 package com.example.geoqr;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,11 +9,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
 
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
@@ -46,9 +39,6 @@ public class ProfileList extends ArrayAdapter<ListEntry> {
         View view = convertView;
         db = FirebaseFirestore.getInstance();
 
-        final CollectionReference collectionReference = db.collection("Users");
-        final String TAG = "Sample";
-
         if (view == null) {
             view = LayoutInflater.from(context).inflate(R.layout.list_profile_content, parent, false);
         }
@@ -61,7 +51,6 @@ public class ProfileList extends ArrayAdapter<ListEntry> {
         score.setText(entry.getScore());
 
         return view;
-
     }
 
     public void addEntry(ListEntry entry) {

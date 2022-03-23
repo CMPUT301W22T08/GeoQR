@@ -30,14 +30,12 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.gson.Gson;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Objects;
 
 
@@ -53,7 +51,6 @@ public class ProfilePage extends AppCompatActivity {
     TextView contact_text;
     ImageView show_QR;
     String contact, content, current_score;
-    byte[] current;
 
     private ArrayAdapter<ListEntry> listAdapter;
     private ArrayList<ListEntry> entryDataList;
@@ -152,7 +149,6 @@ public class ProfilePage extends AppCompatActivity {
                     db.collection("Users").document(username)
                             .update("Total Score", String.valueOf(Integer.parseInt(totalScore) - Integer.parseInt(current_score)));
                     updateView();
-
                 });
                 alert.setNegativeButton(android.R.string.no, ((dialogInterface, i1) -> dialogInterface.cancel()));
                 alert.show();
@@ -283,7 +279,6 @@ public class ProfilePage extends AppCompatActivity {
                 });
             }
         });
-
     }
 
     private void updateView() {
@@ -319,6 +314,7 @@ public class ProfilePage extends AppCompatActivity {
         final CollectionReference collectionReference = db.collection("Users").document(username).collection("QR codes");
         collectionReference.addSnapshotListener((queryDocumentSnapshots, error) -> {
             entryDataList.clear();
+            assert queryDocumentSnapshots != null;
             for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
                 Log.d(TAG, String.valueOf(doc.getData().get("QR codes")));
                 content = (String) doc.getData().get("Content");

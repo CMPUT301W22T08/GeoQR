@@ -62,7 +62,6 @@
 
         <activity android:name=".addQR" />
         <activity android:name=".MainActivity" />
-        <activity android:name=".ContentTest" />
         <activity android:name=".ProfileDetails" />
         <activity
             android:name=".ScanLoginQR"

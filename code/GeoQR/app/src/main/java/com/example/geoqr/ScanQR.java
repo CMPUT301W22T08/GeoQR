@@ -2,7 +2,6 @@ package com.example.geoqr;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -12,7 +11,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.budiyev.android.codescanner.CodeScanner;
@@ -33,7 +31,6 @@ public class ScanQR extends AppCompatActivity {
     public String content;
     private CodeScannerView scannerView;
     float x1, x2, y1, y2;
-    String username;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -144,27 +141,4 @@ public class ScanQR extends AppCompatActivity {
         calScore.putExtra("content", content);
         startActivity(calScore);
     }
-
-//    public boolean camPermission(Context context, String ... permissions) {
-//        if (context != null && permissions != null) {
-//            for (String permission : permissions) {
-//                if (ActivityCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
-//                    return false;
-//                }
-//            }
-//        }
-//        return true;
-//    }
-
-    // to be tested
-//    @Override
-//    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-//        if (requestCode == REQUEST_CAMERA_PERMISSION) {
-//            if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-//                Toast.makeText(this, "Camera Permission needed", Toast.LENGTH_SHORT).show();
-//                finish();
-//            }
-//        }
-//    }
 }

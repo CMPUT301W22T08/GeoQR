@@ -41,14 +41,10 @@ import com.google.gson.Gson;
 
 import java.io.ByteArrayOutputStream;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
-import java.util.logging.SimpleFormatter;
 
 /**
  * add the QR codes details to the database
@@ -58,10 +54,7 @@ public class addQR extends AppCompatActivity {
 
     // Define values that's gonna display on the xml
     private String UserName;
-    // private String QRHex; // I still don't get what this is asking, the really long one or the value?
     private Integer QRScore;
-    private String Comments;
-    private Location location = new Location(""); // get location somehow, work with Julian
     private Boolean add_img = false;
     private Boolean add_g  = false;
     private Location location_get;
@@ -91,14 +84,13 @@ public class addQR extends AppCompatActivity {
     ActivityResultLauncher<Intent> activityResultLauncher;
     @SuppressLint("UseSwitchCompatOrMaterialCode")
     Switch add_geo;
-//    @SuppressLint("UseSwitchCompatOrMaterialCode")
-//    Switch add_photo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.aqq_qr_code_v2);
         Objects.requireNonNull(getSupportActionBar()).hide();
+        String notice = "null";
 
         db = FirebaseFirestore.getInstance();
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
@@ -152,8 +144,9 @@ public class addQR extends AppCompatActivity {
                                 GeoDisplay_long.setText(String.valueOf(location.getLongitude()));
                                 GeoDisplay_lati.setText(String.valueOf(location.getLatitude()));
                             } else {
-                                GeoDisplay_long.setText("null");
-                                GeoDisplay_lati.setText("null");
+                                Toast.makeText(getApplicationContext(), "This device does not support geolocation recording", Toast.LENGTH_LONG).show();
+                                GeoDisplay_long.setText(notice);
+                                GeoDisplay_lati.setText(notice);
                             }
                         }
                     });
@@ -200,15 +193,7 @@ public class addQR extends AppCompatActivity {
                 QR_img_view.setVisibility(View.GONE);
             }
         });
-
-        String s = score.getQRHex();
-
-        // define for add to database
-        final CollectionReference QR_ref = db.collection("QR codes");
-        // final DocumentReference QR_code_ref = db.collection("QR codes").document(s);
-
         // get all data to the QR database and go back
-
         add_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -244,7 +229,6 @@ public class addQR extends AppCompatActivity {
         });
     }
 
-
     /**
      * go back to the class intent from
      */
@@ -266,7 +250,7 @@ public class addQR extends AppCompatActivity {
      * add the data to the user section of firestore
      */
     public void add_user_db() {
-        // only add score if subarray in Users, QR codes, if the document does not exist
+        // only add score if sub-array in Users, QR codes, if the document does not exist
         docRef = db.collection("Users")
                 .document(UserName)
                 .collection("QR codes")
@@ -301,8 +285,6 @@ public class addQR extends AppCompatActivity {
      */
     public HashMap<String, Object> user_db_content(){
         //Add to user collection
-        // List<String> qr = new ArrayList<>();
-        // qr.add(QRHexDisplay.getText().toString());
         HashMap<String, Object> user_qr = new HashMap<>();
         user_qr.put("QR codes", QRHexDisplay.getText().toString());
         user_qr.put("Comment",comment.getText().toString());
@@ -355,8 +337,6 @@ public class addQR extends AppCompatActivity {
     public void add_qr_db(Location location){
         final CollectionReference QR_ref = db.collection("QR codes");
 
-//        System.out.println("Debug, something wrong");
-//        Log.d("Debug", "Debug3, something wrong");
         QR_ref.document(score.getQRHex()).set(qr_db_content(), SetOptions.merge())
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -379,7 +359,8 @@ public class addQR extends AppCompatActivity {
 
         // if user wants to add location
         if (add_g){
-            m.put("Location", location);
+            m.put("Latitude", location_get.getLatitude());
+            m.put("Longitude", location_get.getLongitude());
         }
         // adding username inside the sub-collection
         QR_ref.document(score.getQRHex()).collection("Users").document(UserName)
@@ -397,10 +378,10 @@ public class addQR extends AppCompatActivity {
                 });
 
         HashMap<String, Object> k = new HashMap<>();
-        if (location_get!=null){
+        if (location_get != null){
             k.put("Longitude",location_get.getLongitude());
             k.put("Latitude",location_get.getLatitude());
-        }else{
+        } else{
             k.put("Longitude","null");
             k.put("Latitude","null");
         }
@@ -434,13 +415,9 @@ public class addQR extends AppCompatActivity {
               @Override
               public void onSuccess(DocumentSnapshot documentSnapshot) {
 
-//                  DatabaseQR test = new DatabaseQR();
-//                  Integer high_score = Integer.parseInt(test.getQRHighestScore());
-//                  System.out.println(high_score);
-
-                  Integer highest_score = Integer.valueOf(documentSnapshot.getString("Highest Score"));
-                  Integer lowest_score = Integer.valueOf(documentSnapshot.getString("Lowest Score"));
-                  Integer total_score = Integer.valueOf(documentSnapshot.getString("Total Score"));
+                  Integer highest_score = Integer.valueOf(Objects.requireNonNull(documentSnapshot.getString("Highest Score")));
+                  Integer lowest_score = Integer.valueOf(Objects.requireNonNull(documentSnapshot.getString("Lowest Score")));
+                  Integer total_score = Integer.valueOf(Objects.requireNonNull(documentSnapshot.getString("Total Score")));
 
                   Integer qr_score = score.find_total();
 

@@ -1,10 +1,6 @@
 package com.example.geoqr;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-
 import com.google.common.hash.Hashing;
-//import com.google.zxing.*;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -12,8 +8,6 @@ import java.util.Hashtable;
 
 public class CalculateScore{
 
-    //    private byte[] qr_byte;
-//    private Bitmap bmp;
     private String Result = "";
     private String hex_result = "";
 

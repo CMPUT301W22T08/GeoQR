@@ -6,7 +6,7 @@ public class ListEntry implements Serializable {
     private String qrcode;
     private String content;
     private String score;
-    private String username;
+    private final String username;
 
 
     ListEntry(String username, String qrcode, String content, String score) {
@@ -16,14 +16,9 @@ public class ListEntry implements Serializable {
         this.score = score;
     }
 
-    public void setUser(String username) {
-        this.username = username;
-    }
-
     public String getUsername() {
         return this.username;
     }
-
 
     public String getQrcode() {
         return qrcode;

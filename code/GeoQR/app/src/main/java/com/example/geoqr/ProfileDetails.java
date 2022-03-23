@@ -1,7 +1,6 @@
 package com.example.geoqr;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -27,17 +26,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.gson.Gson;
 
-import org.w3c.dom.Document;
-
 import java.io.ByteArrayOutputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Objects;
 
 public class ProfileDetails extends AppCompatActivity {
@@ -47,8 +40,8 @@ public class ProfileDetails extends AppCompatActivity {
     FirebaseFirestore db;
     Button detail_edit, detail_o, detail_x, detail_add_img, detail_del_img;
     EditText detail_edit_bar;
-    String new_comment, username;
-    String content, comment, date, score, location, image, hex;
+    String new_comment, username, longitude, latitude;
+    String content, comment, date, score, image, hex;
     ActivityResultLauncher<Intent> activityResultLauncher;
     private final String TAG = "Sample";
 
@@ -61,6 +54,7 @@ public class ProfileDetails extends AppCompatActivity {
         Intent intent = getIntent();
         hex = intent.getStringExtra("QR");
         String notice = "Click Edit Button To Add";
+        String null_notice = "null";
 
         db = FirebaseFirestore.getInstance();
         detail_content = findViewById(R.id.detail_content);
@@ -132,6 +126,28 @@ public class ProfileDetails extends AppCompatActivity {
                     }
                 });
 
+        db.collection("QR codes").document(hex).collection("QR data").document(username).get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        longitude = documentSnapshot.getString("Longitude");
+                        latitude = documentSnapshot.getString("Latitude");
+                        if (!longitude.equals("null") && !latitude.equals("null")) {
+                            String location = String.format("[%s, %s]", longitude, latitude);
+                            detail_loc.setText(location);
+                        }
+                        else {
+                            detail_loc.setText(null_notice);
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        System.out.println("failed access in qr_ref ProfileDetail");
+                    }
+                });
+
         detail_add_img.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -169,25 +185,6 @@ public class ProfileDetails extends AppCompatActivity {
             }
         });
 
-
-//        db.collection("QR codes").document(hex).collection("Users").document(username).get()
-//                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-//                    @Override
-//                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-//                        location = documentSnapshot.getString("Location");
-//                    }
-//                })
-//                .addOnFailureListener(new OnFailureListener() {
-//                    @Override
-//                    public void onFailure(@NonNull Exception e) {
-//                        System.out.println("failed access in qr_ref ProfileDetail");
-//                    }
-//                });
-//
-//
-//        detail_loc.setText(location);
-
-
         back_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -197,7 +194,6 @@ public class ProfileDetails extends AppCompatActivity {
                 overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
             }
         });
-
 
         detail_edit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -253,8 +249,6 @@ public class ProfileDetails extends AppCompatActivity {
                 });
             }
         });
-
-
     }
 
     private void updateImg(String byte_array) {
@@ -324,6 +318,5 @@ public class ProfileDetails extends AppCompatActivity {
                         System.out.println("Fail to get comment in ProfileDetails");
                     }
                 });
-
     }
 }
