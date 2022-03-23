@@ -40,6 +40,7 @@ import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Objects;
 
@@ -56,6 +57,7 @@ public class ProfilePage extends AppCompatActivity {
     TextView contact_text;
     ImageView show_QR;
     String contact, content, current_score;
+    ArrayList<Integer> list_temp = new ArrayList<>();
 
     private ArrayAdapter<ListEntry> listAdapter;
     private ArrayList<ListEntry> entryDataList;
@@ -106,7 +108,7 @@ public class ProfilePage extends AppCompatActivity {
 
 
 
-                                updateScoreTester();
+                                // updateScoreTester();
 //
 //                                if (current_score == highScore.toString()){
 //                                    updateScoreTester();
@@ -153,7 +155,12 @@ public class ProfilePage extends AppCompatActivity {
                                     Log.d(TAG, "User - QR Delete Failed");
                                 }
                             });
-
+//                    if (Integer.parseInt(current_score) == Integer.parseInt(largestScore)) {
+//                        updateScore();
+//                    }
+//                    else if (Integer.parseInt(current_score) == Integer.parseInt(smallestScore)) {
+//                        updateScore();
+//                    }
                     db.collection("QR codes")
                             .document(list.getQrcode())
                             .collection("Users")
@@ -410,25 +417,28 @@ public class ProfilePage extends AppCompatActivity {
 
     private void updateScore() {
 
-
+        list_temp.clear();
         DocumentReference docRef = db.collection("Users").document(username);
         db.collection("Users").document(username).collection("QR codes")
-                .addSnapshotListener((queryDocuments, error) -> {
-                    ArrayList<Integer> list_temp = new ArrayList<>();
-                    for (QueryDocumentSnapshot doc : queryDocuments) {
+                .addSnapshotListener((queryDocumentSnapshot, error) -> {
+                    for (QueryDocumentSnapshot doc : queryDocumentSnapshot) {
                         String score = doc.getString("Score");
                         int int_score = Integer.parseInt(score);
                         System.out.println(String.format("score: %s", int_score));
                         list_temp.add(int_score);
-                        list_temp.add(1);
-                        list_temp.add(2);
 
-                        Log.d(TAG, "updateScore111111111: "+list_temp);
-                        Log.d(TAG, "updateScore11111111111: "+list_temp.size());
+//                        Log.d(TAG, "updateScore111111111: "+list_temp);
+//                        Log.d(TAG, "updateScore11111111111: "+list_temp.size());
                     }
-                    Log.d(TAG, "updateScore: "+list_temp+378);
-                    Log.d(TAG, "updateScore: "+list_temp.size());
+//                    Log.d(TAG, "updateScore: "+list_temp+378);
+//                    Log.d(TAG, "updateScore: "+list_temp.size());
                 });
+        System.out.println(list_temp);
+        Collections.sort(list_temp);
+        System.out.println(list_temp);
+        db.collection("Users").document(username).update("Highest Score", list_temp.get(list_temp.size() - 1));
+        db.collection("Users").document(username).update("Lowest Score", list_temp.get(0));
+        updateView();
 
 //        final CollectionReference collectionReference = db.collection("Users").document(username).collection("QR codes");
 //        final DocumentReference docRef = db.collection("Users").document(username);

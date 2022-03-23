@@ -141,7 +141,7 @@ public class LoginPage extends AppCompatActivity {
 
     // check if the user is admin
     public boolean checkIfAdmin(String username) {
-        return false;
+        return true;
     }
 
     // this is for scanning QR code login
