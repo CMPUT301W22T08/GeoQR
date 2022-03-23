@@ -365,13 +365,16 @@ public class ProfilePage extends AppCompatActivity {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         largestScore = documentSnapshot.getString("Highest Score");
-                        smallestScore = documentSnapshot.getString("Lowest Score");
+                        smallestScore = documentSnapshot.getString("Highest Score");
                         collectionReference.addSnapshotListener((queryDocumentSnapshots, error) -> {
                             assert queryDocumentSnapshots != null;
                             for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
                                 Log.d(TAG, String.valueOf(doc.getData().get("QR codes")));
                                 String score = (String) doc.getData().get("Score");
 
+
+                                Integer.parseInt(largestScore);
+                                Integer.parseInt(score);
 
                                 if (Integer.parseInt(score) > Integer.parseInt(largestScore)) {
                                     docRef
