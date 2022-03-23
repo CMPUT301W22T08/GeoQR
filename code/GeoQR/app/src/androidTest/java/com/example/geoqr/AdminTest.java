@@ -39,14 +39,14 @@ public class AdminTest {
         mockQRs = new ArrayList<>();
         mockPlayers = new ArrayList<>();
 
-        mockQRs.add(new AdminQRTuple("ABCD", "wUw", 20));
-        mockQRs.add(new AdminQRTuple("DCBA", "uWu", 30));
-        mockQRs.add(new AdminQRTuple("BCDA", "wUw", 10));
-        mockQRs.add(new AdminQRTuple("ABCD", "uWu", 20));
-        mockQRs.add(new AdminQRTuple("AABC", "poppy", 40));
-        mockQRs.add(new AdminQRTuple("BBBD", "ursa", 60));
-        mockQRs.add(new AdminQRTuple("BCDA","ursa",10));
-        mockQRs.add(new AdminQRTuple("DDDD", "bat", 100));
+        mockQRs.add(new AdminQRTuple("A","ABCD", "wUw", 20));
+        mockQRs.add(new AdminQRTuple("B","DCBA", "uWu", 30));
+        mockQRs.add(new AdminQRTuple("C", "BCDA", "wUw", 10));
+        mockQRs.add(new AdminQRTuple("D", "ABCD", "uWu", 20));
+        mockQRs.add(new AdminQRTuple("E", "AABC", "poppy", 40));
+        mockQRs.add(new AdminQRTuple("F", "BBBD", "ursa", 60));
+        mockQRs.add(new AdminQRTuple("G", "BCDA","ursa",10));
+        mockQRs.add(new AdminQRTuple("H", "DDDD", "bat", 100));
 
 
         mockPlayers.add(new AdminPlayerTuple("wUw", 30));
@@ -106,9 +106,9 @@ public class AdminTest {
     @Test
     public void checkQRSelection() {
         admin.addSelectedQRAt(1);
-        admin.addSelectedQRAt(2);
+        admin.addSelectedQRAt(1);
 
-        assertEquals(2, admin.getSelectedQRIndices().size());
+        assertEquals(1, admin.getSelectedQRIndices().size());
 
         admin.deleteQRCodes();
 

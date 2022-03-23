@@ -49,18 +49,18 @@ public class Admin {
     public void fetch() {
         // Get List of QR codes
         db = FirebaseFirestore.getInstance();
-        db.collection("QR codes").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        Log.d("RR: ", document.toString());
-                        qrAdapter.add(new AdminQRTuple(document.getId(), (String) ((ArrayList) document.get("User")).get(0),
-                                Math.toIntExact((Long) document.get("Score"))));
-                    }
-                }
-            }
-        });
+//        db.collection("QR codes").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//            @Override
+//            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                if (task.isSuccessful()) {
+//                    for (QueryDocumentSnapshot document : task.getResult()) {
+//                        Log.d("RR: ", document.toString());
+//                        qrAdapter.add(new AdminQRTuple((String) document.get("Content"),,
+//                                Math.toIntExact((Long) document.get("Score"))));
+//                    }
+//                }
+//            }
+//        });
 
         // Get List of Players
         db.collection("Users").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -68,11 +68,36 @@ public class Admin {
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot document : task.getResult()) {
-                        Log.d("GG: ", document.get("Score").toString());
-                        playerAdapter.add(new AdminPlayerTuple(document.getId(), Math.toIntExact((Long) document.get("Score"))));
+                        AdminPlayerTuple player = new AdminPlayerTuple(document.getId(),
+                                Integer.parseInt((String) document.get("Total Score")));
+                        playerAdapter.add(player);
+
+                        // Add Players QR to qrAdapter
+                        fetchQRsOfPlayer(player);
                     }
-                } else {
+                }
+                else {
                     Log.d("Error:", "Error getting documents: ", task.getException());
+                }
+            }
+        });
+    }
+
+    public void fetchQRsOfPlayer(AdminPlayerTuple player) {
+        db.collection("Users").document(player.getName())
+                .collection("QR codes").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot qrData : task.getResult()) {
+                        String content = (String) qrData.get("Content");
+                        String score = (String) qrData.get("Score");
+
+                        if (score == null || content == null) continue;
+
+                        qrAdapter.add(new AdminQRTuple(qrData.getId(), content, player.getName(),
+                                Integer.parseInt(score)));
+                    }
                 }
             }
         });
@@ -85,10 +110,18 @@ public class Admin {
     public void deleteQRCodes() {
         for (AdminQRTuple qrTuple: qrSelection) {
             if (db != null) {
-                db.collection("QR codes").document(qrTuple.getContents()).delete();
+
+                // 1. Delete that specific user from the corresponding document in
+                // "QR code" Collection
+                db.collection("QR codes")
+                        .document(qrTuple.getId())
+                        .collection("Users").document(qrTuple.getPlayer())
+                        .delete();
+
+                // 2. Delete from User Collection
                 db.collection("User")
                         .document(qrTuple.getPlayer())
-                        .collection("QR codes").document(qrTuple.getContents())
+                        .collection("QR codes").document(qrTuple.getId())
                         .delete();
             }
 
@@ -105,7 +138,32 @@ public class Admin {
     public void deletePlayers() {
         for (AdminPlayerTuple playerTuple: playerSelection) {
             if (db != null) {
-                db.collection("Users").document(playerTuple.getName()).delete();
+                // 1. Delete this user's entry in any document in the "QR codes" collection
+                db.collection("Users")
+                        .document(playerTuple.getName())
+                        .collection("QR codes").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot qrData: task.getResult()) {
+                                // Delete the User entry from the
+                                // correspond "Users" collection under "QR codes"
+                                db.collection("QR codes")
+                                        .document(qrData.getId())
+                                        .collection("Users")
+                                        .document(playerTuple.getName())
+                                        .delete();
+                            }
+
+                            // Once the User references are deleted:
+                            // 2. Delete the user from "Users" collection
+                            db.collection("Users").document(playerTuple.getName()).delete();
+                        }
+                        else {
+                            // TODO: User can't be deleted
+                        }
+                    }
+                });
             }
 
             playerAdapter.remove(playerTuple);
@@ -120,7 +178,10 @@ public class Admin {
      *      The pos corresponds to the position the ListView and the qrAdapter
      */
     public void addSelectedQRAt(int pos) {
-        qrSelection.add(qrAdapter.getItem(pos));
+        AdminQRTuple qr = qrAdapter.getItem(pos);
+        if (!qrSelection.contains(qr)) {
+            qrSelection.add(qr);
+        }
     }
 
     /**
@@ -210,7 +271,11 @@ public class Admin {
      *      The pos corresponds to the position the ListView and the playerAdapter
      */
     public void addSelectedPlayerAt(int pos) {
-        playerSelection.add(playerAdapter.getItem(pos));
+        AdminPlayerTuple player = playerAdapter.getItem(pos);
+
+        if (!playerSelection.contains(player)) {
+            playerSelection.add(player);
+        }
     }
 
     /**
