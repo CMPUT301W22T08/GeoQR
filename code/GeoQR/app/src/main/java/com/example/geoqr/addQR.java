@@ -373,30 +373,38 @@ public class addQR extends AppCompatActivity {
                     }
                 });
 
-        HashMap<String, Object> k = new HashMap<>();
+        HashMap<String, Object> m = new HashMap<>();
+
+
+
         // if user wants to add location
         if (add_g){
-            k.put("Longitude",location.getLongitude());
-            k.put("Latitude",location.getLatitude());
-            k.put("Content",qr_str);
-
-//            k.put("Location", location);
+            m.put("Location", location);
         }
-//        // adding username inside the sub-collection
-//        QR_ref.document(score.getQRHex()).collection("Users").document(UserName)
-//                .set(k)  //change to hashmap
-//                .addOnSuccessListener(new OnSuccessListener<Void>() {
-//                    @Override
-//                    public void onSuccess(Void unused) {
-//                        Log.d(TAG, "Data of username has been added successfully!");
-//                    }})
-//                .addOnFailureListener(new OnFailureListener() {
-//                    @Override
-//                    public void onFailure(@NonNull Exception e) {
-//                        Log.d(TAG, "~(Data of username has been added successfully!)");
-//                    }
-//                });
+        // adding username inside the sub-collection
+        QR_ref.document(score.getQRHex()).collection("Users").document(UserName)
+                .set(m)  //change to hashmap
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Log.d(TAG, "Data of username has been added successfully!");
+                    }})
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG, "~(Data of username has been added successfully!)");
+                    }
+                });
 
+        HashMap<String, Object> k = new HashMap<>();
+        if (location_get!=null){
+            k.put("Longitude",location_get.getLongitude());
+            k.put("Latitude",location_get.getLatitude());
+        }else{
+            k.put("Longitude","null");
+            k.put("Latitude","null");
+        }
+        k.put("Content",qr_str);
 
          QR_ref.document(score.getQRHex()).collection("QR Data")
                  .add(k).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
