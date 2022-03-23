@@ -56,7 +56,7 @@ public class ProfilePage extends AppCompatActivity {
     private ArrayList<ListEntry> entryDataList;
     private final String TAG = "Sample";
     FirebaseFirestore db;
-    String totalScore, largestScore, smallestScore;
+    String totalScore, largestScore, smallestScore, small;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +84,7 @@ public class ProfilePage extends AppCompatActivity {
 
         updateScore();
         updateView();
+
 
 
         profileList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
@@ -373,13 +374,11 @@ public class ProfilePage extends AppCompatActivity {
                                 String score = (String) doc.getData().get("Score");
 
 
-                                Integer.parseInt(largestScore);
-                                Integer.parseInt(score);
-
                                 if (Integer.parseInt(score) > Integer.parseInt(largestScore)) {
                                     docRef
                                             .update("Highest Score", score);
-                                } else if (Integer.parseInt(score) < Integer.parseInt(smallestScore)) {
+                                }
+                                if (Integer.parseInt(score) < Integer.parseInt(smallestScore)) {
                                     docRef
                                             .update("Lowest Score", score);
                                 }
