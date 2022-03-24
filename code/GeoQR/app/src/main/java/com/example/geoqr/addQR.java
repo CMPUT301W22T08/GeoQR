@@ -159,6 +159,9 @@ public class addQR extends AppCompatActivity {
                     bitmap = (Bitmap) bundle.get("data");
                     QR_img_view.setImageBitmap(bitmap);
                 }
+                else {
+                    bitmap = null;
+                }
             }
         });
 
@@ -306,14 +309,19 @@ public class addQR extends AppCompatActivity {
         if (add_img) {
             // got bitmap and can store to database
             // but currently no place to put bitmap on database so implement later
-            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-            byte[] bytes = stream.toByteArray();
-            // user_qr.put("Bytes Array", bytes);
+            if (bitmap == null) {
+                user_qr.put("Bytes Array", "null");
+            }
+            else {
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                byte[] bytes = stream.toByteArray();
+                // user_qr.put("Bytes Array", bytes);
 
-            Gson gson = new Gson();
-            String byte_array = gson.toJson(bytes);
-            user_qr.put("Bytes Array", byte_array);
+                Gson gson = new Gson();
+                String byte_array = gson.toJson(bytes);
+                user_qr.put("Bytes Array", byte_array);
+            }
         }
         if (!add_img) {
             user_qr.put("Bytes Array", "null");
