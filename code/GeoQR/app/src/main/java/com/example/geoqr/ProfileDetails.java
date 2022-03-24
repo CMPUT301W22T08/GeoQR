@@ -79,6 +79,7 @@ public class ProfileDetails extends AppCompatActivity {
         activityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
             @Override
             public void onActivityResult(ActivityResult result) {
+                checkImage();
                 if (result.getResultCode() == RESULT_OK && result.getData() != null) {
                     Bundle bundle = result.getData().getExtras();
                     add_img = (Bitmap) bundle.get("data");
@@ -91,6 +92,9 @@ public class ProfileDetails extends AppCompatActivity {
                     updateImg(byte_array);
                     detail_img.setVisibility(View.VISIBLE);
                     detail_img.setImageBitmap(add_img);
+                }
+                else if (!image.equals("null")) {
+                    Toast.makeText(getApplicationContext(), "Nothing has changed", Toast.LENGTH_LONG).show();
                 }
                 else {
                     add_img = null;
@@ -258,6 +262,22 @@ public class ProfileDetails extends AppCompatActivity {
                 });
             }
         });
+    }
+
+    private void checkImage() {
+        db.collection("Users").document(username).collection("QR codes").document(hex).get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        image = documentSnapshot.getString("Bytes Array");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        System.out.println("failed access in user_ref ProfileDetail");
+                    }
+                });
     }
 
     private void updateImg(String byte_array) {
