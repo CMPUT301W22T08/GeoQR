@@ -421,7 +421,8 @@ public class ProfilePage extends AppCompatActivity {
                             sum += list_temp.get(i);
 
                         System.out.println(list_temp);
-                        if (list_temp.size() == 0) {
+
+                        if (list_temp.isEmpty()) {
                             db.collection("Users").document(username).update("Highest Score", String.valueOf(0));
                             db.collection("Users").document(username).update("Lowest Score", String.valueOf(0));
                             db.collection("Users").document(username).update("Total Score", String.valueOf(0));
@@ -431,6 +432,7 @@ public class ProfilePage extends AppCompatActivity {
                             db.collection("Users").document(username).update("Lowest Score", String.valueOf(list_temp.get(0)));
                             db.collection("Users").document(username).update("Total Score", String.valueOf(sum));
                         }
+                        updateScoreView();
                     }
                 });
     }
