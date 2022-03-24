@@ -88,10 +88,14 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback
      * it inside the SupportMapFragment. This method will only be triggered once the user has
      * installed Google Play services and returned to the app.
      */
+    @SuppressLint("MissingPermission")
     @Override
     public void onMapReady(GoogleMap googleMap) {
 
         mMap = googleMap;
+        // Button to center on current position
+        mMap.setMyLocationEnabled(true);
+
         updateUserPosition();
         db.collection("QR codes").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
