@@ -1,32 +1,57 @@
 package com.example.geoqr;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.example.geoqr.databinding.ActivityMapBinding;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
-import java.util.ArrayList;
-
-public class MapActivity extends FragmentActivity implements OnMapReadyCallback {
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+// LAST SUCCESFUL BUILD
+public class MapActivity extends FragmentActivity implements OnMapReadyCallback
+{
 
     private GoogleMap mMap;
-    private ActivityMapBinding binding;
+    private com.example.geoqr.databinding.ActivityMapBinding binding;
+
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+    private String Latitude;
+    private String Longitude;
+    private LatLng tempVal;
+
+    public LatLng tempPos;
+
+
+    private FusedLocationProviderClient fusedLocationClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d("testing","Activated onCreate");
 
-        binding = ActivityMapBinding.inflate(getLayoutInflater());
+        binding = com.example.geoqr.databinding.ActivityMapBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -34,7 +59,8 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        // to be tested
+
+
         FloatingActionButton scan_btn = findViewById(R.id.scan);
         scan_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -45,6 +71,12 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             }
         });
+
+    }
+    protected void onResume(Bundle saveInstanceState) {
+        super.onResume();
+        Log.d("testing","Activated onResume");
+        updateUserPosition();
     }
 
     /**
@@ -58,47 +90,56 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
+
         mMap = googleMap;
+        updateUserPosition();
+        db.collection("QR codes").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                for (QueryDocumentSnapshot qrData : task.getResult()){
+                    Latitude = (String) qrData.get("Latitude");
+                    Longitude = (String) qrData.get("Longitude");
 
-        /* Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
-        */
+                    try {
+                        tempVal = new LatLng(Double.parseDouble(Latitude),Double.parseDouble(Longitude));
+                        mMap.addMarker(new MarkerOptions().position(tempVal).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+                    } catch (Exception e){
+                        //failed
+                    }
+                }
+            }
+        });
 
-        //Create a list of pointGIS, and update the map with them
-        ArrayList<pointGIS> pointList;
 
-        pointList = createPointsList();
-
-        updateMap(pointList);
-
-        //set the camera to a specified position
+        // Add a marker in Sydney and move the camera
         mMap.moveCamera(CameraUpdateFactory.zoomTo(15.0f));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(53.523988,-113.527551)));
+//        mMap.moveCamera(CameraUpdateFactory.newLatLng(currPos));
     }
 
-    private void updateMap(ArrayList<pointGIS> locations) {
-        /* Iterates through a list of pointGIS objects and adds them to the map */
-        for (int i = 0; i < locations.size(); i++){
-            LatLng coordinates = locations.get(i).getCoordinates();
-            String name = locations.get(i).getTitle();
-            mMap.addMarker(new MarkerOptions().position(coordinates).title(name));
-        }
+    @SuppressLint("MissingPermission")
+    private void updateUserPosition() {
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        fusedLocationClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
+            @Override
+            public void onSuccess(Location location) {
+                Log.d("testing","onSuccess Succeeded!");
+                if (location != null) {
+                    tempPos = new LatLng(location.getLatitude(),location.getLongitude());
+                    mMap.moveCamera(CameraUpdateFactory.zoomTo(15.0f));
+                    mMap.moveCamera(CameraUpdateFactory.newLatLng(tempPos));
+                    Log.d("testing","Value after succeed: " + String.valueOf(tempPos));
+                } else {
+                    // default location. In case the listener fails to find a location
+                    tempPos = new LatLng(53.523988,-113.527551);
+                    mMap.moveCamera(CameraUpdateFactory.zoomTo(15.0f));
+                    mMap.moveCamera(CameraUpdateFactory.newLatLng(tempPos));
+                    Log.d("testing","Value after failure: " + String.valueOf(tempPos));
+                }
+            }
+        });
     }
 
-    private ArrayList<pointGIS> createPointsList() {
-        ArrayList<pointGIS> points = new ArrayList<pointGIS>();
-        // connect to firebase here
-
-        // loop through firebase connection and create points for every one on the list
-
-        //temporary hard points for testing, remove before commissioning
-        pointGIS hlthSci = new pointGIS(new LatLng(53.520020,-113.525857), "Health Sciences Jubilee");
-        pointGIS vvc = new pointGIS(new LatLng(53.523988,-113.527551), "Van Vilet Centre");
-        points.add(hlthSci);
-        points.add(vvc);
-
-        return points;
-    }
 }
+
+
+
