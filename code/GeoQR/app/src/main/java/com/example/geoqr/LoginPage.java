@@ -141,13 +141,13 @@ public class LoginPage extends AppCompatActivity {
 
     // check if the user is admin
     public boolean checkIfAdmin(String username) {
-        return true;
+        return false;
     }
 
     // this is for scanning QR code login
     // return false if user is not in the db, otherwise true.
     public boolean checkIfUserExists(String username) {
-        return false;
+        return true;
     }
 
 
