@@ -94,6 +94,7 @@ public class ProfileDetails extends AppCompatActivity {
                 }
                 else {
                     add_img = null;
+                    detail_img.setVisibility(View.GONE);
                     updateImg("null");
                 }
             }
