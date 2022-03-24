@@ -335,6 +335,17 @@ public class addQR extends AppCompatActivity {
 
         data_qr.put("Score", String.valueOf(QRScore));
         data_qr.put("Content", qr_str);
+        if (add_g){
+            if (location_get == null) {
+                data_qr.put("Latitude", "null");
+                data_qr.put("Longitude", "null");
+            }
+            else {
+                data_qr.put("Latitude", String.valueOf(location_get.getLatitude()));
+                data_qr.put("Longitude", String.valueOf(location_get.getLongitude()));
+            }
+        }
+
 
         return data_qr;
     }
@@ -391,30 +402,30 @@ public class addQR extends AppCompatActivity {
                     }
                 });
 
-        HashMap<String, Object> k = new HashMap<>();
-        if (location_get != null){
-            k.put("Longitude",String.valueOf(location_get.getLongitude()));
-            k.put("Latitude",String.valueOf(location_get.getLatitude()));
-        } else{
-            k.put("Longitude","null");
-            k.put("Latitude","null");
-        }
-        k.put("Content",qr_str);
-
-         QR_ref.document(score.getQRHex()).collection("QR Data")
-                 .add(k).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                     @Override
-                     public void onSuccess(DocumentReference documentReference) {
-                         Toast.makeText(getApplicationContext(), "Added for location", Toast.LENGTH_LONG).show();
-                         Log.d(TAG, "Added for location");
-                     }
-                 }).addOnFailureListener(new OnFailureListener() {
-                     @Override
-                     public void onFailure(@NonNull Exception e) {
-                         Toast.makeText(getApplicationContext(), "Not Added for location", Toast.LENGTH_LONG).show();
-                         Log.d(TAG, "Not Added for location");
-                     }
-                 });
+//        HashMap<String, Object> k = new HashMap<>();
+//        if (location_get != null){
+//            k.put("Longitude",String.valueOf(location_get.getLongitude()));
+//            k.put("Latitude",String.valueOf(location_get.getLatitude()));
+//        } else{
+//            k.put("Longitude","null");
+//            k.put("Latitude","null");
+//        }
+//        k.put("Content",qr_str);
+//
+//         QR_ref.document(score.getQRHex()).collection("QR Data")
+//                 .add(k).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+//                     @Override
+//                     public void onSuccess(DocumentReference documentReference) {
+//                         Toast.makeText(getApplicationContext(), "Added for location", Toast.LENGTH_LONG).show();
+//                         Log.d(TAG, "Added for location");
+//                     }
+//                 }).addOnFailureListener(new OnFailureListener() {
+//                     @Override
+//                     public void onFailure(@NonNull Exception e) {
+//                         Toast.makeText(getApplicationContext(), "Not Added for location", Toast.LENGTH_LONG).show();
+//                         Log.d(TAG, "Not Added for location");
+//                     }
+//                 });
     }
 
     private String getCurrentTime() {
@@ -425,7 +436,7 @@ public class addQR extends AppCompatActivity {
 
     private void total_score_and_count(){
         DocumentReference docRef = db.collection("Users").document(UserName);
-        docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+        docRef.get().addOnSuccessListener(new  OnSuccessListener<DocumentSnapshot>() {
               @Override
               public void onSuccess(DocumentSnapshot documentSnapshot) {
 
