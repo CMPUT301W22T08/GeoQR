@@ -38,6 +38,7 @@ public class ProfileDetails extends AppCompatActivity {
     TextView detail_content, detail_score, detail_date, detail_loc, detail_comment, detail_hex;
     ImageView detail_img;
     FirebaseFirestore db;
+    Bitmap add_img;
     Button detail_edit, detail_o, detail_x, detail_add_img, detail_del_img;
     EditText detail_edit_bar;
     String new_comment, username, longitude, latitude;
@@ -80,7 +81,7 @@ public class ProfileDetails extends AppCompatActivity {
             public void onActivityResult(ActivityResult result) {
                 if (result.getResultCode() == RESULT_OK && result.getData() != null) {
                     Bundle bundle = result.getData().getExtras();
-                    Bitmap add_img = (Bitmap) bundle.get("data");
+                    add_img = (Bitmap) bundle.get("data");
                     detail_img.setImageBitmap(add_img);
                     ByteArrayOutputStream stream = new ByteArrayOutputStream();
                     add_img.compress(Bitmap.CompressFormat.PNG, 100, stream);
@@ -90,6 +91,10 @@ public class ProfileDetails extends AppCompatActivity {
                     updateImg(byte_array);
                     detail_img.setVisibility(View.VISIBLE);
                     detail_img.setImageBitmap(add_img);
+                }
+                else {
+                    add_img = null;
+                    updateImg("null");
                 }
             }
         });
@@ -255,6 +260,7 @@ public class ProfileDetails extends AppCompatActivity {
     }
 
     private void updateImg(String byte_array) {
+
         db.collection("Users").document(username).collection("QR codes").document(hex)
                 .update("Bytes Array", byte_array)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
