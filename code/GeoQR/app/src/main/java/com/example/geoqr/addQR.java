@@ -352,6 +352,9 @@ public class addQR extends AppCompatActivity {
                 data_qr.put("Latitude", String.valueOf(location_get.getLatitude()));
                 data_qr.put("Longitude", String.valueOf(location_get.getLongitude()));
             }
+        }else{
+            data_qr.put("Latitude", "null");
+            data_qr.put("Longitude", "null");
         }
 
 
