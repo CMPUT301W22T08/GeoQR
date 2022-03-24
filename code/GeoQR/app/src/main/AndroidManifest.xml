@@ -5,6 +5,7 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.CAMERA" />
+
     <uses-feature
         android:name="android.hardware.camera"
         android:required="false" />
@@ -16,10 +17,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.GeoQR">
-
-        <meta-data
-            android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
 
         <!--
              TODO: Before you run your application, you need a Google Maps API key.
@@ -34,41 +31,39 @@
         -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="$AIzaSyB-o6lI4UPwaGD5xgjhdO_JLPuwC5yhFc0" />
+            android:value="${MAPS_API_KEY}" />
+
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
 
         <activity
             android:name=".MapActivity"
-            android:exported="false"
+            android:exported="true"
             android:label="@string/title_activity_map" />
-      
         <activity
             android:name=".ScanQR"
             android:exported="true"
             android:screenOrientation="nosensor" />
-
         <activity
             android:name=".AdminPage"
             android:exported="true" />
-      
         <activity
             android:name=".LoginPage"
             android:exported="true"
             android:screenOrientation="nosensor">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity android:name=".addQR" />
         <activity android:name=".MainActivity" />
         <activity android:name=".ProfileDetails" />
         <activity
             android:name=".ScanLoginQR"
             android:screenOrientation="nosensor" />
-
-
         <activity
             android:name=".ProfilePage"
             android:parentActivityName=".MainActivity" />
@@ -76,7 +71,6 @@
         <meta-data
             android:name="android.support.PARENT_ACTIVITY"
             android:value=".MainActivity" />
-
     </application>
 
 </manifest>
