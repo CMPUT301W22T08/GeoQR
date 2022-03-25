@@ -65,8 +65,7 @@
             android:name=".ScanLoginQR"
             android:screenOrientation="nosensor" />
         <activity
-            android:name=".ProfilePage"
-            android:parentActivityName=".MainActivity" />
+            android:name=".ProfilePage" />
 
         <meta-data
             android:name="android.support.PARENT_ACTIVITY"
