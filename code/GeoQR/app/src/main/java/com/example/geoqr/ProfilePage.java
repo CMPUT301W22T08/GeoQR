@@ -91,8 +91,6 @@ public class ProfilePage extends AppCompatActivity {
 
         updateView();
 
-
-
         profileList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -149,11 +147,9 @@ public class ProfilePage extends AppCompatActivity {
 
                                     if (Integer.parseInt(current_score) == Integer.parseInt(largestScore)) {
                                         updateScore();
-                                        updateScoreView();
                                     }
                                     else if (Integer.parseInt(current_score) == Integer.parseInt(smallestScore)) {
                                         updateScore();
-                                        updateScoreView();
                                     }
                                 }
                             })
@@ -163,7 +159,6 @@ public class ProfilePage extends AppCompatActivity {
                                     Log.d(TAG, "QR - User Delete Failed");
                                 }
                             });
-                    updateScoreView();
                 });
                 alert.setNegativeButton(android.R.string.no, ((dialogInterface, i1) -> dialogInterface.cancel()));
                 alert.show();
@@ -201,7 +196,6 @@ public class ProfilePage extends AppCompatActivity {
         generateStatusQR.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                updateView();
                 String status = String.format("Username: %s\nTotal Score: %s\nTotal Scans: %s\n" +
                         "Highest Score: %s\nLowest Score: %s", username, totalScore, entryDataList.size(),
                         largestScore, smallestScore);
@@ -213,7 +207,6 @@ public class ProfilePage extends AppCompatActivity {
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                updateView();
                 AlertDialog.Builder alert = new AlertDialog.Builder(ProfilePage.this);
                 alert.setTitle("Logout Confirmation");
                 alert.setMessage(String.format("Are you sure you want to Logout '%s'?", username));
@@ -294,28 +287,6 @@ public class ProfilePage extends AppCompatActivity {
                 });
             }
         });
-    }
-
-    private void updateScoreView() {
-
-        db.collection("Users").document(username).get()
-                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                    @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        updateHigh = documentSnapshot.getString("Highest Score");
-                        updateLow = documentSnapshot.getString("Lowest Score");
-                        updateTotal = documentSnapshot.getString("Total Score");
-                        highScore.setText(String.format("Highest Score: %s", updateHigh));
-                        lowScore.setText(String.format("Lowest Score: %s", updateLow));
-                        profileTotal.setText(String.format("Total Score: %s", updateTotal));
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        System.out.println("Failed to update");
-                    }
-                });
     }
 
     private void updateView() {
@@ -420,21 +391,29 @@ public class ProfilePage extends AppCompatActivity {
                         for(int i = 0; i < list_temp.size(); i++)
                             sum += list_temp.get(i);
 
+
                         System.out.println(list_temp);
 
                         if (list_temp.isEmpty()) {
                             db.collection("Users").document(username).update("Highest Score", String.valueOf(0));
                             db.collection("Users").document(username).update("Lowest Score", String.valueOf(0));
                             db.collection("Users").document(username).update("Total Score", String.valueOf(0));
+                            highScore.setText(String.format("Highest Score: %s", "0"));
+                            lowScore.setText(String.format("Lowest Score: %s", "0"));
+                            profileTotal.setText(String.format("Total Score: %s", "0"));
+
                         }
                         else {
                             db.collection("Users").document(username).update("Highest Score", String.valueOf(list_temp.get(list_temp.size() - 1)));
                             db.collection("Users").document(username).update("Lowest Score", String.valueOf(list_temp.get(0)));
                             db.collection("Users").document(username).update("Total Score", String.valueOf(sum));
+                            highScore.setText(String.format("Highest Score: %s", String.valueOf(list_temp.get(list_temp.size() - 1))));
+                            lowScore.setText(String.format("Lowest Score: %s", String.valueOf(list_temp.get(0))));
+                            profileTotal.setText(String.format("Total Score: %s", String.valueOf(sum)));
                         }
-                        updateScoreView();
                     }
                 });
+        System.out.print("i am out");
     }
 
     public static void hideKeyboard(Activity activity) {

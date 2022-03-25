@@ -276,6 +276,7 @@ public class addQR extends AppCompatActivity {
                                 @Override
                                 public void onSuccess(Void unused) {
                                     Log.d(TAG, "Added");
+                                    total_score_and_count();
                                 }})
                             .addOnFailureListener(new OnFailureListener() {
                                 @Override
@@ -283,7 +284,7 @@ public class addQR extends AppCompatActivity {
                                     Log.d(TAG, "Not added");
                                 }
                             });
-                    total_score_and_count();
+
                 }
             }
         });
@@ -421,31 +422,31 @@ public class addQR extends AppCompatActivity {
     }
 
     private void total_score_and_count(){
-        DocumentReference docRef = db.collection("Users").document(UserName);
-        docRef.get().addOnSuccessListener(new  OnSuccessListener<DocumentSnapshot>() {
-              @Override
-              public void onSuccess(DocumentSnapshot documentSnapshot) {
 
-                  Integer highest_score = Integer.valueOf(Objects.requireNonNull(documentSnapshot.getString("Highest Score")));
-                  Integer lowest_score = Integer.valueOf(Objects.requireNonNull(documentSnapshot.getString("Lowest Score")));
-                  Integer total_score = Integer.valueOf(Objects.requireNonNull(documentSnapshot.getString("Total Score")));
+        DocumentReference doc = db.collection("Users").document(UserName);
+        doc.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                Integer hi_sco = Integer.valueOf(documentSnapshot.getString("Highest Score"));
+                Integer lo_sco = Integer.valueOf(documentSnapshot.getString("Lowest Score"));
+                Integer total_sco = Integer.valueOf(documentSnapshot.getString("Total Score"));
 
-                  Integer qr_score = score.find_total();
+                Integer current_Qr_sco = score.find_total();
 
-                  if (highest_score < qr_score){
-                      highest_score = qr_score;
-                  }
-                  if(lowest_score > qr_score){
-                      lowest_score = qr_score;
-                  }else if(lowest_score == 0){
-                      lowest_score = qr_score;
-                  }
-                  total_score += qr_score;
 
-                  docRef.update("Highest Score", String.valueOf(highest_score));
-                  docRef.update("Lowest Score", String.valueOf(lowest_score));
-                  docRef.update("Total Score", String.valueOf(total_score));
-              }
-          });
+                if(lo_sco > current_Qr_sco || lo_sco == 0){
+                    doc.update("Lowest Score",String.valueOf(current_Qr_sco));
+                }
+
+                if(hi_sco < current_Qr_sco){
+                    doc.update("Highest Score",String.valueOf(current_Qr_sco));
+                }
+
+                doc.update("Total Score",String.valueOf(total_sco + current_Qr_sco));
+
+                System.out.print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"+String.valueOf(total_sco + current_Qr_sco));
+            }
+        });
+
     }
 }
