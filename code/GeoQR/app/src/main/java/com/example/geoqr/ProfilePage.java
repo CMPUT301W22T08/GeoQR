@@ -378,21 +378,16 @@ public class ProfilePage extends AppCompatActivity {
                             if (doc != null) {
                                 String score = doc.getString("Score");
                                 int int_score = Integer.parseInt(score);
-                                System.out.println(String.format("AAAA score: %s", int_score));
                                 list_temp.add(int_score);
                             }
                             else {
                                 System.out.println("doc == null");
                             }
                         }
-                        // System.out.println(list_temp);
                         Collections.sort(list_temp);
                         int sum = 0;
                         for(int i = 0; i < list_temp.size(); i++)
                             sum += list_temp.get(i);
-
-
-                        System.out.println(list_temp);
 
                         if (list_temp.isEmpty()) {
                             db.collection("Users").document(username).update("Highest Score", String.valueOf(0));
@@ -407,13 +402,12 @@ public class ProfilePage extends AppCompatActivity {
                             db.collection("Users").document(username).update("Highest Score", String.valueOf(list_temp.get(list_temp.size() - 1)));
                             db.collection("Users").document(username).update("Lowest Score", String.valueOf(list_temp.get(0)));
                             db.collection("Users").document(username).update("Total Score", String.valueOf(sum));
-                            highScore.setText(String.format("Highest Score: %s", String.valueOf(list_temp.get(list_temp.size() - 1))));
-                            lowScore.setText(String.format("Lowest Score: %s", String.valueOf(list_temp.get(0))));
-                            profileTotal.setText(String.format("Total Score: %s", String.valueOf(sum)));
+                            highScore.setText(String.format("Highest Score: %s", list_temp.get(list_temp.size() - 1)));
+                            lowScore.setText(String.format("Lowest Score: %s", list_temp.get(0)));
+                            profileTotal.setText(String.format("Total Score: %s", sum));
                         }
                     }
                 });
-        System.out.print("i am out");
     }
 
     public static void hideKeyboard(Activity activity) {

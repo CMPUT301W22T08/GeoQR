@@ -284,7 +284,6 @@ public class addQR extends AppCompatActivity {
                                     Log.d(TAG, "Not added");
                                 }
                             });
-
                 }
             }
         });
