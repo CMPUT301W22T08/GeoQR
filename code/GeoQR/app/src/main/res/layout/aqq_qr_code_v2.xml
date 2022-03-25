@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:scrollbars="vertical"
     tools:context=".addQR">
 
     <!--Username-->
@@ -12,6 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:scrollbars="vertical"
         android:paddingTop="10dp" >
 
         <TextView
@@ -36,6 +38,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:scrollbars="vertical"
         android:paddingTop="10dp" >
 
         <TextView
@@ -63,6 +66,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:scrollbars="vertical"
         android:paddingTop="10dp" >
 
         <TextView
@@ -79,6 +83,9 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="20dp"
+            android:maxLines="1"
+            android:maxLength="30"
+            android:ellipsize="end"
             android:textSize="20sp"
             android:text="@string/default_txt" />
 
@@ -92,6 +99,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:scrollbars="vertical"
         android:paddingTop="10dp" >
 
         <TextView
@@ -117,6 +125,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="10dp"
+        android:scrollbars="vertical"
         android:orientation="horizontal">
 
         <TextView
@@ -143,6 +152,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="10dp"
+        android:scrollbars="vertical"
         android:orientation="horizontal">
 
         <TextView
@@ -170,6 +180,7 @@
         android:layout_height="wrap_content"
         android:paddingTop="10dp"
         android:gravity="center"
+        android:scrollbars="vertical"
         android:orientation="horizontal">
 
         <Switch
@@ -188,6 +199,7 @@
         android:layout_height="wrap_content"
         android:paddingTop="10dp"
         android:gravity="center"
+        android:scrollbars="vertical"
         android:orientation="horizontal">
 
         <Button
@@ -213,6 +225,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:gravity="center"
+        android:scrollbars="vertical"
         android:orientation="horizontal">
 
         <ImageView
@@ -223,6 +236,7 @@
             android:visibility="gone"
             android:layout_weight="1"
             tools:srcCompat="@tools:sample/avatars"
+            android:scrollbars="vertical"
             tools:ignore="InefficientWeight" />
 
     </LinearLayout>
@@ -233,6 +247,7 @@
         android:layout_height="wrap_content"
         android:paddingTop="10dp"
         android:gravity="center"
+        android:scrollbars="vertical"
         android:orientation="horizontal">
 
         <EditText
@@ -257,6 +272,7 @@
         android:layout_height="wrap_content"
         android:paddingTop="10dp"
         android:gravity="center"
+        android:scrollbars="vertical"
         android:orientation="horizontal">
 
         <Button
