@@ -166,8 +166,8 @@ public class LoginPage extends AppCompatActivity {
                 }
             }
         });
-
-
+        
+        return false;
     }
 
 

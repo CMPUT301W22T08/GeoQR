@@ -38,6 +38,7 @@ public class ProfileDetails extends AppCompatActivity {
     TextView detail_content, detail_score, detail_date, detail_loc, detail_comment, detail_hex;
     ImageView detail_img;
     FirebaseFirestore db;
+    Bitmap add_img;
     Button detail_edit, detail_o, detail_x, detail_add_img, detail_del_img;
     EditText detail_edit_bar;
     String new_comment, username, longitude, latitude;
@@ -78,9 +79,10 @@ public class ProfileDetails extends AppCompatActivity {
         activityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
             @Override
             public void onActivityResult(ActivityResult result) {
+                checkImage();
                 if (result.getResultCode() == RESULT_OK && result.getData() != null) {
                     Bundle bundle = result.getData().getExtras();
-                    Bitmap add_img = (Bitmap) bundle.get("data");
+                    add_img = (Bitmap) bundle.get("data");
                     detail_img.setImageBitmap(add_img);
                     ByteArrayOutputStream stream = new ByteArrayOutputStream();
                     add_img.compress(Bitmap.CompressFormat.PNG, 100, stream);
@@ -90,6 +92,14 @@ public class ProfileDetails extends AppCompatActivity {
                     updateImg(byte_array);
                     detail_img.setVisibility(View.VISIBLE);
                     detail_img.setImageBitmap(add_img);
+                }
+                else if (!image.equals("null")) {
+                    Toast.makeText(getApplicationContext(), "Nothing has changed", Toast.LENGTH_LONG).show();
+                }
+                else {
+                    add_img = null;
+                    detail_img.setVisibility(View.GONE);
+                    updateImg("null");
                 }
             }
         });
@@ -254,7 +264,24 @@ public class ProfileDetails extends AppCompatActivity {
         });
     }
 
+    private void checkImage() {
+        db.collection("Users").document(username).collection("QR codes").document(hex).get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        image = documentSnapshot.getString("Bytes Array");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        System.out.println("failed access in user_ref ProfileDetail");
+                    }
+                });
+    }
+
     private void updateImg(String byte_array) {
+
         db.collection("Users").document(username).collection("QR codes").document(hex)
                 .update("Bytes Array", byte_array)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {

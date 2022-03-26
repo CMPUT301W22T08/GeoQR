@@ -39,4 +39,5 @@
     <string name="delete_qr">Delete QR</string>
     <string name="edit_comment">Edit Comment</string>
     <string name="qr_hex">QR Hex:</string>
+
 </resources>
