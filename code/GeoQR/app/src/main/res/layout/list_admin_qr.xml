@@ -17,6 +17,7 @@
         android:lines="1"
         android:textSize="15sp"
         android:ellipsize="end"
+        android:maxLength="15"
         android:text="TextView" />
 
     <TextView
