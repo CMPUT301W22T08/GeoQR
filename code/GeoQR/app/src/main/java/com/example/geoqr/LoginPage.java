@@ -177,7 +177,7 @@ public class LoginPage extends AppCompatActivity {
         etUsername.setText(result);
     }
 
-    public void writeFile(String username) {
+    private void writeFile(String username) {
         SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString("username", username);
@@ -190,6 +190,7 @@ public class LoginPage extends AppCompatActivity {
         System.out.println(get_user);
         if (get_user != null) {
             username = get_user;
+            etUsername.setText(username);
             checkIfAdmin(username);
 //            Intent camScan = new Intent(LoginPage.this, ScanQR.class);
 //            Toast.makeText(getApplicationContext(), String.format("Login as '%s'", username), Toast.LENGTH_LONG).show();

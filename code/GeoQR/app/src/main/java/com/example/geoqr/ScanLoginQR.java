@@ -4,6 +4,7 @@ import static android.content.ContentValues.TAG;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
@@ -123,6 +124,7 @@ public class ScanLoginQR extends AppCompatActivity {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
                         System.out.println("User Exists");
+                        writeFile(username);
                         Intent passScan = new Intent(ScanLoginQR.this, ScanQR.class);
                         Toast.makeText(getApplicationContext(), String.format("Login as '%s'", content), Toast.LENGTH_LONG).show();
                         // to be written the checking method by using the public checkIfUserExists and checkIfAdmin
@@ -152,8 +154,7 @@ public class ScanLoginQR extends AppCompatActivity {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
                         System.out.println("Admin Exists");
-                        LoginPage log = new LoginPage();
-                        log.writeFile(content);
+                        writeFile(username);
                         Intent admin_page = new Intent(ScanLoginQR.this, AdminPage.class);
                         admin_page.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(admin_page);
@@ -166,5 +167,12 @@ public class ScanLoginQR extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void writeFile(String username) {
+        SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("username", username);
+        editor.apply();
     }
 }
