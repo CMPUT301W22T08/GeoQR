@@ -16,6 +16,7 @@
         android:layout_marginRight="5dp"
         android:lines="1"
         android:textSize="15sp"
+        android:maxLines="1"
         android:ellipsize="end"
         android:maxLength="15"
         android:text="TextView" />
