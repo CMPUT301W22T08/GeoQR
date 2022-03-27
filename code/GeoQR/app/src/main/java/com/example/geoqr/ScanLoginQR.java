@@ -91,7 +91,8 @@ public class ScanLoginQR extends AppCompatActivity {
                         Intent passBack = new Intent(ScanLoginQR.this, LoginPage.class);
                         passBack.putExtra("username", content);
                         passBack.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        startActivity(passBack);
+                        setResult(10, passBack);
+                        ScanLoginQR.super.onBackPressed();
                     }
                 });
             }

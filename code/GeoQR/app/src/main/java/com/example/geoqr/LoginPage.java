@@ -100,16 +100,23 @@ public class LoginPage extends AppCompatActivity {
             }
         });
     }
-    
+
     ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
                 @Override
                 public void onActivityResult(ActivityResult result) {
-                    Intent content = getIntent();
-                    username = content.getStringExtra("username");
-                    writeFile(username);
-                    checkIfAdmin(username);
+                    if (result.getResultCode() == 10) {
+                        Intent content = result.getData();
+                        if (content != null) {
+                            username = content.getStringExtra("username");
+                            writeFile(username);
+                            checkIfAdmin(username);
+                        }
+                        else {
+                            System.out.println("Content is null from result");
+                        }
+                    }
                 }
             }
     );
