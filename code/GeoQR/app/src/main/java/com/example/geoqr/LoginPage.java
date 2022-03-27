@@ -58,7 +58,6 @@ public class LoginPage extends AppCompatActivity {
 
         db = FirebaseFirestore.getInstance();
 
-        etUsername = findViewById(R.id.et_Username);
         Button btnGenerate = findViewById(R.id.btn_Generate);
         Button btnLogin = findViewById(R.id.btn_Login);
         FloatingActionButton scanLogin = findViewById(R.id.scan_login);
@@ -70,7 +69,7 @@ public class LoginPage extends AppCompatActivity {
                 username = etUsername.getText().toString();
 
                 if (!TextUtils.isEmpty(username)) {  // if the username is not empty
-                    Toast.makeText(getApplicationContext(), String.format("Login as '%s'", username), Toast.LENGTH_LONG).show();
+                    // Toast.makeText(getApplicationContext(), String.format("Login as '%s'", username), Toast.LENGTH_LONG).show();
                     writeFile(username);
                     checkIfAdmin(username);
                 } else {
@@ -94,8 +93,17 @@ public class LoginPage extends AppCompatActivity {
                 // scan.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(scan);
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                // checkUsers();
             }
         });
+    }
+
+    private void checkUsers() {
+        Intent content = getIntent();
+        username = content.getStringExtra("username");
+        etUsername.setText(username);
+        writeFile(username);
+        checkIfAdmin(username);
     }
 
     public void add_user_detail() {
@@ -126,6 +134,7 @@ public class LoginPage extends AppCompatActivity {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
                         System.out.println("Admin Exists");
+                        Toast.makeText(getApplicationContext(), String.format("Login as '%s'", username), Toast.LENGTH_LONG).show();
                         Intent admin_page = new Intent(LoginPage.this, AdminPage.class);
                         admin_page.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(admin_page);
@@ -243,6 +252,7 @@ public class LoginPage extends AppCompatActivity {
                     return;
                 }
             }
+            etUsername = findViewById(R.id.et_Username);
             load();
         }
     }

@@ -100,9 +100,9 @@ public class ProfilePage extends AppCompatActivity {
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         Objects.requireNonNull(mSensorManager).registerListener(mSensorListener, mSensorManager.getDefaultSensor(TYPE_ACCELEROMETER),
                 SensorManager.SENSOR_DELAY_NORMAL);
-        mAccel = 10f;
-        mAccelCurrent = SensorManager.GRAVITY_EARTH;
-        mAccelLast = SensorManager.GRAVITY_EARTH;
+//        mAccel = 10f;
+//        mAccelCurrent = SensorManager.GRAVITY_EARTH;
+//        mAccelLast = SensorManager.GRAVITY_EARTH;
 
         SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
         username = sharedPreferences.getString("username", null);
@@ -317,7 +317,7 @@ public class ProfilePage extends AppCompatActivity {
             mAccelCurrent = (float) Math.sqrt(x * x + y * y + z * z);
             float delta = mAccelCurrent - mAccelLast;
             mAccel = mAccel * 0.9f + delta;
-            if (mAccel > 6) {
+            if (mAccel > 5) {
                 // Toast.makeText(getApplicationContext(), "Shake event detected", Toast.LENGTH_SHORT).show();
                 AlertDialog.Builder alert = new AlertDialog.Builder(ProfilePage.this);
                 alert.setTitle("Logout Confirmation");

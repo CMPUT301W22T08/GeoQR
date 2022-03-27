@@ -88,6 +88,10 @@ public class ScanLoginQR extends AppCompatActivity {
                     public void run() {
                         content = result.getText();
                         checkIfAdmin(content);
+//                        Intent passBack = new Intent(ScanLoginQR.this, LoginPage.class);
+//                        passBack.putExtra("username", content);
+//                        passBack.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//                        startActivity(passBack);
                     }
                 });
             }
@@ -115,35 +119,33 @@ public class ScanLoginQR extends AppCompatActivity {
 
     // this is for scanning QR code login
     // return false if user is not in the db, otherwise true.
-    public void checkIfUserExists(String username) {
-        DocumentReference docRef = db.collection("Users").document(username);
-        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        System.out.println("User Exists");
-                        writeFile(username);
-                        Intent passScan = new Intent(ScanLoginQR.this, ScanQR.class);
-                        Toast.makeText(getApplicationContext(), String.format("Login as '%s'", content), Toast.LENGTH_LONG).show();
-                        // to be written the checking method by using the public checkIfUserExists and checkIfAdmin
-                        // if passes, write db.
-                        passScan.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        startActivity(passScan);
-                    } else {
-                        System.out.println("User does not exist");
-                        Intent passLogin = new Intent(ScanLoginQR.this, LoginPage.class);
-                        Toast.makeText(getApplicationContext(), String.format("'%s' has not been created before, please use the login page", content), Toast.LENGTH_LONG).show();
-                        passLogin.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        startActivity(passLogin);
-                    }
-                } else {
-                    Log.d(TAG, "get failed with ", task.getException());
-                }
-            }
-        });
-    }
+//    public void checkIfUserExists(String username) {
+//        DocumentReference docRef = db.collection("Users").document(username);
+//        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+//            @Override
+//            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+//                if (task.isSuccessful()) {
+//                    DocumentSnapshot document = task.getResult();
+//                    if (document.exists()) {
+//                        System.out.println("User Exists");
+//                        writeFile(username);
+//                        Intent passScan = new Intent(ScanLoginQR.this, ScanQR.class);
+//                        Toast.makeText(getApplicationContext(), String.format("Login as '%s'", content), Toast.LENGTH_LONG).show();
+//                        passScan.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//                        startActivity(passScan);
+//                    } else {
+//                        System.out.println("User does not exist");
+//                        Intent passLogin = new Intent(ScanLoginQR.this, LoginPage.class);
+//                        Toast.makeText(getApplicationContext(), String.format("'%s' has not been created before, please use the login page", content), Toast.LENGTH_LONG).show();
+//                        passLogin.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//                        startActivity(passLogin);
+//                    }
+//                } else {
+//                    Log.d(TAG, "get failed with ", task.getException());
+//                }
+//            }
+//        });
+//    }
 
     public void checkIfAdmin(String username) {
         DocumentReference docRef = db.collection("Admin").document(username);
@@ -160,7 +162,33 @@ public class ScanLoginQR extends AppCompatActivity {
                         startActivity(admin_page);
                     } else {
                         System.out.println("Admin does not exist");
-                        checkIfUserExists(username);
+
+                        DocumentReference docRef = db.collection("Users").document(username);
+                        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    DocumentSnapshot document = task.getResult();
+                                    if (document.exists()) {
+                                        System.out.println("User Exists");
+                                        writeFile(username);
+                                        Intent passScan = new Intent(ScanLoginQR.this, ScanQR.class);
+                                        Toast.makeText(getApplicationContext(), String.format("Login as '%s'", content), Toast.LENGTH_LONG).show();
+                                        passScan.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                        startActivity(passScan);
+                                    } else {
+                                        System.out.println("User does not exist");
+                                        Intent passLogin = new Intent(ScanLoginQR.this, LoginPage.class);
+                                        Toast.makeText(getApplicationContext(), String.format("'%s' has not been created before, please use the login page", content), Toast.LENGTH_LONG).show();
+                                        passLogin.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                        startActivity(passLogin);
+                                    }
+                                } else {
+                                    Log.d(TAG, "get failed with ", task.getException());
+                                }
+                            }
+                        });
+
                     }
                 } else {
                     Log.d(TAG, "get failed with ", task.getException());
