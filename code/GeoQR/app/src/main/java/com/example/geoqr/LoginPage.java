@@ -15,6 +15,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -91,20 +95,24 @@ public class LoginPage extends AppCompatActivity {
             public void onClick(View view) {
                 Intent scan = new Intent(LoginPage.this, ScanLoginQR.class);
                 // scan.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(scan);
+                activityResultLauncher.launch(scan);
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-                checkUsers();
             }
         });
     }
-
-    private void checkUsers() {
-        Intent content = getIntent();
-        username = content.getStringExtra("username");
-        etUsername.setText(username);
-        writeFile(username);
-        checkIfAdmin(username);
-    }
+    
+    ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    Intent content = getIntent();
+                    username = content.getStringExtra("username");
+                    writeFile(username);
+                    checkIfAdmin(username);
+                }
+            }
+    );
 
     public void add_user_detail() {
         HashMap<String, Object> user_detail = new HashMap<>();
