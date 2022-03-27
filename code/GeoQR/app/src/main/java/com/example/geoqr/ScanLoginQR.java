@@ -1,9 +1,12 @@
 package com.example.geoqr;
 
+import static android.content.ContentValues.TAG;
+
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -15,7 +18,12 @@ import com.budiyev.android.codescanner.CodeScanner;
 import com.budiyev.android.codescanner.CodeScannerView;
 import com.budiyev.android.codescanner.DecodeCallback;
 import com.budiyev.android.codescanner.ScanMode;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.zxing.Result;
 
 import java.util.Objects;
@@ -30,13 +38,14 @@ public class ScanLoginQR extends AppCompatActivity {
     private CodeScanner lCodeScanner;
     private String content;
     private CodeScannerView scanLogin;
+    FirebaseFirestore db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.scan_login);
         Objects.requireNonNull(getSupportActionBar()).hide();
-
+        db = FirebaseFirestore.getInstance();
         scanLogin = findViewById(R.id.login_view);
         FloatingActionButton cancel = findViewById(R.id.cancel_btn_login);
 
@@ -77,7 +86,7 @@ public class ScanLoginQR extends AppCompatActivity {
                     @Override
                     public void run() {
                         content = result.getText();
-                        passContent();
+                        checkIfAdmin(content);
                     }
                 });
             }
@@ -103,16 +112,59 @@ public class ScanLoginQR extends AppCompatActivity {
         lCodeScanner.releaseResources();
     }
 
-    /**
-     * Login
-     */
-    private void passContent() {
-        Intent passName = new Intent(ScanLoginQR.this, ScanQR.class);
-        Toast.makeText(getApplicationContext(), String.format("Login as '%s'", content), Toast.LENGTH_LONG).show();
+    // this is for scanning QR code login
+    // return false if user is not in the db, otherwise true.
+    public void checkIfUserExists(String username) {
+        DocumentReference docRef = db.collection("Users").document(username);
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        System.out.println("User Exists");
+                        Intent passScan = new Intent(ScanLoginQR.this, ScanQR.class);
+                        Toast.makeText(getApplicationContext(), String.format("Login as '%s'", content), Toast.LENGTH_LONG).show();
+                        // to be written the checking method by using the public checkIfUserExists and checkIfAdmin
+                        // if passes, write db.
+                        passScan.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(passScan);
+                    } else {
+                        System.out.println("User does not exist");
+                        Intent passLogin = new Intent(ScanLoginQR.this, LoginPage.class);
+                        Toast.makeText(getApplicationContext(), String.format("'%s' has not been created before, please use the login page", content), Toast.LENGTH_LONG).show();
+                        passLogin.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(passLogin);
+                    }
+                } else {
+                    Log.d(TAG, "get failed with ", task.getException());
+                }
+            }
+        });
+    }
 
-        // to be written the checking method by using the public checkIfUserExists and checkIfAdmin
-        // if passes, write db.
-        passName.putExtra("username", content);
-        startActivity(passName);
+    public void checkIfAdmin(String username) {
+        DocumentReference docRef = db.collection("Admin").document(username);
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        System.out.println("Admin Exists");
+                        LoginPage log = new LoginPage();
+                        log.writeFile(content);
+                        Intent admin_page = new Intent(ScanLoginQR.this, AdminPage.class);
+                        admin_page.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(admin_page);
+                    } else {
+                        System.out.println("Admin does not exist");
+                        checkIfUserExists(username);
+                    }
+                } else {
+                    Log.d(TAG, "get failed with ", task.getException());
+                }
+            }
+        });
     }
 }
