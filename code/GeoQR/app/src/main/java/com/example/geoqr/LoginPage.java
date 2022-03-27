@@ -93,7 +93,7 @@ public class LoginPage extends AppCompatActivity {
                 // scan.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(scan);
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-                // checkUsers();
+                checkUsers();
             }
         });
     }
