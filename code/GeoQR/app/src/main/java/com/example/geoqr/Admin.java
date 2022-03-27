@@ -186,7 +186,7 @@ public class Admin {
 
     /**
      * The method returns if the qrSelection List is empty or not
-     * @return
+     * @return qrSelection.isEmpty()
      */
     public boolean noQRSelected() {
         return qrSelection.isEmpty();
@@ -205,7 +205,7 @@ public class Admin {
      * The method checks if the selected QR in the ListView is the qrSelection List
      * @param pos
      *      The pos corresponds to the position the ListView and the qrAdapter
-     * @return
+     * @return qrSelection.contains(qrAdapter.getItem(pos)
      */
     public boolean qrSelectedAt(int pos) {
         return qrSelection.contains(qrAdapter.getItem(pos));
@@ -259,7 +259,7 @@ public class Admin {
      * The method checks if the selected player in the ListView is the playerSelection List
      * @param pos
      *      The pos corresponds to the position the ListView and the playerAdapter
-     * @return
+     * @return playerSelection.contains(playerAdapter.getItem(pos)
      */
     public boolean playerSelectedAt(int pos) {
         return playerSelection.contains(playerAdapter.getItem(pos));
@@ -289,7 +289,7 @@ public class Admin {
 
     /**
      * The method checks if the playerSelection List is empty or not
-     * @return
+     * @return playerSelection.isEmpty()
      */
     public boolean noPlayerSelected() {
         return playerSelection.isEmpty();
@@ -297,7 +297,7 @@ public class Admin {
 
     /**
      * The method returns the playerAdapter
-     * @return
+     * @return playerAdapter
      */
     public AdminPlayerAdapter getPlayerAdapter() {
         return playerAdapter;
@@ -305,7 +305,7 @@ public class Admin {
 
     /**
      * The method returns the qrAdapter
-     * @return
+     * @return qrAdapter
      */
     public AdminQRAdapter getQRAdapter() {
         return qrAdapter;

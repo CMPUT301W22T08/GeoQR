@@ -1,18 +1,11 @@
 package com.example.geoqr;
 
-import static android.hardware.Sensor.TYPE_ACCELEROMETER;
-
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -62,7 +55,7 @@ public class ProfilePage extends AppCompatActivity {
     private EditText contact_bar;
     TextView contact_text;
     ImageView show_QR;
-    String contact, content, current_score, updateHigh, updateLow, updateTotal;
+    String contact, content, current_score;
     ArrayList<Integer> list_temp = new ArrayList<>();
 
     private ArrayAdapter<ListEntry> listAdapter;
@@ -70,11 +63,6 @@ public class ProfilePage extends AppCompatActivity {
     private final String TAG = "Sample";
     FirebaseFirestore db;
     String totalScore, largestScore, smallestScore;
-
-    private SensorManager mSensorManager;
-    private float mAccel;
-    private float mAccelCurrent;
-    private float mAccelLast;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,13 +84,6 @@ public class ProfilePage extends AppCompatActivity {
         Button contact_ok = findViewById(R.id.contact_ok);
         Button contact_cancel = findViewById(R.id.contact_cancel);
         Button contact_btn = findViewById(R.id.contact_btn);
-
-//        mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-//        Objects.requireNonNull(mSensorManager).registerListener(mSensorListener, mSensorManager.getDefaultSensor(TYPE_ACCELEROMETER),
-//                SensorManager.SENSOR_DELAY_NORMAL);
-//        mAccel = 10f;
-//        mAccelCurrent = SensorManager.GRAVITY_EARTH;
-//        mAccelLast = SensorManager.GRAVITY_EARTH;
 
         SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
         username = sharedPreferences.getString("username", null);
@@ -306,54 +287,6 @@ public class ProfilePage extends AppCompatActivity {
             }
         });
     }
-
-//    private final SensorEventListener mSensorListener = new SensorEventListener() {
-//        @Override
-//        public void onSensorChanged(SensorEvent sensorEvent) {
-//            float x = sensorEvent.values[0];
-//            float y = sensorEvent.values[1];
-//            float z = sensorEvent.values[2];
-//            mAccelLast = mAccelCurrent;
-//            mAccelCurrent = (float) Math.sqrt(x * x + y * y + z * z);
-//            float delta = mAccelCurrent - mAccelLast;
-//            mAccel = mAccel * 0.9f + delta;
-//            if (mAccel > 5) {
-//                // Toast.makeText(getApplicationContext(), "Shake event detected", Toast.LENGTH_SHORT).show();
-//                AlertDialog.Builder alert = new AlertDialog.Builder(ProfilePage.this);
-//                alert.setTitle("Logout Confirmation");
-//                alert.setMessage(String.format("Are you sure you want to Logout '%s'?", username));
-//                alert.setPositiveButton(android.R.string.yes, (dialogInterface, i1) -> {
-//                    Intent log_page = new Intent(ProfilePage.this, LoginPage.class);
-//                    SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
-//                    SharedPreferences.Editor editor = sharedPreferences.edit();
-//                    editor.clear();
-//                    editor.apply();
-//                    Toast.makeText(getApplicationContext(), String.format("%s has been logged out", username), Toast.LENGTH_LONG).show();
-//                    log_page.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//                    startActivity(log_page);
-//                });
-//                alert.setNegativeButton(android.R.string.no, ((dialogInterface, i1) -> dialogInterface.cancel()));
-//                alert.show();
-//            }
-//        }
-
-//        @Override
-//        public void onAccuracyChanged(Sensor sensor, int i) {
-//
-//        }
-//    };
-//    @Override
-//    protected void onResume() {
-//        mSensorManager.registerListener(mSensorListener, mSensorManager.getDefaultSensor(TYPE_ACCELEROMETER),
-//                SensorManager.SENSOR_DELAY_NORMAL);
-//        super.onResume();
-//    }
-//    @Override
-//    protected void onPause() {
-//        mSensorManager.unregisterListener(mSensorListener);
-//        super.onPause();
-//    }
-
 
     private void updateView() {
         final DocumentReference user_ref = db.collection("Users").document(username);

@@ -50,6 +50,7 @@ public class ScanQR extends AppCompatActivity {
             scanCode();
         }
 
+        // profile button pressed
         profile_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -58,6 +59,7 @@ public class ScanQR extends AppCompatActivity {
             }
         });
 
+        // swipe view
         scannerView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -111,7 +113,6 @@ public class ScanQR extends AppCompatActivity {
             }
         });
 
-
         scannerView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -137,7 +138,6 @@ public class ScanQR extends AppCompatActivity {
      */
     private void passScore() {
         Intent calScore = new Intent(ScanQR.this, addQR.class);
-        // calScore.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         calScore.putExtra("content", content);
         startActivity(calScore);
     }

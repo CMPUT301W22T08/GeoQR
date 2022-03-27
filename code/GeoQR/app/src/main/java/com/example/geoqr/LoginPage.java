@@ -52,6 +52,7 @@ public class LoginPage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_page);
         Objects.requireNonNull(getSupportActionBar()).hide();
+        // check if there is a camera on this device
         if (!checkCamera(this)) {
             Toast.makeText(getApplicationContext(), "You need a camera for this app", Toast.LENGTH_LONG).show();
             finish();
@@ -61,12 +62,11 @@ public class LoginPage extends AppCompatActivity {
         }
 
         db = FirebaseFirestore.getInstance();
-
         Button btnGenerate = findViewById(R.id.btn_Generate);
         Button btnLogin = findViewById(R.id.btn_Login);
         FloatingActionButton scanLogin = findViewById(R.id.scan_login);
 
-
+        // login button pressed
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -82,6 +82,7 @@ public class LoginPage extends AppCompatActivity {
             }
         });
 
+        // auto generate button pressed
         btnGenerate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -89,18 +90,19 @@ public class LoginPage extends AppCompatActivity {
             }
         });
 
-        // scanning login button
+        // scanning login button pressed
         scanLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // go to the scanLoginQR page (get result from activity)
                 Intent scan = new Intent(LoginPage.this, ScanLoginQR.class);
-                // scan.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 activityResultLauncher.launch(scan);
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             }
         });
     }
 
+    // get result from scanQRLogin
     ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
@@ -122,6 +124,7 @@ public class LoginPage extends AppCompatActivity {
             }
     );
 
+    // new user add details to the DB
     public void add_user_detail() {
         HashMap<String, Object> user_detail = new HashMap<>();
         user_detail.put("Contact", "null");
@@ -195,13 +198,14 @@ public class LoginPage extends AppCompatActivity {
         });
     }
 
-
+    // generate random string
     private void generate(){
         RandomString randomString = new RandomString();
         String result = randomString.generateAlphaNumeric(12);
         etUsername.setText(result);
     }
 
+    // write file (for auto login)
     private void writeFile(String username) {
         SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -209,6 +213,7 @@ public class LoginPage extends AppCompatActivity {
         editor.apply();
     }
 
+    // load when the application starts (auto login purpose)
     private void load() {
         SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
         String get_user = sharedPreferences.getString("username", null);
@@ -225,7 +230,7 @@ public class LoginPage extends AppCompatActivity {
         }
     }
 
-
+    // check all permissions (camera, location)
     protected void checkPermissions() {
         final List<String> missingPermissions = new ArrayList<>();
         // check all required dynamic permissions
@@ -248,6 +253,7 @@ public class LoginPage extends AppCompatActivity {
         }
     }
 
+    // request permissions (camera, location)
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
@@ -269,8 +275,7 @@ public class LoginPage extends AppCompatActivity {
                 }
             }
             etUsername = findViewById(R.id.et_Username);
-            load();
+            load(); // load after asking the permission or checking the permission (auto login purpose)
         }
     }
-
 }
