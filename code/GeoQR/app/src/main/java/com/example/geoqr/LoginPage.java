@@ -110,6 +110,7 @@ public class LoginPage extends AppCompatActivity {
                         Intent content = result.getData();
                         if (content != null) {
                             username = content.getStringExtra("username");
+                            etUsername.setText(username);
                             writeFile(username);
                             checkIfAdmin(username);
                         }
