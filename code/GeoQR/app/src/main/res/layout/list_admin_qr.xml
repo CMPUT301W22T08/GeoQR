@@ -1,28 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="wrap_content"
+    android:paddingTop="5dp"
+    android:paddingBottom="5dp"
+    android:gravity="center" >
 
     <TextView
         android:id="@+id/list_admin_qr_code"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
+        android:gravity="center"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
         android:lines="1"
+        android:textSize="15sp"
+        android:maxLines="1"
         android:ellipsize="end"
+        android:maxLength="30"
         android:text="TextView" />
 
     <TextView
         android:id="@+id/list_admin_qr_player"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:textSize="15sp"
         android:layout_weight="1"
+        android:gravity="center"
         android:text="TextView" />
 
     <TextView
         android:id="@+id/list_admin_qr_score"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
+        android:textSize="15sp"
+        android:gravity="center"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
         android:text="TextView" />
 </LinearLayout>

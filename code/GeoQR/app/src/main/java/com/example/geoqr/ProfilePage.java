@@ -2,10 +2,15 @@ package com.example.geoqr;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -41,7 +46,6 @@ import com.google.zxing.qrcode.QRCodeWriter;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Objects;
 
 
@@ -56,8 +60,13 @@ public class ProfilePage extends AppCompatActivity {
     private EditText contact_bar;
     TextView contact_text;
     ImageView show_QR;
-    String contact, content, current_score, updateHigh, updateLow, updateTotal;
+    String contact, content, current_score;
     ArrayList<Integer> list_temp = new ArrayList<>();
+
+    private SensorManager mSensorManager;
+    private float mAccel;
+    private float mAccelCurrent;
+    private float mAccelLast;
 
     private ArrayAdapter<ListEntry> listAdapter;
     private ArrayList<ListEntry> entryDataList;
@@ -88,6 +97,12 @@ public class ProfilePage extends AppCompatActivity {
 
         SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
         username = sharedPreferences.getString("username", null);
+
+        mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        mSensorManager.registerListener(mSensorListener, mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);
+        mAccel = 0.00f;
+        mAccelCurrent = SensorManager.GRAVITY_EARTH;
+        mAccelLast = SensorManager.GRAVITY_EARTH;
 
         updateView();
 
@@ -289,6 +304,39 @@ public class ProfilePage extends AppCompatActivity {
         });
     }
 
+    private final SensorEventListener mSensorListener = new SensorEventListener() {
+        @Override
+        public void onSensorChanged(SensorEvent sensorEvent) {
+            float x = sensorEvent.values[0];
+            float y = sensorEvent.values[1];
+            float z = sensorEvent.values[2];
+            mAccelLast = mAccelCurrent;
+            mAccelLast = (float) Math.sqrt(x * x + y * y + z * z);
+            float delta = mAccelCurrent - mAccelLast;
+            mAccel = mAccel * 0.9f + delta;
+            if (mAccel > 5) {
+                Toast.makeText(getApplicationContext(), "Shake detected", Toast.LENGTH_LONG).show();
+            }
+        }
+
+        @Override
+        public void onAccuracyChanged(Sensor sensor, int i) {
+
+        }
+    };
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mSensorManager.registerListener(mSensorListener, mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);
+    }
+
+    @Override
+    protected void onPause() {
+        mSensorManager.unregisterListener(mSensorListener);
+        super.onPause();
+    }
+
     private void updateView() {
         final DocumentReference user_ref = db.collection("Users").document(username);
         user_ref.get()
@@ -374,9 +422,11 @@ public class ProfilePage extends AppCompatActivity {
                             return;
                         }
                         list_temp.clear();
+                        assert value != null;
                         for (QueryDocumentSnapshot doc : value) {
                             if (doc != null) {
                                 String score = doc.getString("Score");
+                                assert score != null;
                                 int int_score = Integer.parseInt(score);
                                 list_temp.add(int_score);
                             }
@@ -422,3 +472,6 @@ public class ProfilePage extends AppCompatActivity {
         }
     }
 }
+
+
+// https://www.tutorialspoint.com/how-to-detect-shake-event-in-android-app

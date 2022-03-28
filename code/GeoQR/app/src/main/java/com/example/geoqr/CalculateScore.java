@@ -20,23 +20,11 @@ public class CalculateScore{
      * @param qr-string item that the content of qr
      */
     public CalculateScore(String qr){
-        //this.qr_byte = qr;
         this.Result = qr;
     }
 
-//    public void byteArray_to_Result(){
-//        Result result = null;
-//
-//        // array byte to bitmap
-//        // https://stackoverflow.com/questions/13854742/byte-array-of-image-into-imageview
-//        bmp = BitmapFactory.decodeByteArray(qr_byte, 0, qr_byte.length);
-//
-//        // array byte to string result
-//        Result = new String(qr_byte, StandardCharsets.UTF_8); // for UTF-8 encoding
-//    }
-
     /**
-     * turn result to incoded hex result
+     * turn result to encoded hex result
      * output the hex result array
      */
     public void Result_to_hexResult(){
@@ -53,7 +41,7 @@ public class CalculateScore{
     }
 
     /**
-     * within the hex result array, get the chained up ones and store inside string called continuse
+     * within the hex result array, get the chained up ones and store inside string called continuous
      */
     public void find_hex_cont(){
         char prev = ' ';
@@ -80,7 +68,7 @@ public class CalculateScore{
     }
 
     /**
-     * using the continuse string and check one by one in hashtable hex_dict for the int result
+     * using the continuous string and check one by one in hashtable hex_dict for the int result
      * @return total - the int score of the qr code
      */
     public Integer find_total(){
@@ -127,16 +115,11 @@ public class CalculateScore{
     }
 
     /**
-     * return hex array for namming referance
+     * return hex array for naming reference
      * @return hex_result - the hex result string format
      */
     // getters
     public String getQRHex(){
         return hex_result;
     }
-
-//    public Bitmap getBitmap(){
-//        return bmp;
-//    }
-
 }

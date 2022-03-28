@@ -145,7 +145,7 @@ public class ProfileDetails extends AppCompatActivity {
                         if (longitude == null) {
                             detail_loc.setText(null_notice);
                         }
-                        else if (!longitude.equals("null") && !latitude.equals("null")) {
+                        else if (!longitude.equals("null") && !Objects.requireNonNull(latitude).equals("null")) {
                             String location = String.format("[%s, %s]", latitude, longitude);
                             detail_loc.setText(location);
                         }

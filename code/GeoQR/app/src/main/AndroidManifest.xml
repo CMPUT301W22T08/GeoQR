@@ -31,7 +31,7 @@
         -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="$AIzaSyB-o6lI4UPwaGD5xgjhdO_JLPuwC5yhFc0" />
+            android:value="${MAPS_API_KEY}" />
 
         <meta-data
             android:name="com.google.android.gms.version"
@@ -40,6 +40,7 @@
         <activity
             android:name=".MapActivity"
             android:exported="true"
+            android:screenOrientation="nosensor"
             android:label="@string/title_activity_map" />
         <activity
             android:name=".ScanQR"
@@ -47,6 +48,7 @@
             android:screenOrientation="nosensor" />
         <activity
             android:name=".AdminPage"
+            android:screenOrientation="nosensor"
             android:exported="true" />
         <activity
             android:name=".LoginPage"
@@ -58,9 +60,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".addQR" />
+        <activity
+            android:name=".addQR"
+            android:screenOrientation="nosensor" />
         <activity android:name=".MainActivity" />
-        <activity android:name=".ProfileDetails" />
+        <activity
+            android:name=".ProfileDetails"
+            android:screenOrientation="nosensor"/>
         <activity
             android:name=".ScanLoginQR"
             android:screenOrientation="nosensor" />
@@ -74,7 +80,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <meta-data
             android:name="android.support.PARENT_ACTIVITY"
             android:value=".MainActivity" />
