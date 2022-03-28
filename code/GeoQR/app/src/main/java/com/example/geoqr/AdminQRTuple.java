@@ -17,7 +17,7 @@ public class AdminQRTuple {
     }
     /**
      * Getter for the id of the QR code
-     * @return
+     * @return id
      */
     public String getId() {
         return id;
@@ -25,7 +25,7 @@ public class AdminQRTuple {
 
     /**
      * Getter for the content of the QR code
-     * @return
+     * @return contents
      */
     public String getContents() {
         return contents;
@@ -33,7 +33,7 @@ public class AdminQRTuple {
 
     /**
      * Getter for the associated player
-     * @return
+     * @return player
      */
     public String getPlayer() {
         return player;
@@ -41,7 +41,7 @@ public class AdminQRTuple {
 
     /**
      * Getter for the score of the QR code
-     * @return
+     * @return Score
      */
     public int getScore() {
         return Score;

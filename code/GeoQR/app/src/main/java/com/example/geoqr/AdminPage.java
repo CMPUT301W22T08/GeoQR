@@ -12,6 +12,8 @@ import android.widget.ListView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
 
+import java.util.Objects;
+
 /**
  * The View class for the Admin page.
  */
@@ -40,7 +42,7 @@ public class AdminPage extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin);
-
+        Objects.requireNonNull(getSupportActionBar()).hide();
         admin = new Admin((Context) this);
         admin.fetch();
 

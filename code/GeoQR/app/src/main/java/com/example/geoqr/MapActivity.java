@@ -1,18 +1,16 @@
 package com.example.geoqr;
 
-import androidx.annotation.NonNull;
-import androidx.fragment.app.FragmentActivity;
-
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentActivity;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -28,6 +26,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+
 // LAST SUCCESFUL BUILD
 public class MapActivity extends FragmentActivity implements OnMapReadyCallback
 {
@@ -131,13 +130,13 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback
                     tempPos = new LatLng(location.getLatitude(),location.getLongitude());
                     mMap.moveCamera(CameraUpdateFactory.zoomTo(15.0f));
                     mMap.moveCamera(CameraUpdateFactory.newLatLng(tempPos));
-                    Log.d("testing","Value after succeed: " + String.valueOf(tempPos));
+                    Log.d("testing","Value after succeed: " + tempPos);
                 } else {
                     // default location. In case the listener fails to find a location
                     tempPos = new LatLng(53.523988,-113.527551);
                     mMap.moveCamera(CameraUpdateFactory.zoomTo(15.0f));
                     mMap.moveCamera(CameraUpdateFactory.newLatLng(tempPos));
-                    Log.d("testing","Value after failure: " + String.valueOf(tempPos));
+                    Log.d("testing","Value after failure: " + tempPos);
                 }
             }
         });
