@@ -22,7 +22,7 @@ public class AdminPage extends AppCompatActivity {
 
     // Buttons
     private Button playerBtn;
-    private B   ``utton qrCodeBtn;
+    private Button qrCodeBtn;
     private Button deleteBtn;
 
     // Headers
