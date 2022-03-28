@@ -64,6 +64,8 @@ public class ProfilePage extends AppCompatActivity {
     ArrayList<Integer> list_temp = new ArrayList<>();
 
     private SensorManager mSensorManager;
+    private Sensor mAccelerometer;
+    private ShakeDetector mShakeDetector;
     private float mAccel;
     private float mAccelCurrent;
     private float mAccelLast;
@@ -99,10 +101,14 @@ public class ProfilePage extends AppCompatActivity {
         username = sharedPreferences.getString("username", null);
 
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        mSensorManager.registerListener(mSensorListener, mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);
-        mAccel = 0.00f;
-        mAccelCurrent = SensorManager.GRAVITY_EARTH;
-        mAccelLast = SensorManager.GRAVITY_EARTH;
+        mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        mShakeDetector = new ShakeDetector();
+        mShakeDetector.setOnShakeListener(new ShakeDetector.OnShakeListener() {
+            @Override
+            public void onShake(int count) {
+                Toast.makeText(getApplicationContext(), "Shake detected", Toast.LENGTH_LONG).show();
+            }
+        });
 
         updateView();
 
@@ -304,36 +310,50 @@ public class ProfilePage extends AppCompatActivity {
         });
     }
 
-    private final SensorEventListener mSensorListener = new SensorEventListener() {
-        @Override
-        public void onSensorChanged(SensorEvent sensorEvent) {
-            float x = sensorEvent.values[0];
-            float y = sensorEvent.values[1];
-            float z = sensorEvent.values[2];
-            mAccelLast = mAccelCurrent;
-            mAccelLast = (float) Math.sqrt(x * x + y * y + z * z);
-            float delta = mAccelCurrent - mAccelLast;
-            mAccel = mAccel * 0.9f + delta;
-            if (mAccel > 5) {
-                Toast.makeText(getApplicationContext(), "Shake detected", Toast.LENGTH_LONG).show();
-            }
-        }
+//    private final SensorEventListener mSensorListener = new SensorEventListener() {
+//        @Override
+//        public void onSensorChanged(SensorEvent sensorEvent) {
+//            float x = sensorEvent.values[0];
+//            float y = sensorEvent.values[1];
+//            float z = sensorEvent.values[2];
+//            mAccelLast = mAccelCurrent;
+//            mAccelLast = (float) Math.sqrt(x * x + y * y + z * z);
+//            float delta = mAccelCurrent - mAccelLast;
+//            mAccel = mAccel * 0.9f + delta;
+//            if (mAccel > 5) {
+//                Toast.makeText(getApplicationContext(), "Shake detected", Toast.LENGTH_LONG).show();
+//            }
+//        }
+//
+//        @Override
+//        public void onAccuracyChanged(Sensor sensor, int i) {
+//
+//        }
+//    };
 
-        @Override
-        public void onAccuracyChanged(Sensor sensor, int i) {
-
-        }
-    };
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//        mSensorManager.registerListener(mSensorListener, mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);
+//    }
+//
+//    @Override
+//    protected void onPause() {
+//        mSensorManager.unregisterListener(mSensorListener);
+//        super.onPause();
+//    }
 
     @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
-        mSensorManager.registerListener(mSensorListener, mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);
+        // Add the following line to register the Session Manager Listener onResume
+        mSensorManager.registerListener(mShakeDetector, mAccelerometer,	SensorManager.SENSOR_DELAY_UI);
     }
 
     @Override
-    protected void onPause() {
-        mSensorManager.unregisterListener(mSensorListener);
+    public void onPause() {
+        // Add the following line to unregister the Sensor Manager onPause
+        mSensorManager.unregisterListener(mShakeDetector);
         super.onPause();
     }
 
