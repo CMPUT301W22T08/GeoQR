@@ -107,6 +107,7 @@ public class ProfilePage extends AppCompatActivity {
             @Override
             public void onShake(int count) {
                 AlertDialog.Builder alert = new AlertDialog.Builder(ProfilePage.this);
+                AlertDialog alertDialog = alert.create();
                 alert.setTitle("Logout Confirmation");
                 alert.setMessage(String.format("Are you sure you want to Logout '%s'?", username));
                 alert.setPositiveButton(android.R.string.yes, (dialogInterface, i1) -> {
@@ -120,7 +121,9 @@ public class ProfilePage extends AppCompatActivity {
                     startActivity(log_page);
                 });
                 alert.setNegativeButton(android.R.string.no, ((dialogInterface, i1) -> dialogInterface.cancel()));
-                alert.show();
+                if (!alertDialog.isShowing()) {
+                    alert.show();
+                }
             }
         });
 
