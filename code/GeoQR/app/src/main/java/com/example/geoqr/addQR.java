@@ -3,9 +3,13 @@ package com.example.geoqr;
 import static android.content.ContentValues.TAG;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.hardware.Sensor;
+import android.hardware.SensorManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -63,7 +67,6 @@ public class addQR extends AppCompatActivity {
     private String qr_str;
     private CalculateScore score;
     FirebaseFirestore db;
-    DatabaseQR databaseQR;
     DocumentReference docRef;
     private FusedLocationProviderClient fusedLocationClient;
 
@@ -84,6 +87,11 @@ public class addQR extends AppCompatActivity {
     ActivityResultLauncher<Intent> activityResultLauncher;
     @SuppressLint("UseSwitchCompatOrMaterialCode")
     Switch add_geo;
+
+    private SensorManager mSensorManager;
+    private Sensor mAccelerometer;
+    private ShakeDetector mShakeDetector;
+    int check_dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,8 +124,6 @@ public class addQR extends AppCompatActivity {
         qr_str = text.getStringExtra("content");
         SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
         UserName = sharedPreferences.getString("username", null);
-
-        databaseQR = new DatabaseQR(UserName);
         //Calculate score
         score = new CalculateScore(qr_str);
         QRScore = score.find_total();
@@ -127,6 +133,41 @@ public class addQR extends AppCompatActivity {
         QRScoreDisplay.setText(String.valueOf(QRScore));
         QRHexDisplay.setText(score.getQRHex());
         QRInfo.setText(qr_str);
+
+        mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        mShakeDetector = new ShakeDetector();
+        mShakeDetector.setOnShakeListener(new ShakeDetector.OnShakeListener() {
+            @Override
+            public void onShake(int count) {
+                if (check_dialog == 0) { // to be implemented as the show alert dialog
+                    System.out.println("check_dialog = 0");
+                    check_dialog = 1;
+                    AlertDialog.Builder alert = new AlertDialog.Builder(addQR.this);
+                    AlertDialog alertDialog = alert.create();
+                    if (!alertDialog.isShowing()) {
+                        alert.setTitle("Logout Confirmation");
+                        alert.setMessage(String.format("Are you sure you want to Logout '%s'?", UserName));
+                        alert.setPositiveButton(android.R.string.yes, (dialogInterface, i1) -> {
+                            Intent log_page = new Intent(addQR.this, LoginPage.class);
+                            SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                            check_dialog = 0;
+                            editor.clear();
+                            editor.apply();
+                            Toast.makeText(getApplicationContext(), String.format("%s has been logged out", UserName), Toast.LENGTH_LONG).show();
+                            log_page.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(log_page);
+                        });
+                        alert.setNegativeButton(android.R.string.no, (dialogInterface, i1) -> {
+                            dialogInterface.cancel();
+                            check_dialog = 0;
+                        });
+                        alert.show();
+                    }
+                }
+            }
+        });
 
         // get if user wants to add the geo or not
         add_geo.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -158,6 +199,9 @@ public class addQR extends AppCompatActivity {
                     QR_img_view.setVisibility(View.VISIBLE);
                     bitmap = (Bitmap) bundle.get("data");
                     QR_img_view.setImageBitmap(bitmap);
+                }
+                else {
+                    bitmap = null;
                 }
             }
         });
@@ -273,6 +317,7 @@ public class addQR extends AppCompatActivity {
                                 @Override
                                 public void onSuccess(Void unused) {
                                     Log.d(TAG, "Added");
+                                    total_score_and_count();
                                 }})
                             .addOnFailureListener(new OnFailureListener() {
                                 @Override
@@ -280,7 +325,6 @@ public class addQR extends AppCompatActivity {
                                     Log.d(TAG, "Not added");
                                 }
                             });
-                    total_score_and_count();
                 }
             }
         });
@@ -306,14 +350,19 @@ public class addQR extends AppCompatActivity {
         if (add_img) {
             // got bitmap and can store to database
             // but currently no place to put bitmap on database so implement later
-            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-            byte[] bytes = stream.toByteArray();
-            // user_qr.put("Bytes Array", bytes);
+            if (bitmap == null) {
+                user_qr.put("Bytes Array", "null");
+            }
+            else {
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                byte[] bytes = stream.toByteArray();
+                // user_qr.put("Bytes Array", bytes);
 
-            Gson gson = new Gson();
-            String byte_array = gson.toJson(bytes);
-            user_qr.put("Bytes Array", byte_array);
+                Gson gson = new Gson();
+                String byte_array = gson.toJson(bytes);
+                user_qr.put("Bytes Array", byte_array);
+            }
         }
         if (!add_img) {
             user_qr.put("Bytes Array", "null");
@@ -335,6 +384,20 @@ public class addQR extends AppCompatActivity {
 
         data_qr.put("Score", String.valueOf(QRScore));
         data_qr.put("Content", qr_str);
+        if (add_g){
+            if (location_get == null) {
+                data_qr.put("Latitude", "null");
+                data_qr.put("Longitude", "null");
+            }
+            else {
+                data_qr.put("Latitude", String.valueOf(location_get.getLatitude()));
+                data_qr.put("Longitude", String.valueOf(location_get.getLongitude()));
+            }
+        }else{
+            data_qr.put("Latitude", "null");
+            data_qr.put("Longitude", "null");
+        }
+
 
         return data_qr;
     }
@@ -390,31 +453,6 @@ public class addQR extends AppCompatActivity {
                         Log.d(TAG, "~(Data of username has been added successfully!)");
                     }
                 });
-
-        HashMap<String, Object> k = new HashMap<>();
-        if (location_get != null){
-            k.put("Longitude",String.valueOf(location_get.getLongitude()));
-            k.put("Latitude",String.valueOf(location_get.getLatitude()));
-        } else{
-            k.put("Longitude","null");
-            k.put("Latitude","null");
-        }
-        k.put("Content",qr_str);
-
-         QR_ref.document(score.getQRHex()).collection("QR Data")
-                 .add(k).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                     @Override
-                     public void onSuccess(DocumentReference documentReference) {
-                         Toast.makeText(getApplicationContext(), "Added for location", Toast.LENGTH_LONG).show();
-                         Log.d(TAG, "Added for location");
-                     }
-                 }).addOnFailureListener(new OnFailureListener() {
-                     @Override
-                     public void onFailure(@NonNull Exception e) {
-                         Toast.makeText(getApplicationContext(), "Not Added for location", Toast.LENGTH_LONG).show();
-                         Log.d(TAG, "Not Added for location");
-                     }
-                 });
     }
 
     private String getCurrentTime() {
@@ -424,31 +462,46 @@ public class addQR extends AppCompatActivity {
     }
 
     private void total_score_and_count(){
-        DocumentReference docRef = db.collection("Users").document(UserName);
-        docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-              @Override
-              public void onSuccess(DocumentSnapshot documentSnapshot) {
 
-                  Integer highest_score = Integer.valueOf(Objects.requireNonNull(documentSnapshot.getString("Highest Score")));
-                  Integer lowest_score = Integer.valueOf(Objects.requireNonNull(documentSnapshot.getString("Lowest Score")));
-                  Integer total_score = Integer.valueOf(Objects.requireNonNull(documentSnapshot.getString("Total Score")));
+        DocumentReference doc = db.collection("Users").document(UserName);
+        doc.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
 
-                  Integer qr_score = score.find_total();
+                int hi_sco = Integer.valueOf(documentSnapshot.getString("Highest Score"));
+                int lo_sco = Integer.valueOf(documentSnapshot.getString("Lowest Score"));
+                int total_sco = Integer.valueOf(documentSnapshot.getString("Total Score"));
 
-                  if (highest_score < qr_score){
-                      highest_score = qr_score;
-                  }
-                  if(lowest_score > qr_score){
-                      lowest_score = qr_score;
-                  }else if(lowest_score == 0){
-                      lowest_score = qr_score;
-                  }
-                  total_score += qr_score;
+                int current_Qr_sco = score.find_total();
 
-                  docRef.update("Highest Score", String.valueOf(highest_score));
-                  docRef.update("Lowest Score", String.valueOf(lowest_score));
-                  docRef.update("Total Score", String.valueOf(total_score));
-              }
-          });
+
+                if(lo_sco > current_Qr_sco || lo_sco == 0){
+                    doc.update("Lowest Score",String.valueOf(current_Qr_sco));
+                }
+
+                if(hi_sco < current_Qr_sco){
+                    doc.update("Highest Score",String.valueOf(current_Qr_sco));
+                }
+
+                doc.update("Total Score",String.valueOf(total_sco + current_Qr_sco));
+
+                System.out.print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"+String.valueOf(total_sco + current_Qr_sco));
+            }
+        });
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        // Add the following line to register the Session Manager Listener onResume
+        mSensorManager.registerListener(mShakeDetector, mAccelerometer,	SensorManager.SENSOR_DELAY_UI);
+    }
+
+    @Override
+    public void onPause() {
+        // Add the following line to unregister the Sensor Manager onPause
+        mSensorManager.unregisterListener(mShakeDetector);
+        super.onPause();
     }
 }

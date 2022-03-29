@@ -1,10 +1,14 @@
 package com.example.geoqr;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.hardware.Sensor;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -38,6 +42,7 @@ public class ProfileDetails extends AppCompatActivity {
     TextView detail_content, detail_score, detail_date, detail_loc, detail_comment, detail_hex;
     ImageView detail_img;
     FirebaseFirestore db;
+    Bitmap add_img;
     Button detail_edit, detail_o, detail_x, detail_add_img, detail_del_img;
     EditText detail_edit_bar;
     String new_comment, username, longitude, latitude;
@@ -45,6 +50,10 @@ public class ProfileDetails extends AppCompatActivity {
     ActivityResultLauncher<Intent> activityResultLauncher;
     private final String TAG = "Sample";
 
+    private SensorManager mSensorManager;
+    private Sensor mAccelerometer;
+    private ShakeDetector mShakeDetector;
+    int check_dialog;
 
     @Override
     protected void onCreate(Bundle savedStateInstance) {
@@ -78,9 +87,10 @@ public class ProfileDetails extends AppCompatActivity {
         activityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
             @Override
             public void onActivityResult(ActivityResult result) {
+                checkImage();
                 if (result.getResultCode() == RESULT_OK && result.getData() != null) {
                     Bundle bundle = result.getData().getExtras();
-                    Bitmap add_img = (Bitmap) bundle.get("data");
+                    add_img = (Bitmap) bundle.get("data");
                     detail_img.setImageBitmap(add_img);
                     ByteArrayOutputStream stream = new ByteArrayOutputStream();
                     add_img.compress(Bitmap.CompressFormat.PNG, 100, stream);
@@ -90,6 +100,14 @@ public class ProfileDetails extends AppCompatActivity {
                     updateImg(byte_array);
                     detail_img.setVisibility(View.VISIBLE);
                     detail_img.setImageBitmap(add_img);
+                }
+                else if (!image.equals("null")) {
+                    Toast.makeText(getApplicationContext(), "Nothing has changed", Toast.LENGTH_LONG).show();
+                }
+                else {
+                    add_img = null;
+                    detail_img.setVisibility(View.GONE);
+                    updateImg("null");
                 }
             }
         });
@@ -135,7 +153,7 @@ public class ProfileDetails extends AppCompatActivity {
                         if (longitude == null) {
                             detail_loc.setText(null_notice);
                         }
-                        else if (!longitude.equals("null") && !latitude.equals("null")) {
+                        else if (!longitude.equals("null") && !Objects.requireNonNull(latitude).equals("null")) {
                             String location = String.format("[%s, %s]", latitude, longitude);
                             detail_loc.setText(location);
                         }
@@ -252,9 +270,61 @@ public class ProfileDetails extends AppCompatActivity {
                 });
             }
         });
+
+        mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        mShakeDetector = new ShakeDetector();
+        mShakeDetector.setOnShakeListener(new ShakeDetector.OnShakeListener() {
+            @Override
+            public void onShake(int count) {
+                if (check_dialog == 0) { // to be implemented as the show alert dialog
+                    System.out.println("check_dialog = 0");
+                    check_dialog = 1;
+                    AlertDialog.Builder alert = new AlertDialog.Builder(ProfileDetails.this);
+                    AlertDialog alertDialog = alert.create();
+                    if (!alertDialog.isShowing()) {
+                        alert.setTitle("Logout Confirmation");
+                        alert.setMessage(String.format("Are you sure you want to Logout '%s'?", username));
+                        alert.setPositiveButton(android.R.string.yes, (dialogInterface, i1) -> {
+                            Intent log_page = new Intent(ProfileDetails.this, LoginPage.class);
+                            SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                            check_dialog = 0;
+                            editor.clear();
+                            editor.apply();
+                            Toast.makeText(getApplicationContext(), String.format("%s has been logged out", username), Toast.LENGTH_LONG).show();
+                            log_page.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(log_page);
+                        });
+                        alert.setNegativeButton(android.R.string.no, (dialogInterface, i1) -> {
+                            dialogInterface.cancel();
+                            check_dialog = 0;
+                        });
+                        alert.show();
+                    }
+                }
+            }
+        });
+    }
+
+    private void checkImage() {
+        db.collection("Users").document(username).collection("QR codes").document(hex).get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        image = documentSnapshot.getString("Bytes Array");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        System.out.println("failed access in user_ref ProfileDetail");
+                    }
+                });
     }
 
     private void updateImg(String byte_array) {
+
         db.collection("Users").document(username).collection("QR codes").document(hex)
                 .update("Bytes Array", byte_array)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -321,5 +391,19 @@ public class ProfileDetails extends AppCompatActivity {
                         System.out.println("Fail to get comment in ProfileDetails");
                     }
                 });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        // Add the following line to register the Session Manager Listener onResume
+        mSensorManager.registerListener(mShakeDetector, mAccelerometer,	SensorManager.SENSOR_DELAY_UI);
+    }
+
+    @Override
+    public void onPause() {
+        // Add the following line to unregister the Sensor Manager onPause
+        mSensorManager.unregisterListener(mShakeDetector);
+        super.onPause();
     }
 }
