@@ -1,11 +1,17 @@
 package com.example.geoqr;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.hardware.Sensor;
+import android.hardware.SensorManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
@@ -42,6 +48,11 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback
 
     public LatLng tempPos;
 
+    private SensorManager mSensorManager;
+    private Sensor mAccelerometer;
+    private ShakeDetector mShakeDetector;
+    int check_dialog;
+    private String username;
 
     private FusedLocationProviderClient fusedLocationClient;
 
@@ -58,7 +69,43 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+        SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
+        username = sharedPreferences.getString("username", null);
 
+        mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        mShakeDetector = new ShakeDetector();
+        mShakeDetector.setOnShakeListener(new ShakeDetector.OnShakeListener() {
+            @Override
+            public void onShake(int count) {
+                if (check_dialog == 0) { // to be implemented as the show alert dialog
+                    System.out.println("check_dialog = 0");
+                    check_dialog = 1;
+                    AlertDialog.Builder alert = new AlertDialog.Builder(MapActivity.this);
+                    AlertDialog alertDialog = alert.create();
+                    if (!alertDialog.isShowing()) {
+                        alert.setTitle("Logout Confirmation");
+                        alert.setMessage(String.format("Are you sure you want to Logout '%s'?", username));
+                        alert.setPositiveButton(android.R.string.yes, (dialogInterface, i1) -> {
+                            Intent log_page = new Intent(MapActivity.this, LoginPage.class);
+                            SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                            check_dialog = 0;
+                            editor.clear();
+                            editor.apply();
+                            Toast.makeText(getApplicationContext(), String.format("%s has been logged out", username), Toast.LENGTH_LONG).show();
+                            log_page.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(log_page);
+                        });
+                        alert.setNegativeButton(android.R.string.no, (dialogInterface, i1) -> {
+                            dialogInterface.cancel();
+                            check_dialog = 0;
+                        });
+                        alert.show();
+                    }
+                }
+            }
+        });
 
         FloatingActionButton scan_btn = findViewById(R.id.scan);
         scan_btn.setOnClickListener(new View.OnClickListener() {
@@ -142,6 +189,19 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback
         });
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        // Add the following line to register the Session Manager Listener onResume
+        mSensorManager.registerListener(mShakeDetector, mAccelerometer,	SensorManager.SENSOR_DELAY_UI);
+    }
+
+    @Override
+    public void onPause() {
+        // Add the following line to unregister the Sensor Manager onPause
+        mSensorManager.unregisterListener(mShakeDetector);
+        super.onPause();
+    }
 }
 
 

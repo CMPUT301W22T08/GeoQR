@@ -2,8 +2,13 @@ package com.example.geoqr;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.hardware.Sensor;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
@@ -32,12 +37,21 @@ public class ScanQR extends AppCompatActivity {
     private CodeScannerView scannerView;
     float x1, x2, y1, y2;
 
+    private SensorManager mSensorManager;
+    private Sensor mAccelerometer;
+    private ShakeDetector mShakeDetector;
+    int check_dialog;
+    String username;
+
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.camera_v2);
         Objects.requireNonNull(getSupportActionBar()).hide();
+
+        SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
+        username = sharedPreferences.getString("username", null);
 
         scannerView = findViewById(R.id.login_view);
         FloatingActionButton profile_btn = findViewById(R.id.profile_btn);
@@ -88,6 +102,41 @@ public class ScanQR extends AppCompatActivity {
                 return false;
             }
         });
+
+        mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        mShakeDetector = new ShakeDetector();
+        mShakeDetector.setOnShakeListener(new ShakeDetector.OnShakeListener() {
+            @Override
+            public void onShake(int count) {
+                if (check_dialog == 0) { // to be implemented as the show alert dialog
+                    System.out.println("check_dialog = 0");
+                    check_dialog = 1;
+                    AlertDialog.Builder alert = new AlertDialog.Builder(ScanQR.this);
+                    AlertDialog alertDialog = alert.create();
+                    if (!alertDialog.isShowing()) {
+                        alert.setTitle("Logout Confirmation");
+                        alert.setMessage(String.format("Are you sure you want to Logout '%s'?", username));
+                        alert.setPositiveButton(android.R.string.yes, (dialogInterface, i1) -> {
+                            Intent log_page = new Intent(ScanQR.this, LoginPage.class);
+                            SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                            check_dialog = 0;
+                            editor.clear();
+                            editor.apply();
+                            Toast.makeText(getApplicationContext(), String.format("%s has been logged out", username), Toast.LENGTH_LONG).show();
+                            log_page.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(log_page);
+                        });
+                        alert.setNegativeButton(android.R.string.no, (dialogInterface, i1) -> {
+                            dialogInterface.cancel();
+                            check_dialog = 0;
+                        });
+                        alert.show();
+                    }
+                }
+            }
+        });
     }
 
     /**
@@ -125,10 +174,12 @@ public class ScanQR extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         mCodeScanner.startPreview();
+        mSensorManager.registerListener(mShakeDetector, mAccelerometer,	SensorManager.SENSOR_DELAY_UI);
     }
 
     @Override
     protected void onPause() {
+        mSensorManager.unregisterListener(mShakeDetector);
         super.onPause();
         mCodeScanner.releaseResources();
     }

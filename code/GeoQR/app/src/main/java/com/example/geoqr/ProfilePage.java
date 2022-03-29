@@ -66,16 +66,13 @@ public class ProfilePage extends AppCompatActivity {
     private SensorManager mSensorManager;
     private Sensor mAccelerometer;
     private ShakeDetector mShakeDetector;
-    private float mAccel;
-    private float mAccelCurrent;
-    private float mAccelLast;
+    int check_dialog;
 
     private ArrayAdapter<ListEntry> listAdapter;
     private ArrayList<ListEntry> entryDataList;
     private final String TAG = "Sample";
     FirebaseFirestore db;
     String totalScore, largestScore, smallestScore;
-    int check_dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,7 +101,6 @@ public class ProfilePage extends AppCompatActivity {
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         mShakeDetector = new ShakeDetector();
-
         mShakeDetector.setOnShakeListener(new ShakeDetector.OnShakeListener() {
             @Override
             public void onShake(int count) {
@@ -134,27 +130,6 @@ public class ProfilePage extends AppCompatActivity {
                         alert.show();
                     }
                 }
-//                AlertDialog.Builder alert = new AlertDialog.Builder(ProfilePage.this);
-//                AlertDialog alertDialog = alert.create();
-//                if (!alertDialog.isShowing()) {
-//                    alert.setTitle("Logout Confirmation");
-//                    alert.setMessage(String.format("Are you sure you want to Logout '%s'?", username));
-//                    alert.setPositiveButton(android.R.string.yes, (dialogInterface, i1) -> {
-//                        Intent log_page = new Intent(ProfilePage.this, LoginPage.class);
-//                        SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
-//                        SharedPreferences.Editor editor = sharedPreferences.edit();
-//                        editor.clear();
-//                        editor.apply();
-//                        Toast.makeText(getApplicationContext(), String.format("%s has been logged out", username), Toast.LENGTH_LONG).show();
-//                        log_page.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//                        startActivity(log_page);
-//                    });
-//                    alert.setNegativeButton(android.R.string.no, ((dialogInterface, i1) -> dialogInterface.cancel()));
-//                    alert.show();
-//                }
-//                else {
-//                    alertDialog.dismiss();
-//                }
             }
         });
 

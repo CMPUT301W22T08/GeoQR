@@ -3,9 +3,13 @@ package com.example.geoqr;
 import static android.content.ContentValues.TAG;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.hardware.Sensor;
+import android.hardware.SensorManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -84,6 +88,11 @@ public class addQR extends AppCompatActivity {
     @SuppressLint("UseSwitchCompatOrMaterialCode")
     Switch add_geo;
 
+    private SensorManager mSensorManager;
+    private Sensor mAccelerometer;
+    private ShakeDetector mShakeDetector;
+    int check_dialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -124,6 +133,41 @@ public class addQR extends AppCompatActivity {
         QRScoreDisplay.setText(String.valueOf(QRScore));
         QRHexDisplay.setText(score.getQRHex());
         QRInfo.setText(qr_str);
+
+        mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        mShakeDetector = new ShakeDetector();
+        mShakeDetector.setOnShakeListener(new ShakeDetector.OnShakeListener() {
+            @Override
+            public void onShake(int count) {
+                if (check_dialog == 0) { // to be implemented as the show alert dialog
+                    System.out.println("check_dialog = 0");
+                    check_dialog = 1;
+                    AlertDialog.Builder alert = new AlertDialog.Builder(addQR.this);
+                    AlertDialog alertDialog = alert.create();
+                    if (!alertDialog.isShowing()) {
+                        alert.setTitle("Logout Confirmation");
+                        alert.setMessage(String.format("Are you sure you want to Logout '%s'?", UserName));
+                        alert.setPositiveButton(android.R.string.yes, (dialogInterface, i1) -> {
+                            Intent log_page = new Intent(addQR.this, LoginPage.class);
+                            SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                            check_dialog = 0;
+                            editor.clear();
+                            editor.apply();
+                            Toast.makeText(getApplicationContext(), String.format("%s has been logged out", UserName), Toast.LENGTH_LONG).show();
+                            log_page.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(log_page);
+                        });
+                        alert.setNegativeButton(android.R.string.no, (dialogInterface, i1) -> {
+                            dialogInterface.cancel();
+                            check_dialog = 0;
+                        });
+                        alert.show();
+                    }
+                }
+            }
+        });
 
         // get if user wants to add the geo or not
         add_geo.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -445,5 +489,19 @@ public class addQR extends AppCompatActivity {
             }
         });
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        // Add the following line to register the Session Manager Listener onResume
+        mSensorManager.registerListener(mShakeDetector, mAccelerometer,	SensorManager.SENSOR_DELAY_UI);
+    }
+
+    @Override
+    public void onPause() {
+        // Add the following line to unregister the Sensor Manager onPause
+        mSensorManager.unregisterListener(mShakeDetector);
+        super.onPause();
     }
 }
