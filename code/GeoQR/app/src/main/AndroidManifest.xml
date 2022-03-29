@@ -47,11 +47,11 @@
             android:screenOrientation="nosensor" />
 
         <activity
-            android:name=".AdminPage"
+            android:name=".LoginPage"
             android:exported="true" />
       
         <activity
-            android:name=".LoginPage"
+            android:name=".AdminPage"
             android:exported="true"
             android:screenOrientation="nosensor">
 

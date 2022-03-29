@@ -6,12 +6,15 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -49,18 +52,6 @@ public class Admin {
     public void fetch() {
         // Get List of QR codes
         db = FirebaseFirestore.getInstance();
-//        db.collection("QR codes").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                if (task.isSuccessful()) {
-//                    for (QueryDocumentSnapshot document : task.getResult()) {
-//                        Log.d("RR: ", document.toString());
-//                        qrAdapter.add(new AdminQRTuple((String) document.get("Content"),,
-//                                Math.toIntExact((Long) document.get("Score"))));
-//                    }
-//                }
-//            }
-//        });
 
         // Get List of Players
         db.collection("Users").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -68,6 +59,7 @@ public class Admin {
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot document : task.getResult()) {
+                        Log.d("GG: ", document.toString());
                         AdminPlayerTuple player = new AdminPlayerTuple(document.getId(),
                                 Integer.parseInt((String) document.get("Total Score")));
                         playerAdapter.add(player);
@@ -110,7 +102,7 @@ public class Admin {
     public void deleteQRCodes() {
         for (AdminQRTuple qrTuple: qrSelection) {
             if (db != null) {
-
+                // Log.d("YIKES: ", qrTuple.getId());
                 // 1. Delete that specific user from the corresponding document in
                 // "QR code" Collection
                 db.collection("QR codes")
@@ -118,17 +110,72 @@ public class Admin {
                         .collection("Users").document(qrTuple.getPlayer())
                         .delete();
 
-                // 2. Delete from User Collection
-                db.collection("User")
+                // 2. Delete QR code from User Collection
+                db.collection("Users")
                         .document(qrTuple.getPlayer())
                         .collection("QR codes").document(qrTuple.getId())
-                        .delete();
+                        .delete()
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void unused) {
+                                    // 3. Update scores of the User
+                                    String username = qrTuple.getPlayer();
+                                    for (int i = 0; i < playerAdapter.getCount(); i++) {
+                                        if (playerAdapter.getItem(i).getName().equals(username)) {
+                                            updateUserScore(i);
+                                            break;
+                                        }
+                                    }
+                                }
+                            });
             }
 
             qrAdapter.remove(qrTuple);
         }
 
         qrSelection.clear();
+    }
+
+    /**
+     * Updates the score of the User in DB and updates the score locally
+     * @param pos
+     *      This is the position of the user in the playerAdapter
+     */
+    private void updateUserScore(int pos) {
+        // Update the scores for the user
+        db.collection("Users").document(playerAdapter.getItem(pos).getName())
+                .collection("QR codes").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                int tscore = 0;
+                int hscore = -1;
+                int lscore = -1;
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot qrData : task.getResult()) {
+                        int qrScore = Integer.parseInt((String) qrData.get("Score"));
+                        tscore += qrScore;
+                        hscore = Math.max(hscore, qrScore);
+                        lscore = lscore == -1 ? qrScore : Math.min(lscore, qrScore);
+                    }
+                }
+
+                Log.d("Score: ", tscore + " " + hscore + " " + lscore);
+
+                // 1. Update the score(s) in DB
+                Map<String, Object> scores = new HashMap<>();
+                scores.put("Highest Score", String.valueOf(hscore));
+                scores.put("Lowest Score", String.valueOf(lscore));
+                scores.put("Total Score", String.valueOf(tscore));
+
+                db.collection("Users")
+                        .document(playerAdapter.getItem(pos).getName())
+                        .update(scores);
+
+                // 2. Update the score in the table locally
+                playerAdapter.getItem(pos).setScore(tscore);
+                playerAdapter.notifyDataSetChanged();
+            }
+        });
     }
 
     /**
@@ -141,10 +188,14 @@ public class Admin {
                 // 1. Delete this user's entry in any document in the "QR codes" collection
                 db.collection("Users")
                         .document(playerTuple.getName())
-                        .collection("QR codes").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        .collection("QR codes")
+                        .get()
+                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
+                            ArrayList<AdminQRTuple> toRemove = new ArrayList<>();
+
                             for (QueryDocumentSnapshot qrData: task.getResult()) {
                                 // Delete the User entry from the
                                 // correspond "Users" collection under "QR codes"
@@ -153,10 +204,26 @@ public class Admin {
                                         .collection("Users")
                                         .document(playerTuple.getName())
                                         .delete();
+                                // 2. Locally Update the qrAdapter for this corresponding user and qr
+                                for (int i = 0; i < qrAdapter.getCount(); i++) {
+                                    AdminQRTuple qrInAdapter = qrAdapter.getItem(i);
+
+                                    // If the QR and the User equals to the removed item
+                                    if (qrInAdapter.getPlayer().equals(playerTuple.getName()) && qrInAdapter.getId().equals(qrData.getId())) {
+                                        toRemove.add(qrInAdapter);
+                                    }
+                                }
+
+                                // Remove the QRs from the Table
+                                for (AdminQRTuple qrTupleToRemove : toRemove) {
+                                    qrAdapter.remove(qrTupleToRemove);
+                                }
+
+                                qrAdapter.notifyDataSetChanged();
                             }
 
                             // Once the User references are deleted:
-                            // 2. Delete the user from "Users" collection
+                            // 3. Delete the user from "Users" collection
                             db.collection("Users").document(playerTuple.getName()).delete();
                         }
                         else {
@@ -164,6 +231,8 @@ public class Admin {
                         }
                     }
                 });
+
+
             }
 
             playerAdapter.remove(playerTuple);
