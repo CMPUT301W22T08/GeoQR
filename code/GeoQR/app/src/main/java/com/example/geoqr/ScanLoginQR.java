@@ -16,11 +16,10 @@ import com.budiyev.android.codescanner.CodeScannerView;
 import com.budiyev.android.codescanner.DecodeCallback;
 import com.budiyev.android.codescanner.ScanMode;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.zxing.Result;
 
 import java.util.Objects;
-
-// this class is to be implemented
 
 /**
  * this class is for login scanning
@@ -30,28 +29,31 @@ public class ScanLoginQR extends AppCompatActivity {
     private CodeScanner lCodeScanner;
     private String content;
     private CodeScannerView scanLogin;
+    FirebaseFirestore db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.scan_login);
         Objects.requireNonNull(getSupportActionBar()).hide();
-
+        db = FirebaseFirestore.getInstance();
         scanLogin = findViewById(R.id.login_view);
         FloatingActionButton cancel = findViewById(R.id.cancel_btn_login);
 
+        // check permissions
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED) {
             Toast.makeText(getApplicationContext(), "Camera Permission Needed", Toast.LENGTH_LONG).show();
             finish();
-            // ActivityCompat.requestPermissions(this, new String[] { Manifest.permission.CAMERA }, CAMERA_PERMISSION_CODE);
         }
         else {
             scanLogin();
         }
 
+        // cancel button
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // going back to the login page if the cancel button is pressed
                 Intent login = new Intent(ScanLoginQR.this, LoginPage.class);
                 login.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(login);
@@ -76,8 +78,13 @@ public class ScanLoginQR extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        // pass content back to the login page for authentication
                         content = result.getText();
-                        passContent();
+                        Intent passBack = new Intent(ScanLoginQR.this, LoginPage.class);
+                        passBack.putExtra("username", content);
+                        passBack.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        setResult(10, passBack);
+                        ScanLoginQR.super.onBackPressed();
                     }
                 });
             }
@@ -101,18 +108,5 @@ public class ScanLoginQR extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         lCodeScanner.releaseResources();
-    }
-
-    /**
-     * Login
-     */
-    private void passContent() {
-        Intent passName = new Intent(ScanLoginQR.this, ScanQR.class);
-        Toast.makeText(getApplicationContext(), String.format("Login as '%s'", content), Toast.LENGTH_LONG).show();
-
-        // to be written the checking method by using the public checkIfUserExists and checkIfAdmin
-        // if passes, write db.
-        passName.putExtra("username", content);
-        startActivity(passName);
     }
 }

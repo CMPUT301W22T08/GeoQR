@@ -195,6 +195,7 @@
                 android:layout_weight="1"
                 android:layout_marginRight="5dp"
                 android:layout_marginLeft="5dp"
+                android:visibility="gone"
                 android:text="@string/logout" />
 
         </LinearLayout>
@@ -203,7 +204,6 @@
             android:id="@+id/showQR"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="10dp"
             tools:visibility="gone"
             tools:ignore="ContentDescription" />
 

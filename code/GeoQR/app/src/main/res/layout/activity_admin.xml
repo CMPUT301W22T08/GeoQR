@@ -16,6 +16,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
             android:backgroundTint="@color/btn_focused"
             android:text="Players" />
 
@@ -23,6 +25,8 @@
             android:id="@+id/admin_select_qr_codes"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
             android:layout_weight="1"
             android:backgroundTint="@color/btn_unfocused"
             android:text="QR Codes" />
@@ -49,6 +53,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
             android:backgroundTint="@color/disabled"
             android:minWidth="20dp"
             app:icon="@android:drawable/ic_menu_delete"

@@ -2,10 +2,15 @@ package com.example.geoqr;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -40,7 +45,7 @@ import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.Objects;
 
 
@@ -56,6 +61,12 @@ public class ProfilePage extends AppCompatActivity {
     TextView contact_text;
     ImageView show_QR;
     String contact, content, current_score;
+    ArrayList<Integer> list_temp = new ArrayList<>();
+
+    private SensorManager mSensorManager;
+    private Sensor mAccelerometer;
+    private ShakeDetector mShakeDetector;
+    int check_dialog;
 
     private ArrayAdapter<ListEntry> listAdapter;
     private ArrayList<ListEntry> entryDataList;
@@ -86,11 +97,43 @@ public class ProfilePage extends AppCompatActivity {
 
         SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
         username = sharedPreferences.getString("username", null);
+        
+        mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        mShakeDetector = new ShakeDetector();
+        mShakeDetector.setOnShakeListener(new ShakeDetector.OnShakeListener() {
+            @Override
+            public void onShake(int count) {
+                if (check_dialog == 0) { // to be implemented as the show alert dialog
+                    System.out.println("check_dialog = 0");
+                    check_dialog = 1;
+                    AlertDialog.Builder alert = new AlertDialog.Builder(ProfilePage.this);
+                    AlertDialog alertDialog = alert.create();
+                    if (!alertDialog.isShowing()) {
+                        alert.setTitle("Logout Confirmation");
+                        alert.setMessage(String.format("Are you sure you want to Logout '%s'?", username));
+                        alert.setPositiveButton(android.R.string.yes, (dialogInterface, i1) -> {
+                            Intent log_page = new Intent(ProfilePage.this, LoginPage.class);
+                            SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                            check_dialog = 0;
+                            editor.clear();
+                            editor.apply();
+                            Toast.makeText(getApplicationContext(), String.format("%s has been logged out", username), Toast.LENGTH_LONG).show();
+                            log_page.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(log_page);
+                        });
+                        alert.setNegativeButton(android.R.string.no, (dialogInterface, i1) -> {
+                            dialogInterface.cancel();
+                            check_dialog = 0;
+                        });
+                        alert.show();
+                    }
+                }
+            }
+        });
 
-        // updateScore();
         updateView();
-
-
 
         profileList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
@@ -102,24 +145,6 @@ public class ProfilePage extends AppCompatActivity {
                             @Override
                             public void onSuccess(DocumentSnapshot documentSnapshot) {
                                 current_score = documentSnapshot.getString("Score");
-
-
-
-
-                                updateScoreTester();
-//
-//                                if (current_score == highScore.toString()){
-//                                    updateScoreTester();
-//                                }else if(current_score == highScore.toString()){
-//                                    updateScoreTester();
-//                                }
-
-
-
-
-
-
-
                             }
                         })
                         .addOnFailureListener(new OnFailureListener() {
@@ -153,7 +178,6 @@ public class ProfilePage extends AppCompatActivity {
                                     Log.d(TAG, "User - QR Delete Failed");
                                 }
                             });
-
                     db.collection("QR codes")
                             .document(list.getQrcode())
                             .collection("Users")
@@ -164,6 +188,13 @@ public class ProfilePage extends AppCompatActivity {
                                 public void onSuccess(Void unused) {
                                     Log.d(TAG, "QR - User Successfully Deleted");
                                     System.out.println("QR - User Successfully Deleted");
+
+                                    if (Integer.parseInt(current_score) == Integer.parseInt(largestScore)) {
+                                        updateScore();
+                                    }
+                                    else if (Integer.parseInt(current_score) == Integer.parseInt(smallestScore)) {
+                                        updateScore();
+                                    }
                                 }
                             })
                             .addOnFailureListener(new OnFailureListener() {
@@ -172,10 +203,6 @@ public class ProfilePage extends AppCompatActivity {
                                     Log.d(TAG, "QR - User Delete Failed");
                                 }
                             });
-                    updateView();
-                    db.collection("Users").document(username)
-                            .update("Total Score", String.valueOf(Integer.parseInt(totalScore) - Integer.parseInt(current_score)));
-                    updateView();
                 });
                 alert.setNegativeButton(android.R.string.no, ((dialogInterface, i1) -> dialogInterface.cancel()));
                 alert.show();
@@ -213,34 +240,10 @@ public class ProfilePage extends AppCompatActivity {
         generateStatusQR.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                updateView();
                 String status = String.format("Username: %s\nTotal Score: %s\nTotal Scans: %s\n" +
                         "Highest Score: %s\nLowest Score: %s", username, totalScore, entryDataList.size(),
                         largestScore, smallestScore);
                 generateQRCode(status);
-            }
-        });
-
-        Button logout = findViewById(R.id.logout_btn);
-        logout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                updateView();
-                AlertDialog.Builder alert = new AlertDialog.Builder(ProfilePage.this);
-                alert.setTitle("Logout Confirmation");
-                alert.setMessage(String.format("Are you sure you want to Logout '%s'?", username));
-                alert.setPositiveButton(android.R.string.yes, (dialogInterface, i1) -> {
-                    Intent log_page = new Intent(ProfilePage.this, LoginPage.class);
-                    SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
-                    SharedPreferences.Editor editor = sharedPreferences.edit();
-                    editor.clear();
-                    editor.apply();
-                    Toast.makeText(getApplicationContext(), String.format("%s has been logged out", username), Toast.LENGTH_LONG).show();
-                    log_page.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(log_page);
-                });
-                alert.setNegativeButton(android.R.string.no, ((dialogInterface, i1) -> dialogInterface.cancel()));
-                alert.show();
             }
         });
 
@@ -306,6 +309,20 @@ public class ProfilePage extends AppCompatActivity {
                 });
             }
         });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        // Add the following line to register the Session Manager Listener onResume
+        mSensorManager.registerListener(mShakeDetector, mAccelerometer,	SensorManager.SENSOR_DELAY_UI);
+    }
+
+    @Override
+    public void onPause() {
+        // Add the following line to unregister the Sensor Manager onPause
+        mSensorManager.unregisterListener(mShakeDetector);
+        super.onPause();
     }
 
     private void updateView() {
@@ -380,96 +397,55 @@ public class ProfilePage extends AppCompatActivity {
         }
     }
 
-    private void updateScoreTester(){
-        CollectionReference Ref = db.collection("Users").document(username).collection("QR codes");
-        Ref.addSnapshotListener(new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                String largest;
-                ArrayList<String> s = new ArrayList<>();
-                for (QueryDocumentSnapshot doc : value) {
-                    s.add((String) doc.get("Score"));
-                    s.add("8");
-                    s.add("9");
-
-                    largest = s.get(0);
-                    for (int i = 1; i < s.size(); i++){
-                        // says s is null
-                        if(Integer.valueOf(largest)  < Integer.valueOf(s.get(i))){
-                            largest = s.get(i);
-                        }
-                    }
-                    HashMap<String,String> x = new HashMap<>();
-                    Ref.document("temp").set(x);
-
-                }
-            }
-        });
-
-    }
-
     private void updateScore() {
 
-
-        DocumentReference docRef = db.collection("Users").document(username);
+        // Users (collection) -> username (document) -> QR codes (sub-collection) -> hex (document) -> score (field)
         db.collection("Users").document(username).collection("QR codes")
-                .addSnapshotListener((queryDocuments, error) -> {
-                    ArrayList<Integer> list_temp = new ArrayList<>();
-                    for (QueryDocumentSnapshot doc : queryDocuments) {
-                        String score = doc.getString("Score");
-                        int int_score = Integer.parseInt(score);
-                        System.out.println(String.format("score: %s", int_score));
-                        list_temp.add(int_score);
-                        list_temp.add(1);
-                        list_temp.add(2);
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                        System.out.println("I am here");
+                        if (error != null) {
+                            Log.w(TAG, "Listen failed.", error);
+                            return;
+                        }
+                        list_temp.clear();
+                        assert value != null;
+                        for (QueryDocumentSnapshot doc : value) {
+                            if (doc != null) {
+                                String score = doc.getString("Score");
+                                assert score != null;
+                                int int_score = Integer.parseInt(score);
+                                list_temp.add(int_score);
+                            }
+                            else {
+                                System.out.println("doc == null");
+                            }
+                        }
+                        Collections.sort(list_temp);
+                        int sum = 0;
+                        for(int i = 0; i < list_temp.size(); i++)
+                            sum += list_temp.get(i);
 
-                        Log.d(TAG, "updateScore111111111: "+list_temp);
-                        Log.d(TAG, "updateScore11111111111: "+list_temp.size());
+                        if (list_temp.isEmpty()) {
+                            db.collection("Users").document(username).update("Highest Score", String.valueOf(0));
+                            db.collection("Users").document(username).update("Lowest Score", String.valueOf(0));
+                            db.collection("Users").document(username).update("Total Score", String.valueOf(0));
+                            highScore.setText(String.format("Highest Score: %s", "0"));
+                            lowScore.setText(String.format("Lowest Score: %s", "0"));
+                            profileTotal.setText(String.format("Total Score: %s", "0"));
+
+                        }
+                        else {
+                            db.collection("Users").document(username).update("Highest Score", String.valueOf(list_temp.get(list_temp.size() - 1)));
+                            db.collection("Users").document(username).update("Lowest Score", String.valueOf(list_temp.get(0)));
+                            db.collection("Users").document(username).update("Total Score", String.valueOf(sum));
+                            highScore.setText(String.format("Highest Score: %s", list_temp.get(list_temp.size() - 1)));
+                            lowScore.setText(String.format("Lowest Score: %s", list_temp.get(0)));
+                            profileTotal.setText(String.format("Total Score: %s", sum));
+                        }
                     }
-                    Log.d(TAG, "updateScore: "+list_temp+378);
-                    Log.d(TAG, "updateScore: "+list_temp.size());
                 });
-
-//        final CollectionReference collectionReference = db.collection("Users").document(username).collection("QR codes");
-//        final DocumentReference docRef = db.collection("Users").document(username);
-//        docRef.get()
-//                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-//                    @Override
-//                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-//                        String large = documentSnapshot.getString("Highest Score");
-//                        String small = documentSnapshot.getString("Lowest Score");
-//                        collectionReference.addSnapshotListener((queryDocumentSnapshots, error) -> {
-//                            System.out.println("I came here and go");
-//                            assert queryDocumentSnapshots != null;
-//                            for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
-//                                Log.d(TAG, String.valueOf(doc.getData().get("QR codes")));
-//                                String score = (String) doc.getData().get("Score");
-//
-//                                assert score != null;
-//                                if (Integer.parseInt(score) > Integer.parseInt(large)) {
-//                                    docRef.update("Highest Score", score);
-//                                    System.out.println("large here");
-//                                }
-//                                if (Integer.parseInt(score) < Integer.parseInt(small)) {
-//                                    docRef.update("Lowest Score", score);
-//                                    System.out.println("small here");
-//                                }
-//                                System.out.println("going to run updateView");
-//                                updateView();
-//                            }
-//                        });
-//
-//                    }
-//                })
-//                .addOnFailureListener(new OnFailureListener() {
-//                    @Override
-//                    public void onFailure(@NonNull Exception e) {
-//                        System.out.println("failed");
-//                    }
-//                });
-
-
-
     }
 
     public static void hideKeyboard(Activity activity) {

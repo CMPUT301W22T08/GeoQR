@@ -1,32 +1,67 @@
 package com.example.geoqr;
 
+import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.hardware.Sensor;
+import android.hardware.SensorManager;
+import android.location.Location;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.View;
-
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.example.geoqr.databinding.ActivityMapBinding;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
-import java.util.ArrayList;
-
-public class MapActivity extends FragmentActivity implements OnMapReadyCallback {
+// LAST SUCCESFUL BUILD
+public class MapActivity extends FragmentActivity implements OnMapReadyCallback
+{
 
     private GoogleMap mMap;
-    private ActivityMapBinding binding;
+    private com.example.geoqr.databinding.ActivityMapBinding binding;
+
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+    private String Latitude;
+    private String Longitude;
+    private LatLng tempVal;
+
+    public LatLng tempPos;
+
+    private SensorManager mSensorManager;
+    private Sensor mAccelerometer;
+    private ShakeDetector mShakeDetector;
+    int check_dialog;
+    private String username;
+
+    private FusedLocationProviderClient fusedLocationClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d("testing","Activated onCreate");
 
-        binding = ActivityMapBinding.inflate(getLayoutInflater());
+        binding = com.example.geoqr.databinding.ActivityMapBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -34,7 +69,44 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        // to be tested
+        SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
+        username = sharedPreferences.getString("username", null);
+
+        mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        mShakeDetector = new ShakeDetector();
+        mShakeDetector.setOnShakeListener(new ShakeDetector.OnShakeListener() {
+            @Override
+            public void onShake(int count) {
+                if (check_dialog == 0) { // to be implemented as the show alert dialog
+                    System.out.println("check_dialog = 0");
+                    check_dialog = 1;
+                    AlertDialog.Builder alert = new AlertDialog.Builder(MapActivity.this);
+                    AlertDialog alertDialog = alert.create();
+                    if (!alertDialog.isShowing()) {
+                        alert.setTitle("Logout Confirmation");
+                        alert.setMessage(String.format("Are you sure you want to Logout '%s'?", username));
+                        alert.setPositiveButton(android.R.string.yes, (dialogInterface, i1) -> {
+                            Intent log_page = new Intent(MapActivity.this, LoginPage.class);
+                            SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                            check_dialog = 0;
+                            editor.clear();
+                            editor.apply();
+                            Toast.makeText(getApplicationContext(), String.format("%s has been logged out", username), Toast.LENGTH_LONG).show();
+                            log_page.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(log_page);
+                        });
+                        alert.setNegativeButton(android.R.string.no, (dialogInterface, i1) -> {
+                            dialogInterface.cancel();
+                            check_dialog = 0;
+                        });
+                        alert.show();
+                    }
+                }
+            }
+        });
+
         FloatingActionButton scan_btn = findViewById(R.id.scan);
         scan_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -45,6 +117,12 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             }
         });
+
+    }
+    protected void onResume(Bundle saveInstanceState) {
+        super.onResume();
+        Log.d("testing","Activated onResume");
+        updateUserPosition();
     }
 
     /**
@@ -56,49 +134,75 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
      * it inside the SupportMapFragment. This method will only be triggered once the user has
      * installed Google Play services and returned to the app.
      */
+    @SuppressLint("MissingPermission")
     @Override
     public void onMapReady(GoogleMap googleMap) {
+
         mMap = googleMap;
+        // Button to center on current position
+        mMap.setMyLocationEnabled(true);
 
-        /* Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
-        */
+        updateUserPosition();
+        db.collection("QR codes").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                for (QueryDocumentSnapshot qrData : task.getResult()){
+                    Latitude = (String) qrData.get("Latitude");
+                    Longitude = (String) qrData.get("Longitude");
 
-        //Create a list of pointGIS, and update the map with them
-        ArrayList<pointGIS> pointList;
+                    try {
+                        tempVal = new LatLng(Double.parseDouble(Latitude),Double.parseDouble(Longitude));
+                        mMap.addMarker(new MarkerOptions().position(tempVal).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+                    } catch (Exception e){
+                        //failed
+                    }
+                }
+            }
+        });
 
-        pointList = createPointsList();
 
-        updateMap(pointList);
-
-        //set the camera to a specified position
+        // Add a marker in Sydney and move the camera
         mMap.moveCamera(CameraUpdateFactory.zoomTo(15.0f));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(53.523988,-113.527551)));
+//        mMap.moveCamera(CameraUpdateFactory.newLatLng(currPos));
     }
 
-    private void updateMap(ArrayList<pointGIS> locations) {
-        /* Iterates through a list of pointGIS objects and adds them to the map */
-        for (int i = 0; i < locations.size(); i++){
-            LatLng coordinates = locations.get(i).getCoordinates();
-            String name = locations.get(i).getTitle();
-            mMap.addMarker(new MarkerOptions().position(coordinates).title(name));
-        }
+    @SuppressLint("MissingPermission")
+    private void updateUserPosition() {
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        fusedLocationClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
+            @Override
+            public void onSuccess(Location location) {
+                Log.d("testing","onSuccess Succeeded!");
+                if (location != null) {
+                    tempPos = new LatLng(location.getLatitude(),location.getLongitude());
+                    mMap.moveCamera(CameraUpdateFactory.zoomTo(15.0f));
+                    mMap.moveCamera(CameraUpdateFactory.newLatLng(tempPos));
+                    Log.d("testing","Value after succeed: " + tempPos);
+                } else {
+                    // default location. In case the listener fails to find a location
+                    tempPos = new LatLng(53.523988,-113.527551);
+                    mMap.moveCamera(CameraUpdateFactory.zoomTo(15.0f));
+                    mMap.moveCamera(CameraUpdateFactory.newLatLng(tempPos));
+                    Log.d("testing","Value after failure: " + tempPos);
+                }
+            }
+        });
     }
 
-    private ArrayList<pointGIS> createPointsList() {
-        ArrayList<pointGIS> points = new ArrayList<pointGIS>();
-        // connect to firebase here
+    @Override
+    public void onResume() {
+        super.onResume();
+        // Add the following line to register the Session Manager Listener onResume
+        mSensorManager.registerListener(mShakeDetector, mAccelerometer,	SensorManager.SENSOR_DELAY_UI);
+    }
 
-        // loop through firebase connection and create points for every one on the list
-
-        //temporary hard points for testing, remove before commissioning
-        pointGIS hlthSci = new pointGIS(new LatLng(53.520020,-113.525857), "Health Sciences Jubilee");
-        pointGIS vvc = new pointGIS(new LatLng(53.523988,-113.527551), "Van Vilet Centre");
-        points.add(hlthSci);
-        points.add(vvc);
-
-        return points;
+    @Override
+    public void onPause() {
+        // Add the following line to unregister the Sensor Manager onPause
+        mSensorManager.unregisterListener(mShakeDetector);
+        super.onPause();
     }
 }
+
+
+
