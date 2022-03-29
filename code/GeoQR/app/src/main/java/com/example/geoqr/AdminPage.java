@@ -104,6 +104,10 @@ public class AdminPage extends AppCompatActivity {
                             // Delete QR Codes
                             admin.deleteQRCodes();
                         }
+
+                        deleteBtnDisabled = true;
+                        deleteBtn.setBackgroundColor(getResources().getColor(R.color.disabled, null));
+                        deleteBtn.setEnabled(false);
                     }
                 });
                 alert.setNegativeButton(android.R.string.no, (dialogInterface, i1) -> {
@@ -132,12 +136,12 @@ public class AdminPage extends AppCompatActivity {
                 if (!admin.noPlayerSelected()) {
                     deleteBtnDisabled = false;
                     deleteBtn.setBackgroundColor(getResources().getColor(R.color.deleteBtnEnabled, null));
-                    deleteBtn.setClickable(true);
+                    deleteBtn.setEnabled(true);
                 }
                 else {
                     deleteBtnDisabled = true;
                     deleteBtn.setBackgroundColor(getResources().getColor(R.color.disabled, null));
-                    deleteBtn.setClickable(false);
+                    deleteBtn.setEnabled(false);
                 }
             }
         });
@@ -161,12 +165,12 @@ public class AdminPage extends AppCompatActivity {
                 if (!admin.noQRSelected()) {
                     deleteBtnDisabled = false;
                     deleteBtn.setBackgroundColor(getResources().getColor(R.color.deleteBtnEnabled, null));
-                    deleteBtn.setClickable(true);
+                    deleteBtn.setEnabled(true);
                 }
                 else {
                     deleteBtnDisabled = true;
                     deleteBtn.setBackgroundColor(getResources().getColor(R.color.disabled, null));
-                    deleteBtn.setClickable(false);
+                    deleteBtn.setEnabled(false);
                 }
             }
         });
@@ -229,15 +233,11 @@ public class AdminPage extends AppCompatActivity {
             qrCodeHeader.setVisibility(View.VISIBLE);
 
             playerList.setVisibility(View.GONE);
+
+            qrCodeList.setAdapter(admin.getQRAdapter());
             qrCodeList.setVisibility(View.VISIBLE);
 
             searchBar.setHint("Search QR Codes");
-
-            // Unselect
-            for (Integer pos: admin.getSelectedPlayerIndices()) {
-                playerList.getChildAt(pos)
-                        .setBackgroundColor(getResources().getColor(R.color.unhighlight, null));
-            }
 
             admin.resetPlayerSelection();
         }
@@ -250,15 +250,11 @@ public class AdminPage extends AppCompatActivity {
             playerHeader.setVisibility(View.VISIBLE);
 
             qrCodeList.setVisibility(View.GONE);
+
             playerList.setVisibility(View.VISIBLE);
+            playerList.setAdapter(admin.getPlayerAdapter());
 
             searchBar.setHint("Search Players");
-
-            // Unselect
-            for (Integer pos: admin.getSelectedQRIndices()) {
-                qrCodeList.getChildAt(pos)
-                        .setBackgroundColor(getResources().getColor(R.color.unhighlight, null));
-            }
 
             admin.resetQRSelection();
         }
@@ -267,6 +263,7 @@ public class AdminPage extends AppCompatActivity {
 
         deleteBtnDisabled = true;
         deleteBtn.setBackgroundColor(getResources().getColor(R.color.disabled, null));
+        deleteBtn.setEnabled(false);
     }
 
     @Override
