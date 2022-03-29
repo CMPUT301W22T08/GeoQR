@@ -57,6 +57,7 @@
             android:layout_marginEnd="5dp"
             android:backgroundTint="@color/disabled"
             android:minWidth="20dp"
+            android:enabled="false"
             app:icon="@android:drawable/ic_menu_delete"
             app:iconPadding="0dp" />
     </LinearLayout>
