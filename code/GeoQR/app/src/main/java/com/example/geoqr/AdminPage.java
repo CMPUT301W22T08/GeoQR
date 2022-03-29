@@ -85,6 +85,9 @@ public class AdminPage extends AppCompatActivity {
                         // Delete QR Codes
                         admin.deleteQRCodes();
                     }
+
+                    deleteBtnDisabled = true;
+                    deleteBtn.setBackgroundColor(getResources().getColor(R.color.disabled, null));
                 }
             }
         });

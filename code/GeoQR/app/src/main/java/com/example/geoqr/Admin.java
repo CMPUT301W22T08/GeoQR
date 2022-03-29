@@ -148,14 +148,15 @@ public class Admin {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 int tscore = 0;
-                int hscore = -1;
-                int lscore = -1;
+                int hscore = 0;
+                int lscore = 0;
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot qrData : task.getResult()) {
+                        if (qrData.get("Score") == null) {continue;}
                         int qrScore = Integer.parseInt((String) qrData.get("Score"));
                         tscore += qrScore;
                         hscore = Math.max(hscore, qrScore);
-                        lscore = lscore == -1 ? qrScore : Math.min(lscore, qrScore);
+                        lscore = lscore == 0 ? qrScore : Math.min(lscore, qrScore);
                     }
                 }
 
