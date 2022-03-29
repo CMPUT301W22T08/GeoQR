@@ -91,16 +91,25 @@ public class AdminPage extends AppCompatActivity {
         deleteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!deleteBtnDisabled) {
-                    if (selectedBtnId == playerBtn.getId()) {
-                        // Delete Players
-                        admin.deletePlayers();
+                AlertDialog.Builder alert = new AlertDialog.Builder(AdminPage.this);
+                alert.setTitle("Delete Confirmation");
+                alert.setMessage("Are you sure you want to delete this item?");
+                alert.setPositiveButton(android.R.string.yes, (dialogInterface, i1) -> {
+                    if (!deleteBtnDisabled) {
+                        if (selectedBtnId == playerBtn.getId()) {
+                            // Delete Players
+                            admin.deletePlayers();
+                        }
+                        else {
+                            // Delete QR Codes
+                            admin.deleteQRCodes();
+                        }
                     }
-                    else {
-                        // Delete QR Codes
-                        admin.deleteQRCodes();
-                    }
-                }
+                });
+                alert.setNegativeButton(android.R.string.no, (dialogInterface, i1) -> {
+                    dialogInterface.cancel();
+                });
+                alert.show();
             }
         });
 

@@ -1,24 +1,14 @@
 package com.example.geoqr;
 
-import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
-
-import static org.junit.Assert.assertTrue;
-
-import android.app.Activity;
-import android.util.Log;
-import android.widget.EditText;
-
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 
-import com.google.zxing.qrcode.encoder.QRCode;
 import com.robotium.solo.Solo;
 
-import org.junit.After;
 import org.junit.Before;
-import org.junit.Test;
 import org.junit.Rule;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 
 
