@@ -132,10 +132,12 @@ public class AdminPage extends AppCompatActivity {
                 if (!admin.noPlayerSelected()) {
                     deleteBtnDisabled = false;
                     deleteBtn.setBackgroundColor(getResources().getColor(R.color.deleteBtnEnabled, null));
+                    deleteBtn.setClickable(true);
                 }
                 else {
                     deleteBtnDisabled = true;
                     deleteBtn.setBackgroundColor(getResources().getColor(R.color.disabled, null));
+                    deleteBtn.setClickable(false);
                 }
             }
         });
@@ -159,10 +161,12 @@ public class AdminPage extends AppCompatActivity {
                 if (!admin.noQRSelected()) {
                     deleteBtnDisabled = false;
                     deleteBtn.setBackgroundColor(getResources().getColor(R.color.deleteBtnEnabled, null));
+                    deleteBtn.setClickable(true);
                 }
                 else {
                     deleteBtnDisabled = true;
                     deleteBtn.setBackgroundColor(getResources().getColor(R.color.disabled, null));
+                    deleteBtn.setClickable(false);
                 }
             }
         });
