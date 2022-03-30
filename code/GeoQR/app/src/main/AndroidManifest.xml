@@ -72,7 +72,6 @@
             android:screenOrientation="nosensor" />
         <activity
             android:name=".ProfilePage"
-
             android:exported="true"
             android:screenOrientation="nosensor">
 <!--            <intent-filter>-->
