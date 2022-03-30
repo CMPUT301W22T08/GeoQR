@@ -262,6 +262,9 @@ public class addQR extends AppCompatActivity {
         });
     }
 
+    /**
+     * get location from device
+     */
     @SuppressLint("MissingPermission")
     private void getLocationFromDevice() {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
@@ -455,12 +458,19 @@ public class addQR extends AppCompatActivity {
                 });
     }
 
+    /**
+     * Get the current time for the details about the qr code
+     * @return time - the formated
+     */
     private String getCurrentTime() {
         Calendar calendar = Calendar.getInstance();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss zzzz", Locale.getDefault());
         return dateFormat.format(calendar.getTime());
     }
 
+    /**
+     * when added new qr code, need to update total score
+     */
     private void total_score_and_count(){
 
         DocumentReference doc = db.collection("Users").document(UserName);
@@ -491,6 +501,9 @@ public class addQR extends AppCompatActivity {
 
     }
 
+    /**
+     * when user return to application
+     */
     @Override
     public void onResume() {
         super.onResume();
@@ -498,6 +511,9 @@ public class addQR extends AppCompatActivity {
         mSensorManager.registerListener(mShakeDetector, mAccelerometer,	SensorManager.SENSOR_DELAY_UI);
     }
 
+    /**
+     * when user exist the application
+     */
     @Override
     public void onPause() {
         // Add the following line to unregister the Sensor Manager onPause
