@@ -160,7 +160,7 @@ public class ProfilePage extends AppCompatActivity {
                         });
                 AlertDialog.Builder alert = new AlertDialog.Builder(ProfilePage.this);
                 alert.setTitle("Delete Confirmation");
-                alert.setMessage(String.format("Are you sure you want to delete '%s'?", content));
+                alert.setMessage("Are you sure you want to delete this item?");
                 alert.setPositiveButton(android.R.string.yes, (dialogInterface, i1) -> {
                     listAdapter.remove(list);
                     entryDataList.remove(list);
