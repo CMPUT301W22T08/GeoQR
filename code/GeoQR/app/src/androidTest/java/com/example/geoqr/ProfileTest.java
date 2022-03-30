@@ -32,6 +32,16 @@ public class ProfileTest {
         solo.assertCurrentActivity("Wrong Activity", ProfilePage.class);
     }
 
+    /**
+     * clicks an item in the profile list to bring to details page
+     * @throws Exception
+     */
+    @Test
+    public void getDetails() throws Exception {
+        solo.clickInList(0);
+        solo.assertCurrentActivity("Wrong activity", ProfileDetails.class);
+
+    }
 
 
 }
