@@ -57,7 +57,7 @@
                 android:textColor="@color/black"
                 android:hint="@string/enter_contact"
                 android:importantForAutofill="no"
-                android:inputType="textPersonName"
+                android:inputType="textEmailAddress"
                 android:maxLength="20"
                 android:minHeight="48dp"
                 android:textSize="15sp" />
