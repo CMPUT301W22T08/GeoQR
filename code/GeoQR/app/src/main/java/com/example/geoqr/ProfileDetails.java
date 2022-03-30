@@ -58,7 +58,7 @@ public class ProfileDetails extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedStateInstance) {
         super.onCreate(savedStateInstance);
-        setContentView(R.layout.qr_detail);
+        setContentView(R.layout.activity_qr_detail);
         Objects.requireNonNull(getSupportActionBar()).hide();
         Intent intent = getIntent();
         hex = intent.getStringExtra("QR");

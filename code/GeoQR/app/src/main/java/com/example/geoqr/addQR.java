@@ -96,13 +96,13 @@ public class addQR extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.aqq_qr_code_v2);
+        setContentView(R.layout.activity_add_qr_code);
         Objects.requireNonNull(getSupportActionBar()).hide();
         notice = "null";
 
         db = FirebaseFirestore.getInstance();
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-
+        
         UNDisplay = findViewById(R.id.UserAutoFill);
         QRHexDisplay = findViewById(R.id.QRAutoFill);
         QRScoreDisplay = findViewById(R.id.QRScoreAutoFill);

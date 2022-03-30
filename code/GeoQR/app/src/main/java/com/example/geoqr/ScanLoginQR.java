@@ -34,7 +34,7 @@ public class ScanLoginQR extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.scan_login);
+        setContentView(R.layout.activity_scan_login);
         Objects.requireNonNull(getSupportActionBar()).hide();
         db = FirebaseFirestore.getInstance();
         scanLogin = findViewById(R.id.login_view);
