@@ -485,40 +485,6 @@ public class addQR extends AppCompatActivity {
     }
 
     /**
-     * when added new qr code, need to update total score
-     */
-//    private void total_score_and_count(){
-//
-//        DocumentReference doc = db.collection("Users").document(UserName);
-//        doc.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-//            @Override
-//            public void onSuccess(DocumentSnapshot documentSnapshot) {
-//
-//                int hi_sco = Integer.valueOf(documentSnapshot.getString("Highest Score"));
-//                int lo_sco = Integer.valueOf(documentSnapshot.getString("Lowest Score"));
-//                int total_sco = Integer.valueOf(documentSnapshot.getString("Total Score"));
-//
-//                int current_Qr_sco = score.find_total();
-//                Log.d(TAG, "onSuccess: total score is "+total_sco);
-//
-//                if(lo_sco > current_Qr_sco || lo_sco == 0){
-//                    doc.update("Lowest Score",String.valueOf(current_Qr_sco));
-//                }
-//
-//                if(hi_sco < current_Qr_sco){
-//                    doc.update("Highest Score",String.valueOf(current_Qr_sco));
-//                }
-//
-//                doc.update("Total Score",String.valueOf(total_sco + current_Qr_sco));
-//
-//                Log.d(TAG, "onSuccess: total score is "+String.valueOf(total_sco + current_Qr_sco));
-//
-//            }
-//        });
-//
-//    }
-
-    /**
      * when user return to application
      */
     @Override
@@ -538,6 +504,9 @@ public class addQR extends AppCompatActivity {
         super.onPause();
     }
 
+    /**
+     * when added new qr code, need to update total score
+     */
     private void total_score_and_count(){
         db.collection("Users").document(UserName).collection("QR codes")
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
