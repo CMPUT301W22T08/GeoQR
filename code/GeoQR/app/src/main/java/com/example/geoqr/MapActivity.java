@@ -33,10 +33,20 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
-// LAST SUCCESFUL BUILD
+/**
+ * This class handles all Map Related Activity.
+ * MapActivity fetches all valid QR codes from the firestore
+ * It then converts the QR Latitude and Longitude to LatLon objects and creates markers for the valid QR codes.
+ * After populating the map with the QR code locations the map displays.
+ *
+ * The map has two buttons
+ * - The top right button centers the map back to the users current location
+ * - The bottom right button brings the user back to the home screen (camera)
+ */
 public class MapActivity extends FragmentActivity implements OnMapReadyCallback
 {
 
+    // Initialize all variables
     private GoogleMap mMap;
     private com.example.geoqr.databinding.ActivityMapBinding binding;
 
@@ -59,7 +69,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d("testing","Activated onCreate");
+        //Log.d("testing","Activated onCreate");
 
         binding = com.example.geoqr.databinding.ActivityMapBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -72,6 +82,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback
         SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
         username = sharedPreferences.getString("username", null);
 
+        //If the user shakes the device they are logged out
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         mShakeDetector = new ShakeDetector();
@@ -107,6 +118,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
 
+        // Floating button to return the user back to the home screen (camera)
         FloatingActionButton scan_btn = findViewById(R.id.scan);
         scan_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -119,6 +131,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback
         });
 
     }
+
     protected void onResume(Bundle saveInstanceState) {
         super.onResume();
         Log.d("testing","Activated onResume");
@@ -139,10 +152,11 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
 
         mMap = googleMap;
-        // Button to center on current position
-        mMap.setMyLocationEnabled(true);
 
+        mMap.setMyLocationEnabled(true);    // Button to center on current position
         updateUserPosition();
+
+        // gather all the valid QR codes from the FireStore
         db.collection("QR codes").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -159,31 +173,37 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback
                 }
             }
         });
-
-
-        // Add a marker in Sydney and move the camera
+        // set the camera height
         mMap.moveCamera(CameraUpdateFactory.zoomTo(15.0f));
-//        mMap.moveCamera(CameraUpdateFactory.newLatLng(currPos));
+
     }
 
     @SuppressLint("MissingPermission")
     private void updateUserPosition() {
+        /**
+         * The purpose of this method is to update the users current location to the map.
+         *
+         * The application will only run if locationPermissions are enabled so we do not check for them here
+         * We get the location from the user and then convert it to a LatLng object
+         * If for some reason we cannot access the current location we default to the University of Alberta
+         */
+
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         fusedLocationClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
             @Override
             public void onSuccess(Location location) {
-                Log.d("testing","onSuccess Succeeded!");
+                //Log.d("testing","onSuccess Succeeded!");
                 if (location != null) {
                     tempPos = new LatLng(location.getLatitude(),location.getLongitude());
                     mMap.moveCamera(CameraUpdateFactory.zoomTo(15.0f));
                     mMap.moveCamera(CameraUpdateFactory.newLatLng(tempPos));
-                    Log.d("testing","Value after succeed: " + tempPos);
+                    //Log.d("testing","Value after succeed: " + tempPos);
                 } else {
                     // default location. In case the listener fails to find a location
                     tempPos = new LatLng(53.523988,-113.527551);
                     mMap.moveCamera(CameraUpdateFactory.zoomTo(15.0f));
                     mMap.moveCamera(CameraUpdateFactory.newLatLng(tempPos));
-                    Log.d("testing","Value after failure: " + tempPos);
+                    //Log.d("testing","Value after failure: " + tempPos);
                 }
             }
         });
