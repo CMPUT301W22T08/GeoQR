@@ -12,11 +12,19 @@ public class ProfileListTest {
 
     private ProfileList list;
 
+    /**
+     * Runs before all tests and creates list object.
+     *
+     */
     @BeforeEach
     public void createList() {
         list = new ProfileList(null, new ArrayList<ListEntry>());
     }
 
+    /**
+     * Tests removing of item from list
+     * @throws Exception
+     */
     @Test
     public void removeEntry() {
         ListEntry entry = new ListEntry("hdhasjdkhjknd", "223311664", "12", "3");
@@ -32,6 +40,10 @@ public class ProfileListTest {
 
     }
 
+    /**
+     * tests addition of entry to list
+     * @throws Exception
+     */
     @Test
     public void addEntry() {
         int size = list.size();
