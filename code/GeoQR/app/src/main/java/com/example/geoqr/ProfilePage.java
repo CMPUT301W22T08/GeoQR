@@ -35,6 +35,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.zxing.BarcodeFormat;
@@ -71,6 +72,12 @@ public class ProfilePage extends AppCompatActivity {
     private final String TAG = "Sample";
     FirebaseFirestore db;
     String totalScore, largestScore, smallestScore;
+
+
+
+    ListenerRegistration registration;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -398,7 +405,7 @@ public class ProfilePage extends AppCompatActivity {
     private void updateScore() {
 
         // Users (collection) -> username (document) -> QR codes (sub-collection) -> hex (document) -> score (field)
-        db.collection("Users").document(username).collection("QR codes")
+        registration = db.collection("Users").document(username).collection("QR codes")
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
@@ -432,18 +439,24 @@ public class ProfilePage extends AppCompatActivity {
                             highScore.setText(String.format("Highest Score: %s", "0"));
                             lowScore.setText(String.format("Lowest Score: %s", "0"));
                             profileTotal.setText(String.format("Total Score: %s", "0"));
+//                            registration.remove();
 
                         }
                         else {
+
                             db.collection("Users").document(username).update("Highest Score", String.valueOf(list_temp.get(list_temp.size() - 1)));
                             db.collection("Users").document(username).update("Lowest Score", String.valueOf(list_temp.get(0)));
                             db.collection("Users").document(username).update("Total Score", String.valueOf(sum));
+
                             highScore.setText(String.format("Highest Score: %s", list_temp.get(list_temp.size() - 1)));
                             lowScore.setText(String.format("Lowest Score: %s", list_temp.get(0)));
                             profileTotal.setText(String.format("Total Score: %s", sum));
+//                            registration.remove();
+
                         }
                     }
                 });
+
     }
 
     public static void hideKeyboard(Activity activity) {

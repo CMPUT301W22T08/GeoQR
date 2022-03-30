@@ -28,6 +28,7 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -39,13 +40,19 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
 import com.google.gson.Gson;
 
 import java.io.ByteArrayOutputStream;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Objects;
@@ -58,6 +65,7 @@ public class addQR extends AppCompatActivity {
 
     // Define values that's gonna display on the xml
     private String UserName, notice;
+
     private Integer QRScore;
     private Boolean add_img = false;
     private Boolean add_g  = false;
@@ -69,6 +77,8 @@ public class addQR extends AppCompatActivity {
     FirebaseFirestore db;
     DocumentReference docRef;
     private FusedLocationProviderClient fusedLocationClient;
+
+    ArrayList<Integer> list_temp = new ArrayList<>();
 
     // Define variables that's going to be used inside this class
     TextView QRInfo;
@@ -226,10 +236,14 @@ public class addQR extends AppCompatActivity {
                 QR_img_view.setVisibility(View.GONE);
             }
         });
+        
+        Log.d(TAG, "onCreate: this also passesssssssssssssss");
+        
         // get all data to the QR database and go back
         add_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Log.d(TAG, "onClick: this pass hereeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
                 docRef = db.collection("Users")
                         .document(UserName)
                         .collection("QR codes")
@@ -241,6 +255,7 @@ public class addQR extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             boolean exist = task.getResult().exists();
                             if (!exist) {
+                                Log.d(TAG, "onComplete: this is passing here");
                                 add_user_db();
                                 add_qr_db(location_get);
                                 goBack(0);
@@ -311,6 +326,7 @@ public class addQR extends AppCompatActivity {
                 .collection("QR codes")
                 .document(score.getQRHex());
 
+        
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -471,35 +487,36 @@ public class addQR extends AppCompatActivity {
     /**
      * when added new qr code, need to update total score
      */
-    private void total_score_and_count(){
-
-        DocumentReference doc = db.collection("Users").document(UserName);
-        doc.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-
-                int hi_sco = Integer.valueOf(documentSnapshot.getString("Highest Score"));
-                int lo_sco = Integer.valueOf(documentSnapshot.getString("Lowest Score"));
-                int total_sco = Integer.valueOf(documentSnapshot.getString("Total Score"));
-
-                int current_Qr_sco = score.find_total();
-
-
-                if(lo_sco > current_Qr_sco || lo_sco == 0){
-                    doc.update("Lowest Score",String.valueOf(current_Qr_sco));
-                }
-
-                if(hi_sco < current_Qr_sco){
-                    doc.update("Highest Score",String.valueOf(current_Qr_sco));
-                }
-
-                doc.update("Total Score",String.valueOf(total_sco + current_Qr_sco));
-
-                System.out.print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"+String.valueOf(total_sco + current_Qr_sco));
-            }
-        });
-
-    }
+//    private void total_score_and_count(){
+//
+//        DocumentReference doc = db.collection("Users").document(UserName);
+//        doc.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+//            @Override
+//            public void onSuccess(DocumentSnapshot documentSnapshot) {
+//
+//                int hi_sco = Integer.valueOf(documentSnapshot.getString("Highest Score"));
+//                int lo_sco = Integer.valueOf(documentSnapshot.getString("Lowest Score"));
+//                int total_sco = Integer.valueOf(documentSnapshot.getString("Total Score"));
+//
+//                int current_Qr_sco = score.find_total();
+//                Log.d(TAG, "onSuccess: total score is "+total_sco);
+//
+//                if(lo_sco > current_Qr_sco || lo_sco == 0){
+//                    doc.update("Lowest Score",String.valueOf(current_Qr_sco));
+//                }
+//
+//                if(hi_sco < current_Qr_sco){
+//                    doc.update("Highest Score",String.valueOf(current_Qr_sco));
+//                }
+//
+//                doc.update("Total Score",String.valueOf(total_sco + current_Qr_sco));
+//
+//                Log.d(TAG, "onSuccess: total score is "+String.valueOf(total_sco + current_Qr_sco));
+//
+//            }
+//        });
+//
+//    }
 
     /**
      * when user return to application
@@ -519,5 +536,48 @@ public class addQR extends AppCompatActivity {
         // Add the following line to unregister the Sensor Manager onPause
         mSensorManager.unregisterListener(mShakeDetector);
         super.onPause();
+    }
+
+    private void total_score_and_count(){
+        db.collection("Users").document(UserName).collection("QR codes")
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                        System.out.println("I am here");
+                        if (error != null) {
+                            Log.w(TAG, "Listen failed.", error);
+                            return;
+                        }
+                        list_temp.clear();
+                        assert value != null;
+                        for (QueryDocumentSnapshot doc : value) {
+                            if (doc != null) {
+                                String score = doc.getString("Score");
+                                assert score != null;
+                                int int_score = Integer.parseInt(score);
+                                list_temp.add(int_score);
+                            }
+                            else {
+                                System.out.println("doc == null");
+                            }
+                        }
+                        Collections.sort(list_temp);
+                        int sum = 0;
+                        for(int i = 0; i < list_temp.size(); i++)
+                            sum += list_temp.get(i);
+
+                        if (list_temp.isEmpty()) {
+                            db.collection("Users").document(UserName).update("Highest Score", String.valueOf(0));
+                            db.collection("Users").document(UserName).update("Lowest Score", String.valueOf(0));
+                            db.collection("Users").document(UserName).update("Total Score", String.valueOf(0));
+                        }
+                        else {
+                            db.collection("Users").document(UserName).update("Highest Score", String.valueOf(list_temp.get(list_temp.size() - 1)));
+                            db.collection("Users").document(UserName).update("Lowest Score", String.valueOf(list_temp.get(0)));
+                            db.collection("Users").document(UserName).update("Total Score", String.valueOf(sum));
+                        }
+                    }
+                });
+
     }
 }
