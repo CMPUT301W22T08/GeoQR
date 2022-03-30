@@ -39,7 +39,8 @@ public class ProfileTest {
     }
 
     /**
-     * clicks an item in the profile list to bring to details page
+     * clicks an item in the profile list to bring to details page, edit comment
+     * then return to main profile page
      * @throws Exception
      */
     @Test
