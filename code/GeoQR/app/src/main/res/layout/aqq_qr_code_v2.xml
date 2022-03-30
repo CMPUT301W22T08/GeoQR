@@ -6,14 +6,14 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:scrollbars="vertical"
-    tools:context=".addQR">
+    tools:context=".addQR" >
 
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical" >
-    <!--Username-->
+        <!--Username-->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -212,7 +212,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
-                android:autofillHints="no"
+                android:autofillHints=""
                 android:ems="10"
                 android:lines="10"
                 android:hint="@string/comment_hint"
@@ -254,8 +254,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:gravity="center"
-            android:scrollbars="vertical"
-            android:orientation="horizontal">
+            android:text="@string/delete_image"
+            tools:ignore="ButtonStyle" >
 
             <ImageView
                 android:id="@+id/QRImg"
@@ -266,11 +266,8 @@
                 android:layout_weight="1"
                 tools:srcCompat="@tools:sample/avatars"
                 android:scrollbars="vertical"
-                tools:ignore="InefficientWeight" />
-
+                android:orientation="horizontal" />
         </LinearLayout>
-
-
 
         <!--button save-->
         <LinearLayout
