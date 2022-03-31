@@ -217,16 +217,10 @@ public class LoginPage extends AppCompatActivity {
     private void load() {
         SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
         String get_user = sharedPreferences.getString("username", null);
-        System.out.println(get_user);
         if (get_user != null) {
             username = get_user;
             etUsername.setText(username);
             checkIfAdmin(username);
-//            Intent camScan = new Intent(LoginPage.this, ScanQR.class);
-//            Toast.makeText(getApplicationContext(), String.format("Login as '%s'", username), Toast.LENGTH_LONG).show();
-//            camScan.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//            startActivity(camScan);
-//            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
         }
     }
 
@@ -261,7 +255,6 @@ public class LoginPage extends AppCompatActivity {
         if (requestCode == REQUEST_CODE_ASK_PERMISSIONS) {
             for (int index = permissions.length - 1; index >= 0; --index) {
                 if (grantResults[index] != PackageManager.PERMISSION_GRANTED) {
-                    System.out.println(permissions[index]);
 
                     if (permissions[index].equals("android.permission.ACCESS_FINE_LOCATION")) {
                         Toast.makeText(this, "Location Permission Needed", Toast.LENGTH_LONG).show();

@@ -104,7 +104,6 @@ public class ProfilePage extends AppCompatActivity {
             @Override
             public void onShake(int count) {
                 if (check_dialog == 0) { // to be implemented as the show alert dialog
-                    System.out.println("check_dialog = 0");
                     check_dialog = 1;
                     AlertDialog.Builder alert = new AlertDialog.Builder(ProfilePage.this);
                     AlertDialog alertDialog = alert.create();
@@ -168,10 +167,8 @@ public class ProfilePage extends AppCompatActivity {
                             @Override
                             public void onSuccess(Void unused) {
                                 Log.d(TAG, "User - QR Successfully deleted");
-                                System.out.println("User - QR Successfully deleted");
                             }
-                        })
-                            .addOnFailureListener(new OnFailureListener() {
+                        }).addOnFailureListener(new OnFailureListener() {
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
                                     Log.d(TAG, "User - QR Delete Failed");
@@ -186,7 +183,6 @@ public class ProfilePage extends AppCompatActivity {
                                 @Override
                                 public void onSuccess(Void unused) {
                                     Log.d(TAG, "QR - User Successfully Deleted");
-                                    System.out.println("QR - User Successfully Deleted");
 
                                     if (Integer.parseInt(current_score) == Integer.parseInt(largestScore)) {
                                         updateScore();
@@ -340,7 +336,6 @@ public class ProfilePage extends AppCompatActivity {
                         profileTotal.setText(String.format("Total Score: %s", totalScore));
                         highScore.setText(String.format("Highest Score: %s", largestScore));
                         lowScore.setText(String.format("Lowest Score: %s", smallestScore));
-                        System.out.printf("%s, %s, %s, %s\n", contact, totalScore, largestScore, smallestScore);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -359,7 +354,6 @@ public class ProfilePage extends AppCompatActivity {
             entryDataList.clear();
             assert queryDocumentSnapshots != null;
             for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
-                Log.d(TAG, String.valueOf(doc.getData().get("QR codes")));
                 content = (String) doc.getData().get("Content");
                 String score = (String) doc.getData().get("Score");
                 String qrcode = doc.getId();
@@ -403,7 +397,6 @@ public class ProfilePage extends AppCompatActivity {
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                        System.out.println("I am here");
                         if (error != null) {
                             Log.w(TAG, "Listen failed.", error);
                             return;
@@ -433,7 +426,6 @@ public class ProfilePage extends AppCompatActivity {
                             highScore.setText(String.format("Highest Score: %s", "0"));
                             lowScore.setText(String.format("Lowest Score: %s", "0"));
                             profileTotal.setText(String.format("Total Score: %s", "0"));
-//                            registration.remove();
 
                         }
                         else {
@@ -445,7 +437,6 @@ public class ProfilePage extends AppCompatActivity {
                             highScore.setText(String.format("Highest Score: %s", list_temp.get(list_temp.size() - 1)));
                             lowScore.setText(String.format("Lowest Score: %s", list_temp.get(0)));
                             profileTotal.setText(String.format("Total Score: %s", sum));
-//                            registration.remove();
 
                         }
                     }

@@ -28,7 +28,7 @@ public class ProfileList extends ArrayAdapter<ListEntry> {
         this.context = context;
     }
 
-    /*
+    /**
      * ADD SORT FUNCTIONALITY
      *
      */

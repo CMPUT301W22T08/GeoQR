@@ -69,7 +69,6 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //Log.d("testing","Activated onCreate");
 
         binding = com.example.geoqr.databinding.ActivityMapBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -90,7 +89,6 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void onShake(int count) {
                 if (check_dialog == 0) { // to be implemented as the show alert dialog
-                    System.out.println("check_dialog = 0");
                     check_dialog = 1;
                     AlertDialog.Builder alert = new AlertDialog.Builder(MapActivity.this);
                     AlertDialog alertDialog = alert.create();
@@ -134,7 +132,6 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback
 
     protected void onResume(Bundle saveInstanceState) {
         super.onResume();
-        Log.d("testing","Activated onResume");
         updateUserPosition();
     }
 
@@ -192,18 +189,15 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback
         fusedLocationClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
             @Override
             public void onSuccess(Location location) {
-                //Log.d("testing","onSuccess Succeeded!");
                 if (location != null) {
                     tempPos = new LatLng(location.getLatitude(),location.getLongitude());
                     mMap.moveCamera(CameraUpdateFactory.zoomTo(15.0f));
                     mMap.moveCamera(CameraUpdateFactory.newLatLng(tempPos));
-                    //Log.d("testing","Value after succeed: " + tempPos);
                 } else {
                     // default location. In case the listener fails to find a location
                     tempPos = new LatLng(53.523988,-113.527551);
                     mMap.moveCamera(CameraUpdateFactory.zoomTo(15.0f));
                     mMap.moveCamera(CameraUpdateFactory.newLatLng(tempPos));
-                    //Log.d("testing","Value after failure: " + tempPos);
                 }
             }
         });

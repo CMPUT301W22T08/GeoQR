@@ -110,7 +110,6 @@ public class ScanQR extends AppCompatActivity {
             @Override
             public void onShake(int count) {
                 if (check_dialog == 0) { // to be implemented as the show alert dialog
-                    System.out.println("check_dialog = 0");
                     check_dialog = 1;
                     AlertDialog.Builder alert = new AlertDialog.Builder(ScanQR.this);
                     AlertDialog alertDialog = alert.create();

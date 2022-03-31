@@ -151,7 +151,6 @@ public class addQR extends AppCompatActivity {
             @Override
             public void onShake(int count) {
                 if (check_dialog == 0) { // to be implemented as the show alert dialog
-                    System.out.println("check_dialog = 0");
                     check_dialog = 1;
                     AlertDialog.Builder alert = new AlertDialog.Builder(addQR.this);
                     AlertDialog alertDialog = alert.create();
@@ -237,13 +236,10 @@ public class addQR extends AppCompatActivity {
             }
         });
         
-        Log.d(TAG, "onCreate: this also passesssssssssssssss");
-        
         // get all data to the QR database and go back
         add_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d(TAG, "onClick: this pass hereeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
                 docRef = db.collection("Users")
                         .document(UserName)
                         .collection("QR codes")
@@ -255,7 +251,6 @@ public class addQR extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             boolean exist = task.getResult().exists();
                             if (!exist) {
-                                Log.d(TAG, "onComplete: this is passing here");
                                 add_user_db();
                                 add_qr_db(location_get);
                                 goBack(0);
@@ -304,7 +299,6 @@ public class addQR extends AppCompatActivity {
      */
     private void goBack(int code){
         Intent camera = new Intent(addQR.this, ScanQR.class);
-        System.out.println("Checkpoint 0");
         if (code == 0) {
             Toast.makeText(getApplicationContext(), "Data saved successfully", Toast.LENGTH_LONG).show();
         }
@@ -511,7 +505,6 @@ public class addQR extends AppCompatActivity {
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                        System.out.println("I am here");
                         if (error != null) {
                             Log.w(TAG, "Listen failed.", error);
                             return;

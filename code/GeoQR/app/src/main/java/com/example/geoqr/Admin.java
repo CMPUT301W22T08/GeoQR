@@ -59,7 +59,6 @@ public class Admin {
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot document : task.getResult()) {
-                        Log.d("GG: ", document.toString());
                         AdminPlayerTuple player = new AdminPlayerTuple(document.getId(),
                                 Integer.parseInt((String) document.get("Total Score")));
                         playerAdapter.add(player);
@@ -102,7 +101,6 @@ public class Admin {
     public void deleteQRCodes() {
         for (AdminQRTuple qrTuple: qrSelection) {
             if (db != null) {
-                // Log.d("YIKES: ", qrTuple.getId());
                 // 1. Delete that specific user from the corresponding document in
                 // "QR code" Collection
                 db.collection("QR codes")
@@ -158,8 +156,6 @@ public class Admin {
                         lscore = lscore == -1 ? qrScore : Math.min(lscore, qrScore);
                     }
                 }
-
-                Log.d("Score: ", tscore + " " + hscore + " " + lscore);
 
                 // 1. Update the score(s) in DB
                 Map<String, Object> scores = new HashMap<>();
