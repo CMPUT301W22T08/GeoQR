@@ -349,7 +349,6 @@ public class addQR extends AppCompatActivity {
         });
     }
 
-
     /**
      * prepare the data to be added to the user part of database
      * @return user_qr - hashmap of user content
@@ -547,6 +546,5 @@ public class addQR extends AppCompatActivity {
                         }
                     }
                 });
-
     }
 }

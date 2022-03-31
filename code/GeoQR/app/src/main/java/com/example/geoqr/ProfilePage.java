@@ -73,12 +73,6 @@ public class ProfilePage extends AppCompatActivity {
     FirebaseFirestore db;
     String totalScore, largestScore, smallestScore;
 
-
-
-    ListenerRegistration registration;
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -405,7 +399,7 @@ public class ProfilePage extends AppCompatActivity {
     private void updateScore() {
 
         // Users (collection) -> username (document) -> QR codes (sub-collection) -> hex (document) -> score (field)
-        registration = db.collection("Users").document(username).collection("QR codes")
+        db.collection("Users").document(username).collection("QR codes")
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
