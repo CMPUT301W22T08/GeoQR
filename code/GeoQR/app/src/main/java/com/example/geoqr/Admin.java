@@ -52,6 +52,7 @@ public class Admin {
     public void fetch() {
         // Get List of QR codes
         db = FirebaseFirestore.getInstance();
+        Log.d("Debug", "Coming to fetch");
 
         // Get List of Players
         db.collection("Users").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -66,6 +67,7 @@ public class Admin {
                         // Add Players QR to qrAdapter
                         fetchQRsOfPlayer(player);
                     }
+                    Log.d("Debug", "Finishing to fetch");
                 }
                 else {
                     Log.d("Error:", "Error getting documents: ", task.getException());

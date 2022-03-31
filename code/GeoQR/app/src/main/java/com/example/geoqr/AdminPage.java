@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
+import android.icu.util.TimeUnit;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -98,12 +99,15 @@ public class AdminPage extends AppCompatActivity {
         Runnable refresh = new Runnable() {
             @Override
             public void run() {
-                Log.d(TAG, "run: !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!11");
+                Log.d("Debug", "fetching");
                 // data request
-                handler.postDelayed(this, 5000);
+                admin.fetch();
+                qrCodeList.setAdapter(admin.getQRAdapter());
+                playerList.setAdapter(admin.getPlayerAdapter());
+                handler.postDelayed(this, 10000);
             }
         };
-        handler.postDelayed(refresh, 5000);
+        handler.postDelayed(refresh, 10000);
 
 
         // Set Listeners
