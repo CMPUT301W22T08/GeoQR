@@ -1,5 +1,7 @@
 package com.example.geoqr;
 
+import static android.service.controls.ControlsProviderService.TAG;
+
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -7,6 +9,9 @@ import android.content.SharedPreferences;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.os.CountDownTimer;
+import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -86,6 +91,20 @@ public class AdminPage extends AppCompatActivity {
 
         qrCodeList.setAdapter(admin.getQRAdapter());
         playerList.setAdapter(admin.getPlayerAdapter());
+
+        
+        //https://stackoverflow.com/questions/68895807/how-to-auto-refresh-data-in-android-studio-every-second
+        final Handler handler = new Handler();
+        Runnable refresh = new Runnable() {
+            @Override
+            public void run() {
+                Log.d(TAG, "run: !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!11");
+                // data request
+                handler.postDelayed(this, 5000);
+            }
+        };
+        handler.postDelayed(refresh, 5000);
+
 
         // Set Listeners
         deleteBtn.setOnClickListener(new View.OnClickListener() {
