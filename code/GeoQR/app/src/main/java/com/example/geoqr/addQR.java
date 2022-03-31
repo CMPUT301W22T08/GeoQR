@@ -252,7 +252,7 @@ public class addQR extends AppCompatActivity {
                             boolean exist = task.getResult().exists();
                             if (!exist) {
                                 add_user_db();
-                                add_qr_db(location_get);
+                                add_qr_db();
                                 goBack(0);
                             } else {
                                 Toast.makeText(getApplicationContext(), "The QR has been added before", Toast.LENGTH_LONG).show();
@@ -417,7 +417,7 @@ public class addQR extends AppCompatActivity {
     /**
      * add the data to the qr section of firestore
      */
-    public void add_qr_db(Location location){
+    public void add_qr_db(){
         final CollectionReference QR_ref = db.collection("QR codes");
 
         QR_ref.document(score.getQRHex()).set(qr_db_content(), SetOptions.merge())
