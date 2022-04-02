@@ -223,6 +223,15 @@ public class ProfilePage extends AppCompatActivity {
             overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
         });
 
+        final FloatingActionButton helpButton = findViewById(R.id.manual);
+        helpButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent manual = new Intent(ProfilePage.this, Manual.class);
+                startActivity(manual);
+            }
+        });
+
         Button generateUserQR = findViewById(R.id.generate_login_qr);
         generateUserQR.setOnClickListener(new View.OnClickListener() {
             @Override
