@@ -64,4 +64,8 @@ public class User implements Parcelable {
     public int getTotalQrs() {
         return qrs.size();
     }
+
+    public ArrayList<QR> getQrs() {
+        return qrs;
+    }
 }

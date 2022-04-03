@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -12,13 +13,16 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 public class ScoreboardUserFragment extends DialogFragment {
+
     User user;
+    ScoreboardQRAdapter qrAdapter;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         user = (User) getArguments().get("User");
+        qrAdapter = new ScoreboardQRAdapter(getContext(), user.getQrs());
     }
 
     @NonNull
@@ -35,6 +39,9 @@ public class ScoreboardUserFragment extends DialogFragment {
 
         TextView tq = view.findViewById(R.id.fragment_scoreboard_user_total_qr);
         tq.setText(String.valueOf(user.getTotalQrs()));
+
+        ListView qrView = view.findViewById(R.id.fragment_scoreboard_user_qrs);
+        qrView.setAdapter(qrAdapter);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 

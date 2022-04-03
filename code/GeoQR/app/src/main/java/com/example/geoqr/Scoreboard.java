@@ -25,7 +25,7 @@ public class Scoreboard {
     FirebaseFirestore db;
 
     String playerName; // Player name
-    User player; // The object corresponding to the player
+    User player; // The player object
 
     RankingUpdatable callee;
 
@@ -74,7 +74,9 @@ public class Scoreboard {
                             ArrayList<QR> qrs = new ArrayList<>();
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 int score = Integer.parseInt((String) document.get("Score"));
-                                QR qr = new QR((String) document.getId(), (String) document.get("Content"), score);
+                                QR qr = new QR((String) document.getId(),
+                                               (String) document.get("Content"),
+                                                username, score);
                                 qrs.add(qr);
                             }
 

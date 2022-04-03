@@ -7,7 +7,7 @@
     android:gravity="center" >
 
     <TextView
-        android:id="@+id/list_admin_qr_code"
+        android:id="@+id/list_scoreboard_qr_contents"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="5dp"
@@ -22,18 +22,7 @@
         android:textSize="15sp" />
 
     <TextView
-        android:id="@+id/list_admin_qr_player"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:textSize="15sp"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:text="TextView" />
-
-    <TextView
-        android:id="@+id/list_admin_qr_score"
+        android:id="@+id/list_scoreboard_qr_score"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"

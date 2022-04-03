@@ -29,7 +29,7 @@ public class AdminTest {
     }
 
     private Admin admin;
-    private ArrayList<AdminQRTuple> mockQRs;
+    private ArrayList<QR> mockQRs;
     private ArrayList<AdminPlayerTuple> mockPlayers;
 
     @Before
@@ -39,14 +39,14 @@ public class AdminTest {
         mockQRs = new ArrayList<>();
         mockPlayers = new ArrayList<>();
 
-        mockQRs.add(new AdminQRTuple("A","ABCD", "wUw", 20));
-        mockQRs.add(new AdminQRTuple("B","DCBA", "uWu", 30));
-        mockQRs.add(new AdminQRTuple("C", "BCDA", "wUw", 10));
-        mockQRs.add(new AdminQRTuple("D", "ABCD", "uWu", 20));
-        mockQRs.add(new AdminQRTuple("E", "AABC", "poppy", 40));
-        mockQRs.add(new AdminQRTuple("F", "BBBD", "ursa", 60));
-        mockQRs.add(new AdminQRTuple("G", "BCDA","ursa",10));
-        mockQRs.add(new AdminQRTuple("H", "DDDD", "bat", 100));
+        mockQRs.add(new QR("A","ABCD", "wUw", 20));
+        mockQRs.add(new QR("B","DCBA", "uWu", 30));
+        mockQRs.add(new QR("C", "BCDA", "wUw", 10));
+        mockQRs.add(new QR("D", "ABCD", "uWu", 20));
+        mockQRs.add(new QR("E", "AABC", "poppy", 40));
+        mockQRs.add(new QR("F", "BBBD", "ursa", 60));
+        mockQRs.add(new QR("G", "BCDA","ursa",10));
+        mockQRs.add(new QR("H", "DDDD", "bat", 100));
 
 
         mockPlayers.add(new AdminPlayerTuple("wUw", 30));
