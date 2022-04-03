@@ -1,6 +1,9 @@
 package com.example.geoqr;
 
+import static org.junit.Assert.assertEquals;
+
 import android.widget.EditText;
+import android.widget.TextView;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
@@ -60,6 +63,65 @@ public class ProfileTest {
         solo.clickOnView(solo.getView(R.id.detail_back));
         solo.assertCurrentActivity("Wrong activity", ProfilePage.class);
     }
+
+    /**
+     * clicks on help button, checks if the manual activity is displayed
+     * if not, raise error, if so, return to camera screen, then back to
+     * profile and check if back in profile page
+     * @throws Exception
+     */
+    @Test
+    public void clickManual() throws Exception {
+
+        // presses back arrow, checks if back in profile pag
+        solo.clickOnView(solo.getView(R.id.manual));
+        solo.assertCurrentActivity("Wrong activity", Manual.class);
+
+        solo.clickOnView(solo.getView(R.id.manual_scan_btn));
+        solo.assertCurrentActivity("Wrong activity", ScanQR.class);
+
+        solo.clickOnView(solo.getView(R.id.profile_btn));
+        solo.assertCurrentActivity("Wrong activity", ProfilePage.class);
+
+    }
+
+    /**
+     * clicks on Edit button to add contact info, puts test string
+     * then checks to see if that test string is displayed in the view
+     * @throws Exception
+     */
+    @Test
+    public void editContact() throws Exception {
+
+        // click on contacts edit button, clears, and checks if has been cleared
+        solo.clickOnButton("Edit");
+        solo.enterText((EditText) solo.getView(R.id.contact_edit), "");
+        solo.clickOnButton("O");
+        String emptyString = ((EditText) solo.getView(R.id.contact_edit)).getText().toString();
+        assertEquals(emptyString, "");
+
+
+        // clicks edit button, adds contact string then checks if that string is displayed
+        solo.clickOnButton("Edit");
+        solo.enterText((EditText) solo.getView(R.id.contact_edit), "contact tests String");
+        solo.clickOnButton("O");
+        String testString = ((EditText) solo.getView(R.id.contact_edit)).getText().toString();
+        assertEquals(testString, "contact tests String");
+
+        // clicks edit button, adds contact string but clicks cancel, makes sure it has not been added
+        solo.clickOnButton("Edit");
+        solo.enterText((EditText) solo.getView(R.id.contact_edit), "this string should not be saved");
+        solo.clickOnButton("X");
+        String cancelString = ((TextView) solo.getView(R.id.show_contact)).getText().toString();
+        assertEquals(cancelString, "contact tests String");
+
+        // clicks edit button, checks to see if string does not exceed max length of 20 characters
+        solo.clickOnButton("Edit");
+        String lengthTest = ((TextView) solo.getView(R.id.show_contact)).getText().toString();
+        assertEquals(lengthTest.length(), 20);
+
+    }
+
 
 
 }
