@@ -51,7 +51,7 @@
             android:screenOrientation="nosensor"
             android:exported="true" />
         <activity
-            android:name=".ScoreBoardActivity"
+            android:name=".ScoreboardActivity"
             android:screenOrientation="nosensor"
             android:exported="true" />
         <activity

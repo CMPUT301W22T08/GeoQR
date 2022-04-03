@@ -61,7 +61,7 @@ public class ScanStatusQR extends AppCompatActivity {
                     public void run() {
                         // pass content back to the login page for authentication
                         content = result.getText();
-                        Intent passBack = new Intent(ScanStatusQR.this, ScoreBoardActivity.class);
+                        Intent passBack = new Intent(ScanStatusQR.this, ScoreboardActivity.class);
                         passBack.putExtra("username", content);
                         passBack.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         setResult(20, passBack);
