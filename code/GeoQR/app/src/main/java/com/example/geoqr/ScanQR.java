@@ -92,7 +92,7 @@ public class ScanQR extends AppCompatActivity {
                             overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
                         }
                         else if (x1 > x2) {
-                            Intent right = new Intent(ScanQR.this, ScoreBoardActivity.class);
+                            Intent right = new Intent(ScanQR.this, ScoreboardActivity.class);
                             right.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(right);
                             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);

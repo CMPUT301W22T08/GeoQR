@@ -25,7 +25,7 @@ import com.google.android.material.tabs.TabLayout;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class ScoreBoardActivity extends AppCompatActivity implements Scoreboard.RankingUpdatable {
+public class ScoreboardActivity extends AppCompatActivity implements Scoreboard.RankingUpdatable {
 
     final String[] scoreText = {"Total Score", "Highest QR Score", "Number of QRs"};
 
@@ -37,7 +37,7 @@ public class ScoreBoardActivity extends AppCompatActivity implements Scoreboard.
     private TabLayout tabs;
     private ListView rankingView;
     private EditText searchBar;
-    private Button clearBtn;
+    private Button backBtn;
     private Button scanBtn;
 
     private ScoreboardRankingAdapter rankingAdapter;
@@ -52,23 +52,27 @@ public class ScoreBoardActivity extends AppCompatActivity implements Scoreboard.
         rankingView = findViewById(R.id.scoreboard_ranking);
         tabs = findViewById(R.id.scoreboard_tabs);
         searchBar = findViewById(R.id.scoreboard_searchbar);
-        clearBtn = findViewById(R.id.scoreboard_clear_search);
         scanBtn = findViewById(R.id.scoreboard_scan_status_qr);
+        backBtn = findViewById(R.id.scoreboard_go_back);
+
+        backBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Go back to ScanQR
+                Intent intent = new Intent(ScoreboardActivity.this, ScanQR.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+            }
+        });
 
         scanBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 // Goto the ScanStatusQR
-                Intent scan = new Intent(ScoreBoardActivity.this, ScanStatusQR.class);
+                Intent scan = new Intent(ScoreboardActivity.this, ScanStatusQR.class);
                 activityResultLauncher.launch(scan);
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
-            }
-        });
-
-        clearBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                scoreboard.filterUsers(null);
             }
         });
 
@@ -172,7 +176,7 @@ public class ScoreBoardActivity extends AppCompatActivity implements Scoreboard.
 
     @Override
     public void onBackPressed() {
-        Intent intent = new Intent(ScoreBoardActivity.this, ScanQR.class);
+        Intent intent = new Intent(ScoreboardActivity.this, ScanQR.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
