@@ -1,22 +1,17 @@
 package com.example.geoqr;
 
-import static android.service.controls.ControlsProviderService.TAG;
-
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
-import android.icu.util.TimeUnit;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -32,7 +27,6 @@ import java.util.Objects;
 public class AdminPage extends AppCompatActivity {
     private int selectedBtnId;
     private boolean deleteBtnDisabled;
-    private EditText searchBar;
 
     // Buttons
     private Button playerBtn;
@@ -78,9 +72,6 @@ public class AdminPage extends AppCompatActivity {
         playerList = findViewById(R.id.admin_player_list);
 
         qrCodeList = findViewById(R.id.admin_qr_code_list);
-
-        // Search Bar
-        searchBar = findViewById(R.id.admin_search);
 
         // Set default state
         selectedBtnId = R.id.admin_select_players;
@@ -259,8 +250,6 @@ public class AdminPage extends AppCompatActivity {
             qrCodeList.setAdapter(admin.getQRAdapter());
             qrCodeList.setVisibility(View.VISIBLE);
 
-            searchBar.setHint("Search QR Codes");
-
             admin.resetPlayerSelection();
         }
 
@@ -275,8 +264,6 @@ public class AdminPage extends AppCompatActivity {
 
             playerList.setVisibility(View.VISIBLE);
             playerList.setAdapter(admin.getPlayerAdapter());
-
-            searchBar.setHint("Search Players");
 
             admin.resetQRSelection();
         }
