@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/fragment_scoreboard_user_total_score_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Total Score: " />
+
+    <TextView
+        android:id="@+id/fragment_scoreboard_user_total_score"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="false"
+        android:layout_alignParentEnd="true"
+        android:layout_toRightOf="@id/fragment_scoreboard_user_total_score_text" />
+
+    <TextView
+        android:id="@+id/fragment_scoreboard_user_highest_score_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/fragment_scoreboard_user_total_score_text"
+        android:text="Highest Score: " />
+
+    <TextView
+        android:id="@+id/fragment_scoreboard_user_highest_score"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/fragment_scoreboard_user_total_score"
+        android:layout_alignParentRight="true"
+        android:layout_toRightOf="@id/fragment_scoreboard_user_highest_score_text" />
+
+    <TextView
+        android:id="@+id/fragment_scoreboard_user_total_qr_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/fragment_scoreboard_user_highest_score_text"
+        android:text="Total QR: " />
+
+    <TextView
+        android:id="@+id/fragment_scoreboard_user_total_qr"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/fragment_scoreboard_user_highest_score"
+        android:layout_alignParentRight="true"
+        android:layout_toRightOf="@id/fragment_scoreboard_user_total_qr_text" />
+</RelativeLayout>

@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/scoreboard_player_metric"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/scoreboard_tabs"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/scoreboard_player_metric_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="0dp"
+            android:padding="6dp"
+            android:text="Your Ranking: " />
+
+        <TextView
+            android:id="@+id/scoreboard_player_ranking"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="6dp"
+            android:text="None"
+            android:textAlignment="viewStart" />
+
+    </LinearLayout>
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/scoreboard_tabs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/tab_total_score"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Total Score" />
+
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/tab_unique_qr"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Unique QR Score" />
+
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/tab_no_qrs"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Number of QRs" />
+    </com.google.android.material.tabs.TabLayout>
+
+    <LinearLayout
+        android:id="@+id/scoreboard_ranking_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/scoreboard_search_group"
+        android:layout_below="@id/scoreboard_player_metric"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/scoreboard_ranking_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/scoreboard_ranking_header_rank"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:padding="6dp"
+                android:text="Rank"
+                android:textAlignment="center" />
+
+            <TextView
+                android:id="@+id/scoreboard_ranking_header_user"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:padding="6dp"
+                android:text="User"
+                android:textAlignment="center" />
+
+            <TextView
+                android:id="@+id/scoreboard_ranking_header_score"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:padding="6dp"
+                android:text="Total Score"
+                android:textAlignment="center" />
+        </LinearLayout>
+
+        <ListView
+            android:id="@+id/scoreboard_ranking"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/scoreboard_search_group"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/scoreboard_searchbar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="10"
+            android:hint="Search"
+            android:inputType="textPersonName" />
+
+        <Button
+            android:id="@+id/scoreboard_clear_search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Clear" />
+
+        <Button
+            android:id="@+id/scoreboard_scan_status_qr"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Scan" />
+    </LinearLayout>
+</RelativeLayout>
