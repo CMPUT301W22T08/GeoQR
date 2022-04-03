@@ -39,4 +39,11 @@ public class AdminQRAdapter extends ArrayAdapter<QR> {
 
         return view;
     }
+
+    @Override
+    public void add(QR qr) {
+        if (!qrList.contains(qr)) {
+            super.add(qr);
+        }
+    }
 }

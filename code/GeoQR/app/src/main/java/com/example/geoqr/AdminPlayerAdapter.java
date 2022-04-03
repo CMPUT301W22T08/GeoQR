@@ -1,7 +1,6 @@
 package com.example.geoqr;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,5 +36,12 @@ public class AdminPlayerAdapter extends ArrayAdapter<AdminPlayerTuple> {
         score.setText(String.valueOf(player.getScore()));
 
         return view;
+    }
+
+    @Override
+    public void add(AdminPlayerTuple playerTuple) {
+        if (!playerList.contains(playerTuple)) {
+            super.add(playerTuple);
+        }
     }
 }

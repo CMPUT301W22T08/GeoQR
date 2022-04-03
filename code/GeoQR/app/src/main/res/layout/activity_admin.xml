@@ -38,27 +38,17 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <EditText
-            android:id="@+id/admin_search"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:ems="10"
-            android:hint="Search Players"
-            android:inputType="textPersonName"
-            android:textAlignment="viewStart" />
-
         <Button
             android:id="@+id/admin_delete_btn"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="0"
             android:layout_marginStart="5dp"
             android:layout_marginEnd="5dp"
+            android:layout_weight="0"
             android:backgroundTint="@color/disabled"
-            android:minWidth="20dp"
             android:enabled="false"
-            app:icon="@android:drawable/ic_menu_delete"
+            android:minWidth="20dp"
+            android:text="Delete"
             app:iconPadding="0dp" />
     </LinearLayout>
 
