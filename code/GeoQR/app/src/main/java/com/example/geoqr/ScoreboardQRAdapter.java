@@ -15,12 +15,14 @@ import java.util.ArrayList;
 public class ScoreboardQRAdapter extends ArrayAdapter<QR> {
 
     private ArrayList<QR> qrList;
+    private ArrayList<QR> qrSeen;
     private Context ctx;
 
-    public ScoreboardQRAdapter(@NonNull Context context, ArrayList<QR> qrList) {
+    public ScoreboardQRAdapter(Context context, ArrayList<QR> qrList, ArrayList<QR> qrSeen) {
         super(context, 0, qrList);
 
         this.qrList = qrList;
+        this.qrSeen = qrSeen;
         this.ctx = context;
     }
 
@@ -32,9 +34,17 @@ public class ScoreboardQRAdapter extends ArrayAdapter<QR> {
         QR qr = qrList.get(position);
         TextView code = view.findViewById(R.id.list_scoreboard_qr_contents);
         TextView score = view.findViewById(R.id.list_scoreboard_qr_score);
+        TextView seen = view.findViewById(R.id.list_scoreboard_qr_seen);
 
         code.setText(qr.getContent());
         score.setText(String.valueOf(qr.getScore()));
+
+        if (qrSeen.contains(qr)) {
+            seen.setText("Yes");
+        }
+        else {
+            seen.setText("No");
+        }
 
         return view;
     }

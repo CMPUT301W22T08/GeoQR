@@ -12,9 +12,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
+import java.util.ArrayList;
+
 public class ScoreboardUserFragment extends DialogFragment {
 
     User user;
+    ArrayList<QR> qrSeen;
     ScoreboardQRAdapter qrAdapter;
 
     @Override
@@ -22,7 +25,9 @@ public class ScoreboardUserFragment extends DialogFragment {
         super.onCreate(savedInstanceState);
 
         user = (User) getArguments().get("User");
-        qrAdapter = new ScoreboardQRAdapter(getContext(), user.getQrs());
+        qrSeen = getArguments().getParcelableArrayList("QRSeen");
+
+        qrAdapter = new ScoreboardQRAdapter(getContext(), user.getQrs(), qrSeen);
     }
 
     @NonNull

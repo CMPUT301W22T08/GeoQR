@@ -6,12 +6,12 @@ import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class Scoreboard {
 
@@ -20,8 +20,8 @@ public class Scoreboard {
     }
 
     ArrayList<User> users, original;
+    ArrayList<QR> allQRs;
 
-    HashMap<String, ArrayList<User>> commonQRs;
     FirebaseFirestore db;
 
     String playerName; // Player name
@@ -35,7 +35,7 @@ public class Scoreboard {
 
         users = new ArrayList<>();
         original = new ArrayList<>();
-        commonQRs = new HashMap<>();
+        allQRs = new ArrayList<>();
         fetchUserData();
     }
 
@@ -82,13 +82,30 @@ public class Scoreboard {
 
                             User user = new User(username, totalScore, highestScore, qrs);
 
-                            // Update Common QRs
+                            // Update Common QRs and Location
                             for (QR qr: qrs) {
-                                if (!commonQRs.containsKey(qr.getContent())) {
-                                    commonQRs.put(qr.getContent(), new ArrayList<>());
-                                }
+                                allQRs.add(qr);
 
-                                commonQRs.get(qr.getContent()).add(user);
+                                // Set the Location of the QR
+                                db.collection("QR codes").document(qr.getId()).get()
+                                        .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                if (task.isSuccessful()) {
+                                                    DocumentSnapshot document = task.getResult();
+                                                    String latitude = (String) document.get("Latitude");
+                                                    String longitude = (String) document.get("Longitude");
+
+                                                    try {
+                                                        qr.setLoc(Double.parseDouble(latitude),
+                                                                Double.parseDouble(longitude));
+                                                    }
+                                                    catch (NumberFormatException e) {
+                                                        // Strings can't be parsed as doubles
+                                                    }
+                                                }
+                                            }
+                                        });
                             }
 
                             if (user.getName().equals(playerName)) {
@@ -98,6 +115,8 @@ public class Scoreboard {
                             original.add(user);
                             users.add(user);
                             callee.update(false); // Update the dependent class
+
+
                         }
 
                         else {
@@ -147,5 +166,15 @@ public class Scoreboard {
             }
         }
         callee.update(true); // Notify change
+    }
+
+    public boolean qrSeen(QR qr1) {
+        for (QR qr2: allQRs) {
+            if (qr1.getId() != qr2.getId() && qr1.isSame(qr2)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

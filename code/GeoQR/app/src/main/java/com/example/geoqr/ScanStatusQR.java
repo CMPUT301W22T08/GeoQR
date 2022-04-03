@@ -1,6 +1,5 @@
 package com.example.geoqr;
 
-import androidx.appcompat.app.AppCompatActivity;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -8,12 +7,14 @@ import android.os.Bundle;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import com.budiyev.android.codescanner.CodeScanner;
 import com.budiyev.android.codescanner.CodeScannerView;
 import com.budiyev.android.codescanner.DecodeCallback;
 import com.budiyev.android.codescanner.ScanMode;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.zxing.Result;
 
 import java.util.Objects;
@@ -30,6 +31,7 @@ public class ScanStatusQR extends AppCompatActivity {
         setContentView(R.layout.activity_scan_login);
         Objects.requireNonNull(getSupportActionBar()).hide();
         scanLogin = findViewById(R.id.login_view);
+        FloatingActionButton cancel = findViewById(R.id.cancel_btn_login);
 
         // check permissions
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED) {

@@ -75,6 +75,9 @@
             android:name=".ScanLoginQR"
             android:screenOrientation="nosensor" />
         <activity
+            android:name=".ScanStatusQR"
+            android:screenOrientation="nosensor" />
+        <activity
             android:name=".ProfilePage"
             android:exported="true"
             android:screenOrientation="nosensor">

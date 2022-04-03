@@ -13,10 +13,17 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.tabs.TabLayout;
+
+import java.util.ArrayList;
+import java.util.Objects;
 
 public class ScoreBoardActivity extends AppCompatActivity implements Scoreboard.RankingUpdatable {
 
@@ -31,18 +38,32 @@ public class ScoreBoardActivity extends AppCompatActivity implements Scoreboard.
     private ListView rankingView;
     private EditText searchBar;
     private Button clearBtn;
+    private Button scanBtn;
 
     private ScoreboardRankingAdapter rankingAdapter;
+    private ActivityResultLauncher<Intent> activityResultLauncher;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scoreboard);
+        Objects.requireNonNull(getSupportActionBar()).hide();
 
         rankingView = findViewById(R.id.scoreboard_ranking);
         tabs = findViewById(R.id.scoreboard_tabs);
         searchBar = findViewById(R.id.scoreboard_searchbar);
         clearBtn = findViewById(R.id.scoreboard_clear_search);
+        scanBtn = findViewById(R.id.scoreboard_scan_status_qr);
+
+        scanBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Goto the ScanStatusQR
+                Intent scan = new Intent(ScoreBoardActivity.this, ScanStatusQR.class);
+                activityResultLauncher.launch(scan);
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
+            }
+        });
 
         clearBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,13 +101,7 @@ public class ScoreBoardActivity extends AppCompatActivity implements Scoreboard.
         rankingView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                ScoreboardUserFragment userFragment = new ScoreboardUserFragment();
-
-                Bundle args = new Bundle();
-                args.putParcelable("User", rankingAdapter.getItem(i));
-
-                userFragment.setArguments(args);
-                userFragment.show(getSupportFragmentManager(), "Show User");
+                showUserProfile(rankingAdapter.getItem(i));
             }
         });
 
@@ -106,6 +121,53 @@ public class ScoreBoardActivity extends AppCompatActivity implements Scoreboard.
             @Override
             public void onTabReselected(TabLayout.Tab tab) {}
         });
+
+        activityResultLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                new ActivityResultCallback<ActivityResult>() {
+                    @Override
+                    public void onActivityResult(ActivityResult result) {
+                        if (result.getResultCode() == 20) {
+                            Intent content = result.getData();
+                            if (content != null) {
+                                String username = content.getStringExtra("username");
+
+                                ScoreboardUserFragment userFragment = new ScoreboardUserFragment();
+                                Bundle args = new Bundle();
+
+                                for (User u: scoreboard.getUsers()) {
+                                    if (u.getName().equals(username)) {
+                                        showUserProfile(u);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+        );
+    }
+
+    /**
+     * Opens the DialogFragment to show user's profile
+     * @param user
+     */
+    private void showUserProfile(User user) {
+        ScoreboardUserFragment userFragment = new ScoreboardUserFragment();
+
+        // Grab the QRs of the user that have been seen by others
+        ArrayList<QR> qrSeen = new ArrayList<>();
+        for (QR qr: user.getQrs()) {
+            if (scoreboard.qrSeen(qr)) {
+                qrSeen.add(qr);
+            }
+        }
+
+        Bundle args = new Bundle();
+        args.putParcelable("User", user);
+        args.putParcelableArrayList("QRSeen", qrSeen);
+
+        userFragment.setArguments(args);
+        userFragment.show(getSupportFragmentManager(), "Show User");
     }
 
     @Override

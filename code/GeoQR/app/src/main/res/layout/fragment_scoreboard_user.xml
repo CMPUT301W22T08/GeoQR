@@ -47,10 +47,42 @@
         android:layout_alignParentRight="true"
         android:layout_toRightOf="@id/fragment_scoreboard_user_total_qr_text" />
 
+    <LinearLayout
+        android:id="@+id/fragment_scoreboard_list_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/fragment_scoreboard_user_total_qr"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/fragment_scoreboard_list_header_qr_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Content"
+            android:textAlignment="center" />
+
+        <TextView
+            android:id="@+id/fragment_scoreboard_list_header_qr_score"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Score"
+            android:textAlignment="center" />
+
+        <TextView
+            android:id="@+id/fragment_scoreboard_header_qr_seen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Seen"
+            android:textAlignment="center" />
+    </LinearLayout>
+
     <ListView
         android:id="@+id/fragment_scoreboard_user_qrs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/fragment_scoreboard_user_total_qr" />
+        android:layout_below="@id/fragment_scoreboard_list_header" />
 
 </RelativeLayout>
