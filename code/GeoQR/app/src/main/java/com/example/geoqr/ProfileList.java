@@ -47,7 +47,7 @@ public class ProfileList extends ArrayAdapter<ListEntry> {
         final TextView content = view.findViewById(R.id.pl_content);
         final TextView score = view.findViewById(R.id.pl_score);
 
-        content.setText(entry.getContent());
+        content.setText(entry.getQrcode());
         score.setText(entry.getScore());
 
         return view;
