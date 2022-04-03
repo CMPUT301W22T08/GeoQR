@@ -60,16 +60,13 @@ public class ProfileTest {
         solo.clickOnButton("Edit Comment");
         solo.enterText((EditText) solo.getView(R.id.detail_edit_bar), "Test String");
         solo.clickOnButton("O");
-        String newComment = ((TextView) solo.getView(R.id.detail_comment)).getText().toString();
         assertTrue(solo.searchText("Test String"));
 
         // clears comment, types text but then presses cancel, checks to see if has been added
         solo.clickOnButton("Edit Comment");
         solo.enterText((EditText) solo.getView(R.id.detail_edit_bar), "this string should not be saved");
         solo.clickOnButton("X");
-        String cancelComment = ((TextView) solo.getView(R.id.detail_comment)).getText().toString();
         assertFalse(solo.searchText("this string should not be saved"));
-
 
         // presses back arrow, checks if back in profile pag
         solo.clickOnView(solo.getView(R.id.detail_back));
