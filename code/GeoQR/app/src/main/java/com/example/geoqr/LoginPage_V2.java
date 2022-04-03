@@ -49,7 +49,7 @@ public class LoginPage_V2 extends AppCompatActivity {
     private final static int REQUEST_CODE_ASK_PERMISSIONS = 1;
     private static final String[] REQUIRED_SDK_PERMISSIONS = new String[] {
             Manifest.permission.CAMERA, Manifest.permission.ACCESS_FINE_LOCATION};
-    String unique;
+    String unique; // this device's unique ID
     Boolean flag;
 
 
@@ -193,30 +193,40 @@ public class LoginPage_V2 extends AppCompatActivity {
                                         assert check_unique != null;
                                         // if this user logs in in the different device
                                         if (!check_unique.equals(unique)) {
-                                            // alert
                                             AlertDialog.Builder alert = new AlertDialog.Builder(LoginPage_V2.this);
-                                            alert.setTitle("Login Error");
-                                            alert.setMessage("You account has logged in in another device, please use scanning to login.");
-                                            alert.setPositiveButton(android.R.string.ok, (dialogInterface, i1) -> {
-                                                dialogInterface.cancel();
-                                            });
-                                        }
-                                        else {
+
                                             if (flag) {
-                                                System.out.println("user exists");
-                                                Intent camScan = new Intent(LoginPage_V2.this, ScanQR.class);
-                                                Toast.makeText(getApplicationContext(), String.format("Login as '%s'", username), Toast.LENGTH_LONG).show();
-                                                camScan.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                                startActivity(camScan);
+                                                alert.setTitle("Login Confirmation");
+                                                alert.setMessage("You account has logged in in another device, are you sure you want to change to this device?");
+                                                alert.setPositiveButton(android.R.string.yes, (dialogInterface, i1) -> {
+                                                    System.out.println("user exists");
+                                                    db.collection("Users").document(username).update("UUID", unique);
+                                                    Intent camScan = new Intent(LoginPage_V2.this, ScanQR.class);
+                                                    Toast.makeText(getApplicationContext(), String.format("Login as '%s'", username), Toast.LENGTH_LONG).show();
+                                                    camScan.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                                    startActivity(camScan);
+                                                });
+                                                alert.setNegativeButton(android.R.string.no, (dialogInterface, i1) -> {
+                                                    dialogInterface.cancel();
+                                                });
+                                                alert.show();
                                             }
                                             else {
-                                                AlertDialog.Builder alert = new AlertDialog.Builder(LoginPage_V2.this);
-                                                alert.setTitle("Notice");
+                                                // alert
+                                                alert.setTitle("Login Error");
                                                 alert.setMessage("You account has logged in in another device, please use scanning to login.");
                                                 alert.setPositiveButton(android.R.string.ok, (dialogInterface, i1) -> {
                                                     dialogInterface.cancel();
                                                 });
+                                                alert.show();
                                             }
+                                        }
+                                        else {
+                                            System.out.println("user exists");
+                                            Intent camScan = new Intent(LoginPage_V2.this, ScanQR.class);
+                                            Toast.makeText(getApplicationContext(), String.format("Login as '%s'", username), Toast.LENGTH_LONG).show();
+                                            camScan.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                            startActivity(camScan);
                                         }
                                     }
                                 })

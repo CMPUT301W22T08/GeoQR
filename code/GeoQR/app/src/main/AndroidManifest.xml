@@ -55,6 +55,10 @@
             android:screenOrientation="nosensor"
             android:exported="true" />
         <activity
+            android:name=".LoginPage_V2"
+            android:exported="true"
+            android:screenOrientation="nosensor" />
+        <activity
             android:name=".LoginPage"
             android:exported="true"
             android:screenOrientation="nosensor">
@@ -67,7 +71,6 @@
         <activity
             android:name=".addQR"
             android:screenOrientation="nosensor" />
-        <activity android:name=".MainActivity" />
         <activity
             android:name=".ProfileDetails"
             android:screenOrientation="nosensor"/>
@@ -81,19 +84,15 @@
             android:name=".ProfilePage"
             android:exported="true"
             android:screenOrientation="nosensor">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.MAIN" />-->
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+<!--                <category android:name="android.intent.category.LAUNCHER" />-->
+<!--            </intent-filter>-->
         </activity>
         <activity
             android:name=".Manual"
             android:screenOrientation="nosensor" />
-
-        <meta-data
-            android:name="android.support.PARENT_ACTIVITY"
-            android:value=".MainActivity" />
     </application>
 
 </manifest>
