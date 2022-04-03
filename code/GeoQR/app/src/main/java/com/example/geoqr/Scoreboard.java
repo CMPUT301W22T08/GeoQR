@@ -16,7 +16,7 @@ import java.util.ArrayList;
 public class Scoreboard {
 
     public interface RankingUpdatable {
-        public void update(boolean isFilter);
+        void update(boolean isFilter);
     }
 
     ArrayList<User> users, original;
