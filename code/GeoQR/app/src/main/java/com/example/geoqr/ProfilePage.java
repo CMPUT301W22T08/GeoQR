@@ -244,10 +244,10 @@ public class ProfilePage extends AppCompatActivity {
         generateStatusQR.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String status = String.format("Username: %s\nTotal Score: %s\nTotal Scans: %s\n" +
-                        "Highest Score: %s\nLowest Score: %s", username, totalScore, entryDataList.size(),
-                        largestScore, smallestScore);
-                generateQRCode(status);
+//                String status = String.format("Username: %s\nTotal Score: %s\nTotal Scans: %s\n" +
+//                        "Highest Score: %s\nLowest Score: %s", username, totalScore, entryDataList.size(),
+//                        largestScore, smallestScore);
+                generateQRCode(username);
             }
         });
 

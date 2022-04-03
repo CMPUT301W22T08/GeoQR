@@ -27,7 +27,8 @@ public class Manual extends AppCompatActivity {
         TextView manual_addQR = findViewById(R.id.manual_add_qr);
 
         String scanQR = "Scanning Page:\nScan your QR code or Barcode so that we could record them. Short click the button (finger print) on the bottom right side " +
-                "navigates you to the profile page. Swipe left from this page, it navigates you to the score board where swipe right navigates you to the map page.";
+                "navigates you to the profile page. Swipe left from this page, it navigates you to the score board where swipe right navigates you to the map page.\n" +
+                "Shake the device to log out in any activity!";
 
         String map = "\nMap Activity:\nThe interactive map displays all valid QR codes that were uploaded by users.\n" +
                 "\n" +
