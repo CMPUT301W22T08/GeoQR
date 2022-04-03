@@ -1,6 +1,8 @@
 package com.example.geoqr;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import android.widget.EditText;
 import android.widget.TextView;
@@ -50,13 +52,23 @@ public class ProfileTest {
     public void getDetails() throws Exception {
 
         // click item from list in profile page, check if moves to details
+        // throws error if list is empty
         solo.clickInList(0);
         solo.assertCurrentActivity("Wrong activity", ProfileDetails.class);
 
-        // click on edit comment, edit comment, click O button
+        // adds a test string, checks if has been added
         solo.clickOnButton("Edit Comment");
         solo.enterText((EditText) solo.getView(R.id.detail_edit_bar), "Test String");
         solo.clickOnButton("O");
+        String newComment = ((TextView) solo.getView(R.id.detail_comment)).getText().toString();
+        assertTrue(solo.searchText("Test String"));
+
+        // clears comment, types text but then presses cancel, checks to see if has been added
+        solo.clickOnButton("Edit Comment");
+        solo.enterText((EditText) solo.getView(R.id.detail_edit_bar), "this string should not be saved");
+        solo.clickOnButton("X");
+        String cancelComment = ((TextView) solo.getView(R.id.detail_comment)).getText().toString();
+        assertFalse(solo.searchText("this string should not be saved"));
 
 
         // presses back arrow, checks if back in profile pag
