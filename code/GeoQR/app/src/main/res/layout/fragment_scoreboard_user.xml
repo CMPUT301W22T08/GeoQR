@@ -46,4 +46,11 @@
         android:layout_below="@id/fragment_scoreboard_user_highest_score"
         android:layout_alignParentRight="true"
         android:layout_toRightOf="@id/fragment_scoreboard_user_total_qr_text" />
+
+    <ListView
+        android:id="@+id/fragment_scoreboard_user_qrs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/fragment_scoreboard_user_total_qr" />
+
 </RelativeLayout>

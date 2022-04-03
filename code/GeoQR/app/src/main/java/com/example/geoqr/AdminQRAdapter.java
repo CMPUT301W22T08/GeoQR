@@ -13,12 +13,12 @@ import java.util.ArrayList;
 
 import javax.annotation.Nullable;
 
-public class AdminQRAdapter extends ArrayAdapter<AdminQRTuple> {
+public class AdminQRAdapter extends ArrayAdapter<QR> {
 
-    private ArrayList<AdminQRTuple> qrList;
+    private ArrayList<QR> qrList;
     private Context context;
 
-    public AdminQRAdapter(Context context, ArrayList<AdminQRTuple> qrList) {
+    public AdminQRAdapter(Context context, ArrayList<QR> qrList) {
         super(context, 0, qrList);
 
         this.qrList = qrList;
@@ -28,12 +28,12 @@ public class AdminQRAdapter extends ArrayAdapter<AdminQRTuple> {
     public View getView (final int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         View view = LayoutInflater.from(context).inflate(R.layout.list_admin_qr, parent, false);
 
-        AdminQRTuple qrt = qrList.get(position);
+        QR qrt = qrList.get(position);
         TextView code = view.findViewById(R.id.list_admin_qr_code);
         TextView player = view.findViewById(R.id.list_admin_qr_player);
         TextView score = view.findViewById(R.id.list_admin_qr_score);
 
-        code.setText(qrt.getContents());
+        code.setText(qrt.getContent());
         player.setText(qrt.getPlayer());
         score.setText(String.valueOf(qrt.getScore()));
 

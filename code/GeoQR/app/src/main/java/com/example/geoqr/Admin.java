@@ -19,21 +19,21 @@ import java.util.Map;
 
 /**
  * The Admin class talks to the Database and manages state for the AdminPage class,
- * Primarily, manages the qrAdapter & the playerAdapter for the corresponding ListViews.
+ * Primarily, manages the adminQrAdapter & the playerAdapter for the corresponding ListViews.
  * Also manages 2 ArrayList called playerSelection & qrSelection to track, which
  * QRs or Players the Owner has selected to delete.
  */
 public class Admin {
     // Adapters
     private AdminPlayerAdapter playerAdapter;
-    private AdminQRAdapter qrAdapter;
+    private AdminQRAdapter adminQrAdapter;
 
     // DB
     FirebaseFirestore db;
 
     // Selection
     ArrayList<AdminPlayerTuple> playerSelection = new ArrayList<>();
-    ArrayList<AdminQRTuple> qrSelection = new ArrayList<>();
+    ArrayList<QR> qrSelection = new ArrayList<>();
 
     /**
      * It generates an Admin class for the AdminPage
@@ -43,7 +43,7 @@ public class Admin {
     public Admin(Context ctx) {
         // Adapters
         playerAdapter = new AdminPlayerAdapter(ctx, new ArrayList<>());
-        qrAdapter = new AdminQRAdapter(ctx, new ArrayList<>());
+        adminQrAdapter = new AdminQRAdapter(ctx, new ArrayList<>());
     }
 
     /**
@@ -64,7 +64,7 @@ public class Admin {
                                 Integer.parseInt((String) document.get("Total Score")));
                         playerAdapter.add(player);
 
-                        // Add Players QR to qrAdapter
+                        // Add Players QR to adminQrAdapter
                         fetchQRsOfPlayer(player);
                     }
                     Log.d("Debug", "Finishing to fetch");
@@ -88,7 +88,7 @@ public class Admin {
 
                         if (score == null || content == null) continue;
 
-                        qrAdapter.add(new AdminQRTuple(qrData.getId(), content, player.getName(),
+                        adminQrAdapter.add(new QR(qrData.getId(), content, player.getName(),
                                 Integer.parseInt(score)));
                     }
                 }
@@ -101,25 +101,25 @@ public class Admin {
      * The selected QRCodes is stored in private qrSelection List in the class
      */
     public void deleteQRCodes() {
-        for (AdminQRTuple qrTuple: qrSelection) {
+        for (QR qr : qrSelection) {
             if (db != null) {
                 // 1. Delete that specific user from the corresponding document in
                 // "QR code" Collection
                 db.collection("QR codes")
-                        .document(qrTuple.getId())
-                        .collection("Users").document(qrTuple.getPlayer())
+                        .document(qr.getId())
+                        .collection("Users").document(qr.getPlayer())
                         .delete();
 
                 // 2. Delete QR code from User Collection
                 db.collection("Users")
-                        .document(qrTuple.getPlayer())
-                        .collection("QR codes").document(qrTuple.getId())
+                        .document(qr.getPlayer())
+                        .collection("QR codes").document(qr.getId())
                         .delete()
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void unused) {
                                     // 3. Update scores of the User
-                                    String username = qrTuple.getPlayer();
+                                    String username = qr.getPlayer();
                                     for (int i = 0; i < playerAdapter.getCount(); i++) {
                                         if (playerAdapter.getItem(i).getName().equals(username)) {
                                             updateUserScore(i);
@@ -130,7 +130,7 @@ public class Admin {
                             });
             }
 
-            qrAdapter.remove(qrTuple);
+            adminQrAdapter.remove(qr);
         }
 
         qrSelection.clear();
@@ -192,7 +192,7 @@ public class Admin {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
-                            ArrayList<AdminQRTuple> toRemove = new ArrayList<>();
+                            ArrayList<QR> toRemove = new ArrayList<>();
 
                             for (QueryDocumentSnapshot qrData: task.getResult()) {
                                 // Delete the User entry from the
@@ -202,9 +202,9 @@ public class Admin {
                                         .collection("Users")
                                         .document(playerTuple.getName())
                                         .delete();
-                                // 2. Locally Update the qrAdapter for this corresponding user and qr
-                                for (int i = 0; i < qrAdapter.getCount(); i++) {
-                                    AdminQRTuple qrInAdapter = qrAdapter.getItem(i);
+                                // 2. Locally Update the adminQrAdapter for this corresponding user and qr
+                                for (int i = 0; i < adminQrAdapter.getCount(); i++) {
+                                    QR qrInAdapter = adminQrAdapter.getItem(i);
 
                                     // If the QR and the User equals to the removed item
                                     if (qrInAdapter.getPlayer().equals(playerTuple.getName()) && qrInAdapter.getId().equals(qrData.getId())) {
@@ -213,11 +213,11 @@ public class Admin {
                                 }
 
                                 // Remove the QRs from the Table
-                                for (AdminQRTuple qrTupleToRemove : toRemove) {
-                                    qrAdapter.remove(qrTupleToRemove);
+                                for (QR qrToRemove : toRemove) {
+                                    adminQrAdapter.remove(qrToRemove);
                                 }
 
-                                qrAdapter.notifyDataSetChanged();
+                                adminQrAdapter.notifyDataSetChanged();
                             }
 
                             // Once the User references are deleted:
@@ -242,10 +242,10 @@ public class Admin {
     /**
      * The method adds the selected QR in the ListView to the qrSelection List
      * @param pos
-     *      The pos corresponds to the position the ListView and the qrAdapter
+     *      The pos corresponds to the position the ListView and the adminQrAdapter
      */
     public void addSelectedQRAt(int pos) {
-        AdminQRTuple qr = qrAdapter.getItem(pos);
+        QR qr = adminQrAdapter.getItem(pos);
         if (!qrSelection.contains(qr)) {
             qrSelection.add(qr);
         }
@@ -262,32 +262,32 @@ public class Admin {
     /**
      * The method removes the selected QR in the ListView from the qrSelection List
      * @param pos
-     *      The pos corresponds to the position the ListView and the qrAdapter
+     *      The pos corresponds to the position the ListView and the adminQrAdapter
      */
     public void removeSelectedQRAt(int pos) {
-        qrSelection.remove(qrAdapter.getItem(pos));
+        qrSelection.remove(adminQrAdapter.getItem(pos));
     }
 
     /**
      * The method checks if the selected QR in the ListView is the qrSelection List
      * @param pos
-     *      The pos corresponds to the position the ListView and the qrAdapter
-     * @return qrSelection.contains(qrAdapter.getItem(pos)
+     *      The pos corresponds to the position the ListView and the adminQrAdapter
+     * @return qrSelection.contains(adminQrAdapter.getItem(pos)
      */
     public boolean qrSelectedAt(int pos) {
-        return qrSelection.contains(qrAdapter.getItem(pos));
+        return qrSelection.contains(adminQrAdapter.getItem(pos));
     }
 
     /**
-     * The method returns the position of the selected QR in the ListView or qrAdapter
+     * The method returns the position of the selected QR in the ListView or adminQrAdapter
      * @return
      *      Returns the position as an array of Integers
      */
     public ArrayList<Integer> getSelectedQRIndices() {
         ArrayList<Integer> indices = new ArrayList<>();
 
-        for (AdminQRTuple q: qrSelection) {
-            indices.add(qrAdapter.getPosition(q));
+        for (QR q: qrSelection) {
+            indices.add(adminQrAdapter.getPosition(q));
         }
 
         return indices;
@@ -308,7 +308,7 @@ public class Admin {
     }
 
     /**
-     * The method returns the position of the selected players in the ListView or qrAdapter
+     * The method returns the position of the selected players in the ListView or adminQrAdapter
      * @return
      *      Returns the position as an array of Integers
      */
@@ -371,10 +371,10 @@ public class Admin {
     }
 
     /**
-     * The method returns the qrAdapter
-     * @return qrAdapter
+     * The method returns the adminQrAdapter
+     * @return adminQrAdapter
      */
     public AdminQRAdapter getQRAdapter() {
-        return qrAdapter;
+        return adminQrAdapter;
     }
 }
