@@ -5,7 +5,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 /**
- * It represents the data for each element in the QR ListView in the Admin page
+ * A class to represent QRs
  */
 public class QR implements Parcelable {
     private String id;
@@ -22,6 +22,10 @@ public class QR implements Parcelable {
         this.loc = null;
     }
 
+    /**
+     * Class for constructing a Parcel from a QR object
+     * @param in
+     */
     protected QR(Parcel in) {
         id = in.readString();
         content = in.readString();

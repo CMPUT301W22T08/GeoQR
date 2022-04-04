@@ -5,6 +5,9 @@ import android.os.Parcelable;
 
 import java.util.ArrayList;
 
+/**
+ * A class that represents an User
+ */
 public class User implements Parcelable {
     private String name;
     private int totalScore;
@@ -18,6 +21,10 @@ public class User implements Parcelable {
         this.qrs = qrs;
     }
 
+    /**
+     * Constructor for Parceling a User object
+     * @param in
+     */
     protected User(Parcel in) {
         name = in.readString();
         totalScore = in.readInt();
@@ -41,6 +48,11 @@ public class User implements Parcelable {
         return 0;
     }
 
+    /**
+     * Writes the user's attributes to a Parcel
+     * @param parcel
+     * @param i
+     */
     @Override
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeString(name);
@@ -49,22 +61,42 @@ public class User implements Parcelable {
         parcel.writeArray(qrs.toArray());
     }
 
+    /**
+     * Getter for user name
+     * @return
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Getter for user's total score
+     * @return
+     */
     public int getTotalScore() {
         return totalScore;
     }
 
+    /**
+     * Getter for user's highest score
+     * @return
+     */
     public int getHighestScore() {
         return highestScore;
     }
 
+    /**
+     * Getter for user's total number of QRs
+     * @return
+     */
     public int getTotalQrs() {
         return qrs.size();
     }
 
+    /**
+     * Getter for user's QRs
+     * @return
+     */
     public ArrayList<QR> getQrs() {
         return qrs;
     }

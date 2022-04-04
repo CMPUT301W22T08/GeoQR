@@ -40,7 +40,14 @@ public class AdminPlayerAdapter extends ArrayAdapter<AdminPlayerTuple> {
 
     @Override
     public void add(AdminPlayerTuple playerTuple) {
-        if (!playerList.contains(playerTuple)) {
+        boolean canAdd = true;
+        for (AdminPlayerTuple playerTuple1: playerList) {
+            if (playerTuple1.getName().equals(playerTuple.getName())) {
+                canAdd = false;
+                break;
+            }
+        }
+        if (canAdd) {
             super.add(playerTuple);
         }
     }

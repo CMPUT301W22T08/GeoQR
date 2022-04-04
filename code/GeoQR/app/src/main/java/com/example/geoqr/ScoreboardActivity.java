@@ -29,6 +29,9 @@ import com.google.android.material.tabs.TabLayout;
 import java.util.ArrayList;
 import java.util.Objects;
 
+/**
+ * The View class for Scoreboard Activity
+ */
 public class ScoreboardActivity extends AppCompatActivity implements Scoreboard.RankingUpdatable {
 
     final String[] scoreText = {"Total Score", "Highest QR Score", "Number of QRs"};
@@ -58,12 +61,14 @@ public class ScoreboardActivity extends AppCompatActivity implements Scoreboard.
         setContentView(R.layout.activity_scoreboard);
         Objects.requireNonNull(getSupportActionBar()).hide();
 
+        // Views
         rankingView = findViewById(R.id.scoreboard_ranking);
         tabs = findViewById(R.id.scoreboard_tabs);
         searchBar = findViewById(R.id.scoreboard_searchbar);
         scanBtn = findViewById(R.id.scoreboard_scan_status_qr);
         backBtn = findViewById(R.id.scoreboard_go_back);
 
+        // Set back button
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -75,6 +80,7 @@ public class ScoreboardActivity extends AppCompatActivity implements Scoreboard.
             }
         });
 
+        // Navigate to ScanStatusQR activity on scanBtn click
         scanBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -85,6 +91,7 @@ public class ScoreboardActivity extends AppCompatActivity implements Scoreboard.
             }
         });
 
+        // Filter the users using the search bar
         searchBar.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -105,12 +112,15 @@ public class ScoreboardActivity extends AppCompatActivity implements Scoreboard.
         // Get player name
         SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
 
+        // Instantiate the model classes
         scoreboard = new Scoreboard(this, sharedPreferences.getString("username", null));
         rankingAdapter = new ScoreboardRankingAdapter((Context) this, scoreboard.getUsers());
 
+        // Set adapters and currently visible ranking list
         rankingAdapter.setBoard(board);
         rankingView.setAdapter(rankingAdapter);
 
+        // Open User profile on click on an item in the list
         rankingView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -118,6 +128,7 @@ public class ScoreboardActivity extends AppCompatActivity implements Scoreboard.
             }
         });
 
+        // Change ranking list on the change of tabs
         tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -170,6 +181,8 @@ public class ScoreboardActivity extends AppCompatActivity implements Scoreboard.
             }
         });
 
+        // The embedded method will be called when ScanStatusQR activity returns
+        // back to the Scoreboard to open a fragment of the user profile.
         activityResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 new ActivityResultCallback<ActivityResult>() {
@@ -227,6 +240,11 @@ public class ScoreboardActivity extends AppCompatActivity implements Scoreboard.
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
     }
 
+    /**
+     * To update the rankingAdapter when the underlying array is updated.
+     * @param isFilter
+     *      This parameter mentions if the update is after filtering or new data is being
+     */
     @Override
     public void update(boolean isFilter) {
         rankingAdapter.sort();
@@ -236,6 +254,9 @@ public class ScoreboardActivity extends AppCompatActivity implements Scoreboard.
         }
     }
 
+    /**
+     * Updates the player's ranking at the top
+     */
     private void updatePlayerMetric() {
         // If the data for the player was fetched update player rank
         User player = scoreboard.getPlayer();

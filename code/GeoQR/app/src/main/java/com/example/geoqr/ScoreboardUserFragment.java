@@ -14,6 +14,9 @@ import androidx.fragment.app.DialogFragment;
 
 import java.util.ArrayList;
 
+/**
+ * A DialogFragment to show a user profile.
+ */
 public class ScoreboardUserFragment extends DialogFragment {
 
     User user;
