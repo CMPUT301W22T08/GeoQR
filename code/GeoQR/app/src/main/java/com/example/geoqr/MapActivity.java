@@ -100,7 +100,8 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback
                             SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
                             SharedPreferences.Editor editor = sharedPreferences.edit();
                             check_dialog = 0;
-                            editor.clear();
+                            editor.remove("username");
+                            // editor.clear();
                             editor.apply();
                             Toast.makeText(getApplicationContext(), String.format("%s has been logged out", username), Toast.LENGTH_LONG).show();
                             log_page.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

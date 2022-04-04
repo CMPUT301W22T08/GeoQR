@@ -3,12 +3,14 @@ package com.example.geoqr;
 import static android.content.ContentValues.TAG;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -39,7 +41,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
-import java.util.UUID;
 
 public class LoginPage_V2 extends AppCompatActivity {
 
@@ -51,7 +52,6 @@ public class LoginPage_V2 extends AppCompatActivity {
             Manifest.permission.CAMERA, Manifest.permission.ACCESS_FINE_LOCATION};
     String unique; // this device's unique ID
     Boolean flag;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +66,7 @@ public class LoginPage_V2 extends AppCompatActivity {
         else {
             checkPermissions();
         }
-
+        flag = false;
         db = FirebaseFirestore.getInstance();
         Button btnGenerate = findViewById(R.id.btn_Generate);
         Button btnLogin = findViewById(R.id.btn_Login);
@@ -152,6 +152,7 @@ public class LoginPage_V2 extends AppCompatActivity {
 
     // check if the user is admin
     public void checkIfAdmin(String username) {
+        Log.d("Login", String.format("In admin Flag: %s", flag));
         DocumentReference docRef = db.collection("Admin").document(username);
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -159,13 +160,14 @@ public class LoginPage_V2 extends AppCompatActivity {
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
-                        System.out.println("Admin Exists");
+                        Log.d("Login", "Admin exists");
+                        writeFile(username);
                         Toast.makeText(getApplicationContext(), String.format("Login as '%s'", username), Toast.LENGTH_LONG).show();
                         Intent admin_page = new Intent(LoginPage_V2.this, AdminPage.class);
                         admin_page.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(admin_page);
                     } else {
-                        System.out.println("Not Admin");
+                        Log.d("Login", "Not Admin");
                         checkIfUserExists(username);
                     }
                 } else {
@@ -178,6 +180,7 @@ public class LoginPage_V2 extends AppCompatActivity {
     // this is for scanning QR code login
     // return false if user is not in the db, otherwise true.
     public void checkIfUserExists(String username) {
+        Log.d("Login", String.format("In exists Flag: %s", flag));
         DocumentReference docRef = db.collection("Users").document(username);
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -203,7 +206,7 @@ public class LoginPage_V2 extends AppCompatActivity {
                                                 alert.setPositiveButton(android.R.string.yes, (dialogInterface, i1) -> {
                                                     System.out.println("user exists");
                                                     db.collection("Users").document(username).update("UUID", unique);
-                                                    writeFile(username, unique);
+                                                    writeFile(username);
                                                     Intent camScan = new Intent(LoginPage_V2.this, ScanQR.class);
                                                     Toast.makeText(getApplicationContext(), String.format("Login as '%s'", username), Toast.LENGTH_LONG).show();
                                                     camScan.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -226,6 +229,7 @@ public class LoginPage_V2 extends AppCompatActivity {
                                         }
                                         else {
                                             Log.d("Login", "user exists");
+                                            writeFile(username);
                                             Intent camScan = new Intent(LoginPage_V2.this, ScanQR.class);
                                             Toast.makeText(getApplicationContext(), String.format("Login as '%s'", username), Toast.LENGTH_LONG).show();
                                             camScan.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -243,7 +247,7 @@ public class LoginPage_V2 extends AppCompatActivity {
                     else {
                         System.out.println("user does not exist");
                         add_user_detail();
-                        writeFile(username, unique);
+                        writeFile(username);
                         Intent camScan = new Intent(LoginPage_V2.this, ScanQR.class);
                         Toast.makeText(getApplicationContext(), String.format("Login as '%s'", username), Toast.LENGTH_LONG).show();
                         camScan.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -264,11 +268,10 @@ public class LoginPage_V2 extends AppCompatActivity {
     }
 
     // write file (for auto login)
-    private void writeFile(String username, String unique) {
+    private void writeFile(String username) {
         SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString("username", username);
-        editor.putString("UUID", unique);
         editor.apply();
     }
 
@@ -277,12 +280,59 @@ public class LoginPage_V2 extends AppCompatActivity {
         SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
         String get_user = sharedPreferences.getString("username", null);
         String get_unique = sharedPreferences.getString("UUID", null);
+        Log.d("Login shared pref", String.format("get_user: %s", get_user));
+        Log.d("Login shared pref", String.format("get_UUID: %s", get_unique));
         if (get_user != null && get_unique != null) {
             username = get_user;
             unique = get_unique;
-            Log.d("Login", String.format("Shared Pref UUID: %s", unique));
             etUsername.setText(username);
-            checkIfAdmin(username);
+            Log.d("Login", String.format("Shared Pref UUID: %s", unique));
+
+            DocumentReference docRef = db.collection("Users").document(username);
+            docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot doc_check = task.getResult();
+                        if (doc_check.exists()) {
+                            db.collection("Users").document(username).get()
+                                    .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                        @Override
+                                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                            String UUID = documentSnapshot.getString("UUID");
+                                            assert UUID != null;
+                                            if (!UUID.equals(unique)) {
+                                                SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
+                                                SharedPreferences.Editor editor = sharedPreferences.edit();
+                                                // editor.clear();
+                                                editor.remove("username");
+                                                editor.apply();
+                                            }
+                                            else {
+                                                checkIfAdmin(username);
+                                            }
+                                        }
+                                    })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Log.d("Login", "Not passing here");
+                                        }
+                                    });
+                        }
+                        else {
+                            checkIfAdmin(username);
+                        }
+                    }
+                }
+            })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.d("Login", "Fail");
+                        }
+                    });
+
         }
     }
 
@@ -310,6 +360,7 @@ public class LoginPage_V2 extends AppCompatActivity {
     }
 
     // request permissions (camera, location)
+    @SuppressLint("HardwareIds")
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
@@ -330,7 +381,12 @@ public class LoginPage_V2 extends AppCompatActivity {
                 }
             }
             etUsername = findViewById(R.id.et_Username);
-            unique = UUID.randomUUID().toString();
+            // unique = UUID.randomUUID().toString();
+            unique = Settings.Secure.getString(getApplicationContext().getContentResolver(), Settings.Secure.ANDROID_ID).replace(' ', '0');
+            SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putString("UUID", unique);
+            editor.apply();
             Log.d("Login", String.format("This is the UUID: %s", unique));
             load(); // load after asking the permission or checking the permission (auto login purpose)
         }
