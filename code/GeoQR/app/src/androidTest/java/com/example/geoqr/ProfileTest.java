@@ -1,8 +1,6 @@
 package com.example.geoqr;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 import android.widget.EditText;
 import android.widget.TextView;
@@ -18,6 +16,13 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+
+/**
+ * Class for running tests of ProfilePage
+ * Must be logged into an account before running tests
+ * Else, will get error that info in ProfilePage is null
+ *
+ */
 
 @RunWith(AndroidJUnit4.class)
 public class ProfileTest {
@@ -44,36 +49,6 @@ public class ProfileTest {
     }
 
     /**
-     * clicks an item in the profile list to bring to details page, edit comment
-     * then return to main profile page
-     * @throws Exception
-     */
-    @Test
-    public void getDetails() throws Exception {
-
-        // click item from list in profile page, check if moves to details
-        // throws error if list is empty
-        solo.clickInList(0);
-        solo.assertCurrentActivity("Wrong activity", ProfileDetails.class);
-
-        // adds a test string, checks if has been added
-        solo.clickOnButton("Edit Comment");
-        solo.enterText((EditText) solo.getView(R.id.detail_edit_bar), "Test String");
-        solo.clickOnButton("O");
-        assertTrue(solo.searchText("Test String"));
-
-        // clears comment, types text but then presses cancel, checks to see if has been added
-        solo.clickOnButton("Edit Comment");
-        solo.enterText((EditText) solo.getView(R.id.detail_edit_bar), "this string should not be saved");
-        solo.clickOnButton("X");
-        assertFalse(solo.searchText("this string should not be saved"));
-
-        // presses back arrow, checks if back in profile pag
-        solo.clickOnView(solo.getView(R.id.detail_back));
-        solo.assertCurrentActivity("Wrong activity", ProfilePage.class);
-    }
-
-    /**
      * clicks on help button, checks if the manual activity is displayed
      * if not, raise error, if so, return to camera screen, then back to
      * profile and check if back in profile page
@@ -95,12 +70,12 @@ public class ProfileTest {
     }
 
     /**
-     * clicks on Edit button to add contact info, puts test string
-     * then checks to see if that test string is displayed in the view
+     * clears contact bar and checks that its been cleared,
+     * else throws exception
      * @throws Exception
      */
     @Test
-    public void editContact() throws Exception {
+    public void clearContact() throws Exception {
 
         // click on contacts edit button, clears, and checks if has been cleared
         solo.clickOnButton("Edit");
@@ -108,7 +83,15 @@ public class ProfileTest {
         solo.clickOnButton("O");
         String emptyString = ((EditText) solo.getView(R.id.contact_edit)).getText().toString();
         assertEquals(emptyString, "");
+    }
 
+    /**
+     * adds contact information and commits them, checks if saved
+     * If not, throw exception
+     * @throws Exception
+     */
+    @Test
+    public void commitEditToContact() throws Exception {
 
         // clicks edit button, adds contact string then checks if that string is displayed
         solo.clickOnButton("Edit");
@@ -116,6 +99,15 @@ public class ProfileTest {
         solo.clickOnButton("O");
         String testString = ((EditText) solo.getView(R.id.contact_edit)).getText().toString();
         assertEquals(testString, "contact tests String");
+    }
+
+    /**
+     * add contact info, then press cancel, check if saved
+     * if it is, throw exception
+     * @throws Exception
+     */
+    @Test
+    public void cancelEditToContact() throws Exception {
 
         // clicks edit button, adds contact string but clicks cancel, makes sure it has not been added
         solo.clickOnButton("Edit");
@@ -123,6 +115,15 @@ public class ProfileTest {
         solo.clickOnButton("X");
         String cancelString = ((TextView) solo.getView(R.id.show_contact)).getText().toString();
         assertEquals(cancelString, "contact tests String");
+    }
+
+    /**
+     * Checks length of contact string, makes sure does not exceed max
+     * Else, throws exception
+     * @throws Exception
+     */
+    @Test
+    public void checkContactLength() throws Exception {
 
         // clicks edit button, checks to see if string does not exceed max length of 20 characters
         solo.clickOnButton("Edit");
