@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
 
-public class Test_calcScore {
+public class TestCalcScore {
     private CalculateScore test(){
         CalculateScore c = new CalculateScore("BFG5DGW54");
         return c;
