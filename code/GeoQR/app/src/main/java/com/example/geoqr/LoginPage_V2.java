@@ -203,6 +203,7 @@ public class LoginPage_V2 extends AppCompatActivity {
                                                 alert.setPositiveButton(android.R.string.yes, (dialogInterface, i1) -> {
                                                     System.out.println("user exists");
                                                     db.collection("Users").document(username).update("UUID", unique);
+                                                    writeFile(username, unique);
                                                     Intent camScan = new Intent(LoginPage_V2.this, ScanQR.class);
                                                     Toast.makeText(getApplicationContext(), String.format("Login as '%s'", username), Toast.LENGTH_LONG).show();
                                                     camScan.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
