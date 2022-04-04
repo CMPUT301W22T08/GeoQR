@@ -13,6 +13,9 @@ import java.util.ArrayList;
 
 import javax.annotation.Nullable;
 
+/**
+ * An ArrayAdapter for the QR ListView in Admin
+ */
 public class AdminQRAdapter extends ArrayAdapter<QR> {
 
     private ArrayList<QR> qrList;
@@ -33,7 +36,7 @@ public class AdminQRAdapter extends ArrayAdapter<QR> {
         TextView player = view.findViewById(R.id.list_admin_qr_player);
         TextView score = view.findViewById(R.id.list_admin_qr_score);
 
-        code.setText(qrt.getContent());
+        code.setText(qrt.getId());
         player.setText(qrt.getPlayer());
         score.setText(String.valueOf(qrt.getScore()));
 
@@ -42,7 +45,14 @@ public class AdminQRAdapter extends ArrayAdapter<QR> {
 
     @Override
     public void add(QR qr) {
-        if (!qrList.contains(qr)) {
+        boolean canAdd = true;
+        for (QR qr2: qrList) {
+            if (qr2.getId().equals(qr.getId())) {
+                canAdd = false;
+                break;
+            }
+        }
+        if (canAdd) {
             super.add(qr);
         }
     }

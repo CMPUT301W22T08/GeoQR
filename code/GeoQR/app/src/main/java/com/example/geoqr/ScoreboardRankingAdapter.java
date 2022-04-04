@@ -16,7 +16,7 @@ public class ScoreboardRankingAdapter extends ArrayAdapter<User> {
     private ArrayList<User> users;
 
     Context context;
-    private int board;
+    private int board;  // Ranking board: 0, 1,or 2
 
     public ScoreboardRankingAdapter(Context context, ArrayList<User> users) {
         super(context, 0, users);
@@ -43,6 +43,11 @@ public class ScoreboardRankingAdapter extends ArrayAdapter<User> {
         return view;
     }
 
+    /**
+     * Returns the score of an user corresponding to the current ranking board
+     * @param user
+     * @return
+     */
     private int getScore(User user) {
         int score;
         switch (board) {
@@ -55,11 +60,18 @@ public class ScoreboardRankingAdapter extends ArrayAdapter<User> {
         return score;
     }
 
+    /**
+     * Sets the current ranking board
+     * @param board
+     */
     public void setBoard(int board) {
         this.board = board;
         this.sort();
     }
 
+    /**
+     * Sorts the user list
+     */
     public void sort() {
         super.sort((user, t1) -> {
             int res = 0;

@@ -86,6 +86,7 @@ public class AdminPage extends AppCompatActivity {
 
         
         //https://stackoverflow.com/questions/68895807/how-to-auto-refresh-data-in-android-studio-every-second
+
         final Handler handler = new Handler();
         Runnable refresh = new Runnable() {
             @Override
@@ -93,8 +94,6 @@ public class AdminPage extends AppCompatActivity {
                 Log.d("Debug", "fetching");
                 // data request
                 admin.fetch();
-                qrCodeList.setAdapter(admin.getQRAdapter());
-                playerList.setAdapter(admin.getPlayerAdapter());
                 handler.postDelayed(this, 10000);
             }
         };
@@ -131,6 +130,7 @@ public class AdminPage extends AppCompatActivity {
             }
         });
 
+        // Set listeners on the items of the playerList ListView
         playerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int pos, long l) {
@@ -160,6 +160,7 @@ public class AdminPage extends AppCompatActivity {
             }
         });
 
+        // Set Listeners on items of the qrCodeList ListView
         qrCodeList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int pos, long l) {
@@ -228,17 +229,27 @@ public class AdminPage extends AppCompatActivity {
         });
     }
 
+    /**
+     * Toggles state when either of the two button at the top are pressed
+     * @param btn
+     */
     private void toggle(View btn) {
         if (btn.getId() != selectedBtnId) {
             setFocus(selectedBtnId, btn.getId());
         }
     }
 
+    /**
+     * Sets focus on the change of view upon pressing of the button at the top
+     * @param unfocus
+     * @param focus
+     */
     private void setFocus(int unfocus, int focus) {
         // Colors
         int focusedColor = ResourcesCompat.getColor(getResources(), R.color.btn_focused, null);
         int unFocusedColor = ResourcesCompat.getColor(getResources(), R.color.btn_unfocused, null);
 
+        // Unfocuses the previously shown ListView
         if (unfocus == playerBtn.getId()) {
             playerBtn.setBackgroundColor(unFocusedColor);
             qrCodeBtn.setBackgroundColor(focusedColor);
@@ -254,6 +265,7 @@ public class AdminPage extends AppCompatActivity {
             admin.resetPlayerSelection();
         }
 
+        // Focuses the other ListView
         else {
             qrCodeBtn.setBackgroundColor(unFocusedColor);
             playerBtn.setBackgroundColor(focusedColor);

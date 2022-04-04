@@ -12,6 +12,10 @@ import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
 
+/**
+ * And Adapter class for showing a user's QRs in
+ * the user profile fragment in Scoreboard.
+ */
 public class ScoreboardQRAdapter extends ArrayAdapter<QR> {
 
     private ArrayList<QR> qrList;

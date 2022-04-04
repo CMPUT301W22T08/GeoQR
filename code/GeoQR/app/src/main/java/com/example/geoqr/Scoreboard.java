@@ -13,9 +13,22 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
+/**
+ * A model class for the scoreboard that keeps track of the
+ * users and ranking.
+ */
 public class Scoreboard {
 
+    /**
+     * An interface that allows itself to be updatable
+     */
     public interface RankingUpdatable {
+        /**
+         * The method that needs to be implemented for updating an array adapter of a view class
+         * @param isFilter
+         *      This parameter mentions if the update is after filtering or new data is being
+         *      inserted.
+         */
         void update(boolean isFilter);
     }
 
@@ -29,6 +42,13 @@ public class Scoreboard {
 
     RankingUpdatable callee;
 
+    /**
+     * The constructor
+     * @param callee
+     *      A class that implements RankingUpdatable
+     * @param playerName
+     *      The name of the player who is currently logged in
+     */
     public Scoreboard(RankingUpdatable callee, String playerName) {
         this.playerName = playerName;
         this.callee = callee;
@@ -39,6 +59,10 @@ public class Scoreboard {
         fetchUserData();
     }
 
+    /**
+     * Fetches the user data from the db and calls asynchronously
+     * fetchTotalQRs to fetch the user QR data
+     */
     public void fetchUserData() {
         db = FirebaseFirestore.getInstance();
 
@@ -64,6 +88,16 @@ public class Scoreboard {
         });
     }
 
+    /**
+     * Fetches the QR data for a user and creates a new User object and updates the
+     * users & allQRs array
+     * @param username
+     *      The name of the user
+     * @param totalScore
+     *      The total score of the user
+     * @param highestScore
+     *      The highest score of the user
+     */
     public void fetchTotalQRs(String username, int totalScore, int highestScore) {
         db.collection("Users").document(username)
                 .collection("QR codes").get()
@@ -126,9 +160,19 @@ public class Scoreboard {
                 });
     }
 
+    /**
+     * Returns the users array
+     * @return
+     */
     public ArrayList<User> getUsers() {
         return users;
     }
+
+    /**
+     * Returns the User object corresponding to a username
+     * @param name
+     * @return
+     */
     public User getUser(String name) {
         for (User user: users) {
             if (user.getName().equals(name)) {
@@ -139,14 +183,27 @@ public class Scoreboard {
         return null;
     }
 
+    /**
+     * Returns the name of the currently logged in player
+     * @return
+     */
     public String getPlayerName() {
         return playerName;
     }
 
+    /**
+     * Returns the player object
+     * @return
+     */
     public User getPlayer() {
         return player;
     }
 
+    /**
+     * Filters the user array and calls `update` on the callee
+     * @param query
+     *      query string for filtering
+     */
     public void filterUsers(String query) {
 
         users.clear();
@@ -168,6 +225,11 @@ public class Scoreboard {
         callee.update(true); // Notify change
     }
 
+    /**
+     * Returns if the qr1 was seen by any other user
+     * @param qr1
+     * @return
+     */
     public boolean qrSeen(QR qr1) {
         for (QR qr2: allQRs) {
             if (qr1.getId() != qr2.getId() && qr1.isSame(qr2)) {
