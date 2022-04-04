@@ -40,7 +40,7 @@ public class ScoreboardQRAdapter extends ArrayAdapter<QR> {
         TextView score = view.findViewById(R.id.list_scoreboard_qr_score);
         TextView seen = view.findViewById(R.id.list_scoreboard_qr_seen);
 
-        code.setText(qr.getContent());
+        code.setText(qr.getId());
         score.setText(String.valueOf(qr.getScore()));
 
         if (qrSeen.contains(qr)) {
