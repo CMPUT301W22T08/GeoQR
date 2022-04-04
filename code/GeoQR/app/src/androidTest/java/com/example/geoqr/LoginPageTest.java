@@ -22,7 +22,7 @@ public class LoginPageTest {
     private Solo solo;
 
     @Rule
-    public ActivityTestRule<LoginPage> rule = new ActivityTestRule<>(LoginPage.class, true, true);
+    public ActivityTestRule<LoginPage_V2> rule = new ActivityTestRule<>(LoginPage_V2.class, true, true);
     /**
      * Runs before all tests and creates solo instance.
      * @throws Exception
@@ -37,19 +37,19 @@ public class LoginPageTest {
      */
     @Test
     public void start() throws Exception{
-        solo.assertCurrentActivity("Wrong Activity",LoginPage.class);
+        solo.assertCurrentActivity("Wrong Activity",LoginPage_V2.class);
     }
 
     @Test
     public void noUsername() {
-        solo.assertCurrentActivity("Wrong Activity", LoginPage.class);
+        solo.assertCurrentActivity("Wrong Activity", LoginPage_V2.class);
         solo.clickOnView(solo.getView(com.example.geoqr.R.id.btn_Login));
-        solo.assertCurrentActivity("Wrong Activity", LoginPage.class);
+        solo.assertCurrentActivity("Wrong Activity", LoginPage_V2.class);
     }
 
     @Test
     public void changeActivity(){
-        solo.assertCurrentActivity("Not Login Page", LoginPage.class);
+        solo.assertCurrentActivity("Not Login Page", LoginPage_V2.class);
         solo.clickOnView(solo.getView(com.example.geoqr.R.id.btn_Generate));
         solo.clickOnView(solo.getView(com.example.geoqr.R.id.btn_Login));
         solo.assertCurrentActivity("Wrong Activity", ScanQR.class);

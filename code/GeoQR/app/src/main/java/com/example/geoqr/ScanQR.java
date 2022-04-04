@@ -122,7 +122,6 @@ public class ScanQR extends AppCompatActivity {
                             SharedPreferences.Editor editor = sharedPreferences.edit();
                             check_dialog = 0;
                             editor.remove("username");
-                            // editor.clear();
                             editor.apply();
                             Toast.makeText(getApplicationContext(), String.format("%s has been logged out", username), Toast.LENGTH_LONG).show();
                             log_page.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

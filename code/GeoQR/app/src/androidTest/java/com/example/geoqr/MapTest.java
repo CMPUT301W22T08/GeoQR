@@ -23,8 +23,8 @@ public class MapTest {
     private Solo solo;
 
     @Rule
-    public ActivityTestRule<LoginPage> rule =
-            new ActivityTestRule<>(LoginPage.class, true, true);
+    public ActivityTestRule<LoginPage_V2> rule =
+            new ActivityTestRule<>(LoginPage_V2.class, true, true);
     /**
      * Runs before all tests and creates solo instance.
      * @throws Exception
