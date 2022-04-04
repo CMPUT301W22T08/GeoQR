@@ -69,11 +69,16 @@ public class Manual extends AppCompatActivity {
                 "\n" +
                 "Click the [CANCEL] to stop the adding process of this QR code to your total scores";
 
+        String score = "Scoreboard:\n" +
+                "It shows you the 3 leaderboards sorted by the \"Total Score\", \"Unique QR Score\" and \"No. of QRs\". The leaderboard also allows you to look at the profiles of different users by clicking on the corresponding row. " +
+                "Also, you can search for specific users by their username using the search bar. An empty search bar will show the entire leaderboard. " +
+                "Any user profile will be opened on a dialog fragment when clicked on. Lastly, you can scan a different user's status QR to directly see that users profile without needing to search for it.";
 
         manual_scanQR.setText(scanQR);
         manual_map.setText(map);
         manual_profile.setText(profile);
         manual_addQR.setText(addQR);
+        manual_score.setText(score);
 
 
         back_btn.setOnClickListener(new View.OnClickListener() {
