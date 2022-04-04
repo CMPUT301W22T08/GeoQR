@@ -61,9 +61,6 @@ import java.util.Objects;
  * add the QR codes details to the database
  */
 public class addQR extends AppCompatActivity {
-    //DATABASE STILL HAVE TROUBLE SETTING UP
-
-    // Define values that's gonna display on the xml
     private String UserName, notice;
 
     private Integer QRScore;
