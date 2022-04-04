@@ -60,6 +60,21 @@ public class Scoreboard {
     }
 
     /**
+     * Constructor for testing
+     * @param callee
+     * @param playerName
+     * @param users
+     * @param qrs
+     */
+    public Scoreboard(RankingUpdatable callee, String playerName, ArrayList<User> users, ArrayList<QR> qrs) {
+        this.callee = callee;
+        this.users = users;
+        this.original = new ArrayList<>(users);
+        this.allQRs = qrs;
+        this.playerName = playerName;
+    }
+
+    /**
      * Fetches the user data from the db and calls asynchronously
      * fetchTotalQRs to fetch the user QR data
      */
