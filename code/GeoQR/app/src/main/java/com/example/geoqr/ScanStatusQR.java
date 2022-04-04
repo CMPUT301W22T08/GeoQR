@@ -23,15 +23,14 @@ public class ScanStatusQR extends AppCompatActivity {
 
     private CodeScanner sCodeScanner;
     private String content;
-    private CodeScannerView scanLogin;
+    private CodeScannerView status;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_scan_login);
+        setContentView(R.layout.activity_scan_status);
         Objects.requireNonNull(getSupportActionBar()).hide();
-        scanLogin = findViewById(R.id.login_view);
-        FloatingActionButton cancel = findViewById(R.id.cancel_btn_login);
+        status = findViewById(R.id.status_view);
 
         // check permissions
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED) {
@@ -47,7 +46,7 @@ public class ScanStatusQR extends AppCompatActivity {
      * provides camera to scan the user's QR code
      */
     private void scanStatus() {
-        sCodeScanner = new CodeScanner(this, scanLogin);
+        sCodeScanner = new CodeScanner(this, status);
         sCodeScanner.setAutoFocusEnabled(true);
         sCodeScanner.setFormats(CodeScanner.ALL_FORMATS);
         sCodeScanner.setScanMode(ScanMode.CONTINUOUS);

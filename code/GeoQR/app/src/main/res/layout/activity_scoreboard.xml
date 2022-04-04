@@ -125,7 +125,8 @@
             android:layout_weight="1"
             android:ems="10"
             android:hint="Search"
-            android:inputType="textPersonName" />
+            android:inputType="textPersonName"
+            android:minHeight="48dp" />
 
         <Button
             android:id="@+id/scoreboard_scan_status_qr"
