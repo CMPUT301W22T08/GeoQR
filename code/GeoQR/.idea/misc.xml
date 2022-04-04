@@ -14,6 +14,25 @@
         <entry key="..\:/Users/yunuo/AndroidStudioProjects/!GeoQR/code/GeoQR/app/src/main/res/layout/fragment_scoreboard_user.xml" value="0.2703125" />
         <entry key="..\:/Users/yunuo/AndroidStudioProjects/!GeoQR/code/GeoQR/app/src/main/res/layout/list_scoreboard_placement.xml" value="0.264" />
         <entry key="..\:/Users/yunuo/AndroidStudioProjects/!GeoQR/code/GeoQR/app/src/main/res/layout/list_scoreboard_qr.xml" value="0.2" />
+        <entry key="app/src/main/res/layout/activity_add_qr_code.xml" value="0.3333333333333333" />
+        <entry key="app/src/main/res/layout/activity_admin.xml" value="0.10207700101317123" />
+        <entry key="app/src/main/res/layout/activity_login_page.xml" value="0.2667572463768116" />
+        <entry key="app/src/main/res/layout/activity_manual.xml" value="0.3333333333333333" />
+        <entry key="app/src/main/res/layout/activity_map.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/activity_profile_v3.xml" value="0.10207700101317123" />
+        <entry key="app/src/main/res/layout/activity_qr_detail.xml" value="0.10207700101317123" />
+        <entry key="app/src/main/res/layout/activity_scan.xml" value="0.10207700101317123" />
+        <entry key="app/src/main/res/layout/activity_scan_login.xml" value="0.10207700101317123" />
+        <entry key="app/src/main/res/layout/activity_scan_status.xml" value="0.10207700101317123" />
+        <entry key="app/src/main/res/layout/activity_scoreboard.xml" value="0.10207700101317123" />
+        <entry key="app/src/main/res/layout/fragment_scoreboard_user.xml" value="0.10207700101317123" />
+        <entry key="app/src/main/res/layout/list_admin_player.xml" value="0.10207700101317123" />
+        <entry key="app/src/main/res/layout/list_admin_qr.xml" value="0.10207700101317123" />
+        <entry key="app/src/main/res/layout/list_profile_content.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/list_scoreboard_placement.xml" value="0.20989583333333334" />
+        <entry key="app/src/main/res/layout/list_scoreboard_qr.xml" value="0.20989583333333334" />
+        <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.217" />
+        <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.217" />
       </map>
     </option>
   </component>
