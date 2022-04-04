@@ -193,14 +193,17 @@ public class LoginPage_V2 extends AppCompatActivity {
                                         assert check_unique != null;
                                         // if this user logs in in the different device
                                         if (!check_unique.equals(unique)) {
+                                            Log.d("Login", "check unique does not equal to unique");
                                             AlertDialog.Builder alert = new AlertDialog.Builder(LoginPage_V2.this);
 
                                             if (flag) {
+                                                Log.d("Login", "different unique, scan login");
                                                 alert.setTitle("Login Confirmation");
                                                 alert.setMessage("You account has logged in in another device, are you sure you want to change to this device?");
                                                 alert.setPositiveButton(android.R.string.yes, (dialogInterface, i1) -> {
                                                     System.out.println("user exists");
                                                     db.collection("Users").document(username).update("UUID", unique);
+                                                    writeFile(username, unique);
                                                     Intent camScan = new Intent(LoginPage_V2.this, ScanQR.class);
                                                     Toast.makeText(getApplicationContext(), String.format("Login as '%s'", username), Toast.LENGTH_LONG).show();
                                                     camScan.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -209,20 +212,20 @@ public class LoginPage_V2 extends AppCompatActivity {
                                                 alert.setNegativeButton(android.R.string.no, (dialogInterface, i1) -> {
                                                     dialogInterface.cancel();
                                                 });
-                                                alert.show();
                                             }
                                             else {
+                                                Log.d("Login", "Login error raised");
                                                 // alert
                                                 alert.setTitle("Login Error");
                                                 alert.setMessage("You account has logged in in another device, please use scanning to login.");
                                                 alert.setPositiveButton(android.R.string.ok, (dialogInterface, i1) -> {
                                                     dialogInterface.cancel();
                                                 });
-                                                alert.show();
                                             }
+                                            alert.show();
                                         }
                                         else {
-                                            System.out.println("user exists");
+                                            Log.d("Login", "user exists");
                                             Intent camScan = new Intent(LoginPage_V2.this, ScanQR.class);
                                             Toast.makeText(getApplicationContext(), String.format("Login as '%s'", username), Toast.LENGTH_LONG).show();
                                             camScan.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -277,6 +280,7 @@ public class LoginPage_V2 extends AppCompatActivity {
         if (get_user != null && get_unique != null) {
             username = get_user;
             unique = get_unique;
+            Log.d("Login", String.format("Shared Pref UUID: %s", unique));
             etUsername.setText(username);
             checkIfAdmin(username);
         }
@@ -327,6 +331,7 @@ public class LoginPage_V2 extends AppCompatActivity {
             }
             etUsername = findViewById(R.id.et_Username);
             unique = UUID.randomUUID().toString();
+            Log.d("Login", String.format("This is the UUID: %s", unique));
             load(); // load after asking the permission or checking the permission (auto login purpose)
         }
     }
