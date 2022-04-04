@@ -48,7 +48,7 @@ public class ProfileDetails extends AppCompatActivity {
     String new_comment, username, longitude, latitude;
     String content, comment, date, score, image, hex;
     ActivityResultLauncher<Intent> activityResultLauncher;
-    private final String TAG = "Sample";
+    private final String TAG = "Profile_Detail";
 
     private SensorManager mSensorManager;
     private Sensor mAccelerometer;
@@ -84,6 +84,7 @@ public class ProfileDetails extends AppCompatActivity {
         SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
         username = sharedPreferences.getString("username", null);
 
+        // getting the picture from the camera
         activityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
             @Override
             public void onActivityResult(ActivityResult result) {
@@ -112,6 +113,7 @@ public class ProfileDetails extends AppCompatActivity {
             }
         });
 
+        // get the QR details
         db.collection("Users").document(username).collection("QR codes").document(hex).get()
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
@@ -144,6 +146,7 @@ public class ProfileDetails extends AppCompatActivity {
                     }
                 });
 
+        // get the location
         db.collection("QR codes").document(hex).collection("Users").document(username).get()
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
@@ -169,6 +172,7 @@ public class ProfileDetails extends AppCompatActivity {
                     }
                 });
 
+        // add the image
         detail_add_img.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -179,6 +183,7 @@ public class ProfileDetails extends AppCompatActivity {
             }
         });
 
+        // delete the image
         detail_del_img.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -206,6 +211,7 @@ public class ProfileDetails extends AppCompatActivity {
             }
         });
 
+        // back to the profile page
         back_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -216,6 +222,7 @@ public class ProfileDetails extends AppCompatActivity {
             }
         });
 
+        // edit the comment
         detail_edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -271,6 +278,7 @@ public class ProfileDetails extends AppCompatActivity {
             }
         });
 
+        // shaking event
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         mShakeDetector = new ShakeDetector();
@@ -290,7 +298,6 @@ public class ProfileDetails extends AppCompatActivity {
                             SharedPreferences.Editor editor = sharedPreferences.edit();
                             check_dialog = 0;
                             editor.remove("username");
-                            // editor.clear();
                             editor.apply();
                             Toast.makeText(getApplicationContext(), String.format("%s has been logged out", username), Toast.LENGTH_LONG).show();
                             log_page.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -307,6 +314,9 @@ public class ProfileDetails extends AppCompatActivity {
         });
     }
 
+    /**
+     * check if the image on the DB, if yes, access it
+     */
     private void checkImage() {
         db.collection("Users").document(username).collection("QR codes").document(hex).get()
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
@@ -323,8 +333,12 @@ public class ProfileDetails extends AppCompatActivity {
                 });
     }
 
+    /**
+     * update the image if the user requires
+     * @param byte_array
+     * pass the byte array and save it in the DB
+     */
     private void updateImg(String byte_array) {
-
         db.collection("Users").document(username).collection("QR codes").document(hex)
                 .update("Bytes Array", byte_array)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -341,6 +355,9 @@ public class ProfileDetails extends AppCompatActivity {
                 });
     }
 
+    /**
+     * delete the image (also wipe from DB)
+     */
     private void deleteImg() {
         db.collection("Users").document(username).collection("QR codes").document(hex)
                 .update("Bytes Array", "null")
@@ -370,6 +387,9 @@ public class ProfileDetails extends AppCompatActivity {
         }
     }
 
+    /**
+     * get the comment from the DB
+     */
     private void getComment() {
         db.collection("Users").document(username).collection("QR codes").document(hex).get()
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {

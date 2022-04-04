@@ -35,7 +35,6 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.zxing.BarcodeFormat;
@@ -94,9 +93,11 @@ public class ProfilePage extends AppCompatActivity {
         Button contact_cancel = findViewById(R.id.contact_cancel);
         Button contact_btn = findViewById(R.id.contact_btn);
 
+        // obtain username
         SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
         username = sharedPreferences.getString("username", null);
-        
+
+        // shaking event
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         mShakeDetector = new ShakeDetector();
@@ -132,8 +133,10 @@ public class ProfilePage extends AppCompatActivity {
             }
         });
 
+        // update the view
         updateView();
 
+        // delete the item from the list
         profileList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -206,6 +209,7 @@ public class ProfilePage extends AppCompatActivity {
             }
         });
 
+        // click to get inside the detail
         profileList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -216,6 +220,7 @@ public class ProfilePage extends AppCompatActivity {
             }
         });
 
+        // button that goes back to the scanQR
         final FloatingActionButton returnButton = findViewById(R.id.return_to_camera);
         returnButton.setOnClickListener((v) -> {
             Intent intent = new Intent(ProfilePage.this, ScanQR.class);
@@ -224,6 +229,7 @@ public class ProfilePage extends AppCompatActivity {
             overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
         });
 
+        // help button to go to the manual
         final FloatingActionButton helpButton = findViewById(R.id.manual);
         helpButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -233,6 +239,7 @@ public class ProfilePage extends AppCompatActivity {
             }
         });
 
+        // to generate the users QR code
         Button generateUserQR = findViewById(R.id.generate_login_qr);
         generateUserQR.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -241,17 +248,16 @@ public class ProfilePage extends AppCompatActivity {
             }
         });
 
+        // to generate the status QR code
         Button generateStatusQR = findViewById(R.id.generate_status_qr);
         generateStatusQR.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                String status = String.format("Username: %s\nTotal Score: %s\nTotal Scans: %s\n" +
-//                        "Highest Score: %s\nLowest Score: %s", username, totalScore, entryDataList.size(),
-//                        largestScore, smallestScore);
                 generateQRCode(username);
             }
         });
 
+        // edit the contact of the user
         contact_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -330,6 +336,9 @@ public class ProfilePage extends AppCompatActivity {
         super.onPause();
     }
 
+    /**
+     * view update method
+     */
     private void updateView() {
         final DocumentReference user_ref = db.collection("Users").document(username);
         user_ref.get()
@@ -375,12 +384,19 @@ public class ProfilePage extends AppCompatActivity {
         });
     }
 
+    /**
+     * let the list adapter know the update
+     */
     public void informUpdate() {
         listAdapter.notifyDataSetChanged();
     }
 
+    /**
+     * generate the QR code method
+     * @param content
+     * the content that the user wants to generate
+     */
     private void generateQRCode(String content) {
-
         QRCodeWriter writer = new QRCodeWriter();
         try {
             BitMatrix bitMatrix = writer.encode(content, BarcodeFormat.QR_CODE, 512, 512);
@@ -400,8 +416,10 @@ public class ProfilePage extends AppCompatActivity {
         }
     }
 
+    /**
+     * updating the score when the user deletes a QR code (all the scores and total codes)
+     */
     private void updateScore() {
-
         // Users (collection) -> username (document) -> QR codes (sub-collection) -> hex (document) -> score (field)
         db.collection("Users").document(username).collection("QR codes")
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
@@ -436,22 +454,17 @@ public class ProfilePage extends AppCompatActivity {
                             highScore.setText(String.format("Highest Score: %s", "0"));
                             lowScore.setText(String.format("Lowest Score: %s", "0"));
                             profileTotal.setText(String.format("Total Score: %s", "0"));
-
                         }
                         else {
-
                             db.collection("Users").document(username).update("Highest Score", String.valueOf(list_temp.get(list_temp.size() - 1)));
                             db.collection("Users").document(username).update("Lowest Score", String.valueOf(list_temp.get(0)));
                             db.collection("Users").document(username).update("Total Score", String.valueOf(sum));
-
                             highScore.setText(String.format("Highest Score: %s", list_temp.get(list_temp.size() - 1)));
                             lowScore.setText(String.format("Lowest Score: %s", list_temp.get(0)));
                             profileTotal.setText(String.format("Total Score: %s", sum));
-
                         }
                     }
                 });
-
     }
 
     public static void hideKeyboard(Activity activity) {

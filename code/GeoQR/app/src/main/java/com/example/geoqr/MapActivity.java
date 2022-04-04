@@ -81,7 +81,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback
         SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
         username = sharedPreferences.getString("username", null);
 
-        //If the user shakes the device they are logged out
+        // If the user shakes the device they are logged out
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         mShakeDetector = new ShakeDetector();
@@ -101,7 +101,6 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback
                             SharedPreferences.Editor editor = sharedPreferences.edit();
                             check_dialog = 0;
                             editor.remove("username");
-                            // editor.clear();
                             editor.apply();
                             Toast.makeText(getApplicationContext(), String.format("%s has been logged out", username), Toast.LENGTH_LONG).show();
                             log_page.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

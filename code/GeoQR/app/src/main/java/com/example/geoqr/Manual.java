@@ -2,7 +2,6 @@ package com.example.geoqr;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,6 +12,9 @@ import java.util.Objects;
 
 public class Manual extends AppCompatActivity {
 
+    /**
+     * This class sets the manual so that hte users are able to see what can they do in each activities
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,9 +56,9 @@ public class Manual extends AppCompatActivity {
                 "Clicking the Camera button at the bottom of the screen will return them to the Camera page for scanning QR codes or to go to other pages like leaderboard or maps.";
 
         String addQR = "\naddQR Page:\nAfter scanning the QR code, you will come to this page, called the AddQR page.\n" +
-                "This page will display the details of the QR code like QR content, QR_hex_encryption result, QR score, Username, Longitute and Latitude (if you wish to add that on), image of QR code (if you wish to add that on), and personal comments on the QR code (if you wish to add that on).\n" +
+                "This page will display the details of the QR code like QR content, QR_hex_encryption result, QR score, Username, Longitude and Latitude (if you wish to add that on), image of QR code (if you wish to add that on), and personal comments on the QR code (if you wish to add that on).\n" +
                 "\n" +
-                "By opening the switch on the page where it says [Add Location], it will store the current location of your device, if it cannot get the location it will display null and give you a textbox at the bottom of the page saying cannot add Location.\n" +
+                "By opening the switch on the page where it says [Add Location], it will store the current location of your device, if it cannot get the location it will display null and give you a text box at the bottom of the page saying cannot add Location.\n" +
                 "If you choose not to store the location, it will not access the current location of your device.\n" +
                 "\n" +
                 "Click the part where it says [Click to add comments] to add personal comments on this QR code if you want.\n" +
@@ -80,14 +82,11 @@ public class Manual extends AppCompatActivity {
         manual_addQR.setText(addQR);
         manual_score.setText(score);
 
-
-        back_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent scan = new Intent(Manual.this, ScanQR.class);
-                scan.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(scan);
-            }
+        // button clicks to go to the scanQR directly
+        back_btn.setOnClickListener(view -> {
+            Intent scan = new Intent(Manual.this, ScanQR.class);
+            scan.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(scan);
         });
     }
 }

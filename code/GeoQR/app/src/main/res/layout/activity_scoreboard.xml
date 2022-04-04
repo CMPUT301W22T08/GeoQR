@@ -20,7 +20,7 @@
 
         <TextView
             android:id="@+id/scoreboard_player_ranking"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:padding="6dp"
@@ -98,7 +98,9 @@
         <ListView
             android:id="@+id/scoreboard_ranking"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent" >
+
+        </ListView>
 
     </LinearLayout>
 
@@ -111,13 +113,6 @@
         android:layout_alignParentBottom="true"
         android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/scoreboard_go_back"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Back" />
-
         <EditText
             android:id="@+id/scoreboard_searchbar"
             android:layout_width="wrap_content"
@@ -127,6 +122,13 @@
             android:hint="Search"
             android:inputType="textPersonName"
             android:minHeight="48dp" />
+
+        <Button
+            android:id="@+id/scoreboard_go_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Back" />
 
         <Button
             android:id="@+id/scoreboard_scan_status_qr"

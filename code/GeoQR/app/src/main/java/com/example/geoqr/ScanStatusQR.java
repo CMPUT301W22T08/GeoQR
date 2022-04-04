@@ -43,7 +43,7 @@ public class ScanStatusQR extends AppCompatActivity {
     }
 
     /**
-     * provides camera to scan the user's QR code
+     * provides camera to scan the user's status QR code
      */
     private void scanStatus() {
         sCodeScanner = new CodeScanner(this, status);

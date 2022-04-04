@@ -150,7 +150,11 @@ public class LoginPage_V2 extends AppCompatActivity {
         return context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY);
     }
 
-    // check if the user is admin
+    /**
+     * check if the user is admin
+     * @param username
+     * pass the username to the method and check if exists in the DB
+     */
     public void checkIfAdmin(String username) {
         Log.d("Login", String.format("In admin Flag: %s", flag));
         DocumentReference docRef = db.collection("Admin").document(username);
@@ -179,6 +183,12 @@ public class LoginPage_V2 extends AppCompatActivity {
 
     // this is for scanning QR code login
     // return false if user is not in the db, otherwise true.
+
+    /**
+     * this is to check if the entered username does exist
+     * @param username
+     * pass the username to the method and check if exists in the DB
+     */
     public void checkIfUserExists(String username) {
         Log.d("Login", String.format("In exists Flag: %s", flag));
         DocumentReference docRef = db.collection("Users").document(username);
@@ -199,14 +209,15 @@ public class LoginPage_V2 extends AppCompatActivity {
                                             Log.d("Login", "check unique does not equal to unique");
                                             AlertDialog.Builder alert = new AlertDialog.Builder(LoginPage_V2.this);
 
-                                            if (flag) {
+                                            // if the user does exists and scanning from the camera to login
+                                            if (flag) { // if the user scans to login
                                                 Log.d("Login", "different unique, scan login");
                                                 alert.setTitle("Login Confirmation");
                                                 alert.setMessage("You account has logged in in another device, are you sure you want to change to this device?");
                                                 alert.setPositiveButton(android.R.string.yes, (dialogInterface, i1) -> {
                                                     System.out.println("user exists");
                                                     db.collection("Users").document(username).update("UUID", unique);
-                                                    writeFile(username);
+                                                    writeFile(username); // write the file to the shared preference
                                                     Intent camScan = new Intent(LoginPage_V2.this, ScanQR.class);
                                                     Toast.makeText(getApplicationContext(), String.format("Login as '%s'", username), Toast.LENGTH_LONG).show();
                                                     camScan.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -216,6 +227,7 @@ public class LoginPage_V2 extends AppCompatActivity {
                                                     dialogInterface.cancel();
                                                 });
                                             }
+                                            // if the user simply login where s/he has logged in from the other device, it will show the error
                                             else {
                                                 Log.d("Login", "Login error raised");
                                                 // alert
@@ -228,6 +240,7 @@ public class LoginPage_V2 extends AppCompatActivity {
                                             alert.show();
                                         }
                                         else {
+                                            // user is able to login if the everything is met
                                             Log.d("Login", "user exists");
                                             writeFile(username);
                                             Intent camScan = new Intent(LoginPage_V2.this, ScanQR.class);
@@ -240,10 +253,11 @@ public class LoginPage_V2 extends AppCompatActivity {
                                 .addOnFailureListener(new OnFailureListener() {
                                     @Override
                                     public void onFailure(@NonNull Exception e) {
-                                        Log.d("Debug", "Cannot get that");
+                                        Log.d("Login", "Cannot get if user exists");
                                     }
                                 });
                     }
+                    // create an account
                     else {
                         System.out.println("user does not exist");
                         add_user_detail();
@@ -260,14 +274,20 @@ public class LoginPage_V2 extends AppCompatActivity {
         });
     }
 
-    // generate random string
+    /**
+     * generate random string
+     */
     private void generate(){
         RandomString randomString = new RandomString();
         String result = randomString.generateAlphaNumeric(12);
         etUsername.setText(result);
     }
 
-    // write file (for auto login)
+    /**
+     * write file (for auto login)
+     * @param username
+     * pass the username from the edit text
+     */
     private void writeFile(String username) {
         SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -275,7 +295,9 @@ public class LoginPage_V2 extends AppCompatActivity {
         editor.apply();
     }
 
-    // load when the application starts (auto login purpose)
+    /**
+     * load when the application starts (auto login purpose)
+     */
     private void load() {
         SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
         String get_user = sharedPreferences.getString("username", null);
@@ -285,9 +307,9 @@ public class LoginPage_V2 extends AppCompatActivity {
         if (get_user != null && get_unique != null) {
             username = get_user;
             unique = get_unique;
-            etUsername.setText(username);
             Log.d("Login", String.format("Shared Pref UUID: %s", unique));
 
+            // this is to check if the user does login to another device
             DocumentReference docRef = db.collection("Users").document(username);
             docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
@@ -299,16 +321,18 @@ public class LoginPage_V2 extends AppCompatActivity {
                                     .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                                         @Override
                                         public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                            // if the user logged onto another device, we logout the user
                                             String UUID = documentSnapshot.getString("UUID");
                                             assert UUID != null;
                                             if (!UUID.equals(unique)) {
                                                 SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
                                                 SharedPreferences.Editor editor = sharedPreferences.edit();
-                                                // editor.clear();
                                                 editor.remove("username");
                                                 editor.apply();
                                             }
                                             else {
+                                                // start to check admin
+                                                etUsername.setText(username);
                                                 checkIfAdmin(username);
                                             }
                                         }
@@ -320,7 +344,8 @@ public class LoginPage_V2 extends AppCompatActivity {
                                         }
                                     });
                         }
-                        else {
+                        else { // start to check admin
+                            etUsername.setText(username);
                             checkIfAdmin(username);
                         }
                     }
@@ -336,7 +361,9 @@ public class LoginPage_V2 extends AppCompatActivity {
         }
     }
 
-    // check all permissions (camera, location)
+    /**
+     * check all permissions (camera, location)
+     */
     protected void checkPermissions() {
         final List<String> missingPermissions = new ArrayList<>();
         // check all required dynamic permissions
@@ -359,7 +386,15 @@ public class LoginPage_V2 extends AppCompatActivity {
         }
     }
 
-    // request permissions (camera, location)
+    /**
+     * request permissions (camera, location)
+     * @param requestCode
+     * request code from the permission
+     * @param permissions
+     * String array that contains what the permission need
+     * @param grantResults
+     * Integer array that contains the items that if the permission is granted
+     */
     @SuppressLint("HardwareIds")
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
@@ -381,7 +416,6 @@ public class LoginPage_V2 extends AppCompatActivity {
                 }
             }
             etUsername = findViewById(R.id.et_Username);
-            // unique = UUID.randomUUID().toString();
             unique = Settings.Secure.getString(getApplicationContext().getContentResolver(), Settings.Secure.ANDROID_ID).replace(' ', '0');
             SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPreferences.edit();
