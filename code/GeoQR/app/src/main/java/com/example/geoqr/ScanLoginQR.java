@@ -54,7 +54,7 @@ public class ScanLoginQR extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 // going back to the login page if the cancel button is pressed
-                Intent login = new Intent(ScanLoginQR.this, LoginPage.class);
+                Intent login = new Intent(ScanLoginQR.this, LoginPage_V2.class);
                 login.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(login);
                 overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
@@ -80,7 +80,7 @@ public class ScanLoginQR extends AppCompatActivity {
                     public void run() {
                         // pass content back to the login page for authentication
                         content = result.getText();
-                        Intent passBack = new Intent(ScanLoginQR.this, LoginPage.class);
+                        Intent passBack = new Intent(ScanLoginQR.this, LoginPage_V2.class);
                         passBack.putExtra("username", content);
                         passBack.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         setResult(10, passBack);

@@ -161,7 +161,7 @@ public class ScoreboardActivity extends AppCompatActivity implements Scoreboard.
                         alert.setTitle("Logout Confirmation");
                         alert.setMessage(String.format("Are you sure you want to Logout '%s'?", sharedPreferences.getString("username", null)));
                         alert.setPositiveButton(android.R.string.yes, (dialogInterface, i1) -> {
-                            Intent log_page = new Intent(ScoreboardActivity.this, LoginPage.class);
+                            Intent log_page = new Intent(ScoreboardActivity.this, LoginPage_V2.class);
                             SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
                             SharedPreferences.Editor editor = sharedPreferences.edit();
                             check_dialog = 0;

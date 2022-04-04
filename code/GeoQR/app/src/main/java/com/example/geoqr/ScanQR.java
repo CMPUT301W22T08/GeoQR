@@ -117,7 +117,7 @@ public class ScanQR extends AppCompatActivity {
                         alert.setTitle("Logout Confirmation");
                         alert.setMessage(String.format("Are you sure you want to Logout '%s'?", username));
                         alert.setPositiveButton(android.R.string.yes, (dialogInterface, i1) -> {
-                            Intent log_page = new Intent(ScanQR.this, LoginPage.class);
+                            Intent log_page = new Intent(ScanQR.this, LoginPage_V2.class);
                             SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
                             SharedPreferences.Editor editor = sharedPreferences.edit();
                             check_dialog = 0;
