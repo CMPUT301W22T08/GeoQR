@@ -367,6 +367,7 @@ public class Admin {
      * @return playerAdapter
      */
     public AdminPlayerAdapter getPlayerAdapter() {
+        playerAdapter.clear();
         return playerAdapter;
     }
 
@@ -375,6 +376,7 @@ public class Admin {
      * @return adminQrAdapter
      */
     public AdminQRAdapter getQRAdapter() {
+        adminQrAdapter.clear();
         return adminQrAdapter;
     }
 }
